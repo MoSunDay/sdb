@@ -278,6 +278,72 @@ func LRange(key []byte, offset int32, limit int32) ([][]byte, error) {
 其他的数据结构大体逻辑类似，其中 [sorted_set](https://github.com/yemingfeng/sdb/blob/master/internal/service/sorted_set.go)
 更加复杂些。可以自行查看。
 
+##### LPop 优化
+
+聪明的大家可以看出，LPop 的逻辑在数据量很大的情况下，非常耗性能。是因为我们在存储引擎中是无法知道 value 对应的 key 的，需要需要将 List 中的元素全部 load
+出来后，挨个判断，才能进行删除。
+
+为了降低时间复杂度，提高性能。 还是以 List: [hello] -> [aaa, ccc, bbb] 为例子。存储模型将改成如下：
+
+正排索引结构【不变】：
+
+pebble key | pebble value
+---- | ---
+l/hello/{unique_ordering_key1} | aaa
+l/hello/{unique_ordering_key2} | ccc
+l/hello/{unique_ordering_key3} | bbb
+
+辅助索引结构
+
+pebble key | pebble value
+---- | ---
+l/hello/aaa/{unique_ordering_key1} | aaa
+l/hello/ccc/{unique_ordering_key2} | ccc
+l/hello/bbb/{unique_ordering_key3} | bbb
+
+有了这个辅助索引后，我们可以通过前缀检索的方式，判断 List 是否存在某个 value 的元素。从而降低时间复杂度，提高性能。 这里面还需要在写入元素时，将辅助索引写入，所以核心逻辑将改成：
+
+```go
+func LPush(key []byte, values [][]byte, sync bool) (bool, error) {
+	lock(LList, key)
+	defer unlock(LList, key)
+
+	batch := store.NewBatch()
+	defer batch.Close()
+
+	for _, value := range values {
+		id := util.GetOrderingKey()
+		batch.Set(generateListKey(key, id), value)
+		batch.Set(generateListIdKey(key, value, id), value)
+	}
+
+	return batch.Commit()
+}
+
+func LPop(key []byte, values [][]byte, sync bool) (bool, error) {
+	lock(LList, key)
+	defer unlock(LList, key)
+
+	batch := store.NewBatch()
+	defer batch.Close()
+
+	for i := range values {
+		store.Iterate(&engine.PrefixIteratorOption{Prefix: generateListIdPrefixKey(key, values[i])},
+			func(storeKey []byte, storeValue []byte) {
+				if bytes.Equal(storeValue, values[i]) {
+					batch.Del(storeKey)
+
+					infos := strings.Split(string(storeKey), "/")
+					id, _ := strconv.ParseInt(infos[len(infos)-1], 10, 64)
+					batch.Del(generateListKey(key, id))
+				}
+			})
+	}
+
+	return batch.Commit()
+}
+```
+
 #### SDB 通讯协议方案
 
 解决完了存储和数据结构的问题后，SDB 面临了【最后一公里】的问题是通讯协议的选择。

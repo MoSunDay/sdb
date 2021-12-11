@@ -18,7 +18,7 @@ func main() {
 	// 连接服务器
 	c := pb.NewSDBClient(conn)
 	// 发起 lpush 请求
-	length := 10
+	length := 50
 	values := make([][]byte, length)
 	for i := 0; i < length; i++ {
 		values[i] = []byte("h" + fmt.Sprint(i))
