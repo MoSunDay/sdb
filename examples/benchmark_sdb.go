@@ -24,7 +24,7 @@ func init() {
 }
 
 func set(key, value []byte) {
-	_, err := c.Set(context.Background(), &pb.SetRequest{Key: key, Value: value, Sync: true})
+	_, err := c.Set(context.Background(), &pb.SetRequest{Key: key, Value: value, Sync: false})
 	if err != nil {
 		log.Fatalf("%+v, key = %s, value = %s", err, key, value)
 	}

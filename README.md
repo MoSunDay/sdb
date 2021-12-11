@@ -119,7 +119,10 @@ server.slow_query_threshold | 慢查询记录的阈值，单位为 ms | 100
 
 内存：8GB
 
-**测试结果： peek QPS > 12k，avg QPS > 7k，set avg time < 70ms，get avg time <
+**NoSync 测试结果： peek QPS > 12k，avg QPS > 7k，set avg time < 3ms，get avg time <
+0.2ms**
+
+**Sync 测试结果： peek QPS > 12k，avg QPS > 7k，set avg time < 70ms，get avg time <
 0.2ms**
 
 <img src="https://github.com/yemingfeng/sdb/raw/master/docs/benchmark.png" width=80% />
