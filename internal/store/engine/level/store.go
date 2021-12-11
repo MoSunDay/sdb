@@ -1,12 +1,13 @@
 package level
 
 import (
-	"github.com/yemingfeng/sdb/internal/conf"
-	"github.com/yemingfeng/sdb/internal/store/engine"
 	"github.com/syndtr/goleveldb/leveldb"
 	"github.com/syndtr/goleveldb/leveldb/filter"
 	"github.com/syndtr/goleveldb/leveldb/opt"
 	"github.com/syndtr/goleveldb/leveldb/util"
+	"github.com/yemingfeng/sdb/internal/conf"
+	"github.com/yemingfeng/sdb/internal/store/engine"
+	util2 "github.com/yemingfeng/sdb/internal/util"
 	"log"
 )
 
@@ -55,7 +56,7 @@ func (store *LevelStore) NewBatch() engine.Batch {
 	return &LevelBatch{db: store.db, batch: new(leveldb.Batch)}
 }
 
-func (store *LevelStore) Iterator(opt *engine.PrefixIteratorOption, handle func([]byte, []byte)) {
+func (store *LevelStore) Iterate(opt *engine.PrefixIteratorOption, handle func([]byte, []byte)) {
 	it := store.db.NewIterator(util.BytesPrefix(opt.Prefix), nil)
 	defer func() {
 		it.Release()
@@ -69,7 +70,7 @@ func (store *LevelStore) Iterator(opt *engine.PrefixIteratorOption, handle func(
 
 		i = 0
 		for ; it.Valid(); it.Next() {
-			handle(it.Key(), it.Value())
+			handle(util2.Copy2(it.Key()), util2.Copy2(it.Value()))
 			i++
 			if opt.Limit > 0 && i == opt.Limit {
 				break
@@ -83,7 +84,7 @@ func (store *LevelStore) Iterator(opt *engine.PrefixIteratorOption, handle func(
 
 		i = 0
 		for ; it.Valid(); it.Prev() {
-			handle(it.Key(), it.Value())
+			handle(util2.Copy2(it.Key()), util2.Copy2(it.Value()))
 			i++
 			if opt.Limit > 0 && i == opt.Limit {
 				break

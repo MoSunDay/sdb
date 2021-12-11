@@ -1,9 +1,10 @@
 package pebble
 
 import (
+	"github.com/cockroachdb/pebble"
 	"github.com/yemingfeng/sdb/internal/conf"
 	"github.com/yemingfeng/sdb/internal/store/engine"
-	"github.com/cockroachdb/pebble"
+	"github.com/yemingfeng/sdb/internal/util"
 	"log"
 )
 
@@ -55,7 +56,7 @@ func (store *PebbleStore) NewBatch() engine.Batch {
 	return &PebbleBatch{batch: store.db.NewBatch()}
 }
 
-func (store *PebbleStore) Iterator(opt *engine.PrefixIteratorOption, handle func([]byte, []byte)) {
+func (store *PebbleStore) Iterate(opt *engine.PrefixIteratorOption, handle func([]byte, []byte)) {
 	keyUpperBound := func(b []byte) []byte {
 		end := make([]byte, len(b))
 		copy(end, b)
@@ -84,7 +85,7 @@ func (store *PebbleStore) Iterator(opt *engine.PrefixIteratorOption, handle func
 
 		i = 0
 		for ; it.Valid(); it.Next() {
-			handle(it.Key(), it.Value())
+			handle(util.Copy2(it.Key()), util.Copy2(it.Value()))
 			i++
 			if opt.Limit > 0 && i == opt.Limit {
 				break
@@ -92,13 +93,13 @@ func (store *PebbleStore) Iterator(opt *engine.PrefixIteratorOption, handle func
 		}
 	} else {
 		i := 0
-		for it.Last(); i < -opt.Offset && it.Valid(); it.Prev() {
+		for it.Last(); i < -opt.Offset-1 && it.Valid(); it.Prev() {
 			i++
 		}
 
 		i = 0
 		for ; it.Valid(); it.Prev() {
-			handle(it.Key(), it.Value())
+			handle(util.Copy2(it.Key()), util.Copy2(it.Value()))
 			i++
 			if opt.Limit > 0 && i == opt.Limit {
 				break

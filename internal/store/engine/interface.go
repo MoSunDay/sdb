@@ -5,7 +5,7 @@ type Store interface {
 	Get(key []byte) ([]byte, error)
 	Del(key []byte, sync bool) (bool, error)
 	NewBatch() Batch
-	Iterator(opt *PrefixIteratorOption, handle func([]byte, []byte))
+	Iterate(opt *PrefixIteratorOption, handle func([]byte, []byte))
 	Close() error
 }
 

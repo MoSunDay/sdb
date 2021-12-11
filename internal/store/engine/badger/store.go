@@ -1,9 +1,9 @@
 package badger
 
 import (
+	"github.com/dgraph-io/badger/v3"
 	"github.com/yemingfeng/sdb/internal/conf"
 	"github.com/yemingfeng/sdb/internal/store/engine"
-	"github.com/dgraph-io/badger/v3"
 	"log"
 )
 
@@ -56,7 +56,7 @@ func (store *BadgerStore) NewBatch() engine.Batch {
 	return &BadgerBatch{batch: store.db.NewWriteBatch()}
 }
 
-func (store *BadgerStore) Iterator(opt *engine.PrefixIteratorOption, handle func([]byte, []byte)) {
+func (store *BadgerStore) Iterate(opt *engine.PrefixIteratorOption, handle func([]byte, []byte)) {
 	_ = store.db.View(func(txn *badger.Txn) error {
 		it := txn.NewIterator(badger.IteratorOptions{
 			Reverse:        opt.Offset < 0,

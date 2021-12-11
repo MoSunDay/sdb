@@ -46,7 +46,7 @@ func NewBatch() engine.Batch {
 }
 
 func Iterate(opt *engine.PrefixIteratorOption, handle func([]byte, []byte)) {
-	store.Iterator(opt, handle)
+	store.Iterate(opt, handle)
 }
 
 func Close() error {

@@ -40,14 +40,18 @@ func main() {
 	// 发起 lrange 请求
 	// 反向检索
 	lrangeResponse, err := c.LRange(context.Background(),
-		&pb.LRangeRequest{Key: []byte("h"), Offset: 0, Limit: 10})
-	lrangeResponse, err = c.LRange(context.Background(),
 		&pb.LRangeRequest{Key: []byte("h"), Offset: -1, Limit: 10})
 	log.Printf("lrangeResponse: %+v, err: %+v", lrangeResponse, err)
 	lrangeResponse, err = c.LRange(context.Background(),
-		&pb.LRangeRequest{Key: []byte("h"), Offset: -1, Limit: 500})
+		&pb.LRangeRequest{Key: []byte("h"), Offset: -3, Limit: 3})
+	log.Printf("lrangeResponse: %+v, err: %+v", lrangeResponse, err)
+	lrangeResponse, err = c.LRange(context.Background(),
+		&pb.LRangeRequest{Key: []byte("h"), Offset: -4, Limit: 3})
 	log.Printf("lrangeResponse: %+v, err: %+v", lrangeResponse, err)
 	// 正向检索
+	lrangeResponse, err = c.LRange(context.Background(),
+		&pb.LRangeRequest{Key: []byte("h"), Offset: 1, Limit: 3})
+	log.Printf("lrangeResponse: %+v, err: %+v", lrangeResponse, err)
 	lrangeResponse, err = c.LRange(context.Background(),
 		&pb.LRangeRequest{Key: []byte("h"), Offset: 2, Limit: 10})
 	log.Printf("lrangeResponse: %+v, err: %+v", lrangeResponse, err)
