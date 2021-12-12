@@ -11,12 +11,12 @@ type ListServer struct {
 }
 
 func (server *ListServer) LPush(_ context.Context, request *pb.LPushRequest) (*pb.LPushResponse, error) {
-	res, err := service.LPush(request.Key, request.Values, request.Sync)
+	res, err := service.LPush(request.Key, request.Values)
 	return &pb.LPushResponse{Success: res}, err
 }
 
 func (server *ListServer) LPop(_ context.Context, request *pb.LPopRequest) (*pb.LPopResponse, error) {
-	res, err := service.LPop(request.Key, request.Values, request.Sync)
+	res, err := service.LPop(request.Key, request.Values)
 	return &pb.LPopResponse{Success: res}, err
 }
 
@@ -31,7 +31,7 @@ func (server *ListServer) LExist(_ context.Context, request *pb.LExistRequest) (
 }
 
 func (server *ListServer) LDel(_ context.Context, request *pb.LDelRequest) (*pb.LDelResponse, error) {
-	res, err := service.LDel(request.Key, request.Sync)
+	res, err := service.LDel(request.Key)
 	return &pb.LDelResponse{Success: res}, err
 }
 

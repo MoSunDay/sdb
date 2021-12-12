@@ -22,7 +22,7 @@ func NewBadgerStore() *BadgerStore {
 	return &BadgerStore{db: db}
 }
 
-func (store *BadgerStore) Set(key []byte, value []byte, _ bool) (bool, error) {
+func (store *BadgerStore) Set(key []byte, value []byte) (bool, error) {
 	if err := store.db.Update(func(txn *badger.Txn) error {
 		return txn.Set(key, value)
 	}); err != nil {
@@ -43,7 +43,7 @@ func (store *BadgerStore) Get(key []byte) ([]byte, error) {
 	return item.ValueCopy(nil)
 }
 
-func (store *BadgerStore) Del(key []byte, _ bool) (bool, error) {
+func (store *BadgerStore) Del(key []byte) (bool, error) {
 	if err := store.db.Update(func(txn *badger.Txn) error {
 		return txn.Delete(key)
 	}); err != nil {

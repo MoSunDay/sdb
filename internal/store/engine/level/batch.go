@@ -18,8 +18,8 @@ func (batch *LevelBatch) Del(key []byte) {
 	batch.batch.Delete(key)
 }
 
-func (batch *LevelBatch) Commit(sync bool) (bool, error) {
-	if err := batch.db.Write(batch.batch, &opt.WriteOptions{Sync: sync}); err != nil {
+func (batch *LevelBatch) Commit() (bool, error) {
+	if err := batch.db.Write(batch.batch, &opt.WriteOptions{Sync: true}); err != nil {
 		return false, err
 	}
 	return true, nil

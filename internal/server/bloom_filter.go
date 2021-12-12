@@ -11,17 +11,17 @@ type BloomFilterServer struct {
 }
 
 func (server *BloomFilterServer) BFCreate(_ context.Context, request *pb.BFCreateRequest) (*pb.BFCreateResponse, error) {
-	res, err := service.BFCreate(request.Key, request.N, request.P, request.Sync)
+	res, err := service.BFCreate(request.Key, request.N, request.P)
 	return &pb.BFCreateResponse{Success: res}, err
 }
 
 func (server *BloomFilterServer) BFDel(_ context.Context, request *pb.BFDelRequest) (*pb.BFDelResponse, error) {
-	res, err := service.BFDel(request.Key, request.Sync)
+	res, err := service.BFDel(request.Key)
 	return &pb.BFDelResponse{Success: res}, err
 }
 
 func (server *BloomFilterServer) BFAdd(_ context.Context, request *pb.BFAddRequest) (*pb.BFAddResponse, error) {
-	res, err := service.BFAdd(request.Key, request.Values, request.Sync)
+	res, err := service.BFAdd(request.Key, request.Values)
 	return &pb.BFAddResponse{Success: res}, err
 }
 

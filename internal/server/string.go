@@ -11,7 +11,7 @@ type StringServer struct {
 }
 
 func (server *StringServer) Set(_ context.Context, request *pb.SetRequest) (*pb.SetResponse, error) {
-	res, err := service.Set(request.Key, request.Value, request.Sync)
+	res, err := service.Set(request.Key, request.Value)
 	return &pb.SetResponse{Success: res}, err
 }
 
@@ -21,11 +21,11 @@ func (server *StringServer) Get(_ context.Context, request *pb.GetRequest) (*pb.
 }
 
 func (server *StringServer) Del(_ context.Context, request *pb.DelRequest) (*pb.DelResponse, error) {
-	res, err := service.Del(request.Key, request.Sync)
+	res, err := service.Del(request.Key)
 	return &pb.DelResponse{Success: res}, err
 }
 
 func (server *StringServer) Incr(_ context.Context, request *pb.IncrRequest) (*pb.IncrResponse, error) {
-	res, err := service.Incr(request.Key, request.Delta, request.Sync)
+	res, err := service.Incr(request.Key, request.Delta)
 	return &pb.IncrResponse{Success: res}, err
 }

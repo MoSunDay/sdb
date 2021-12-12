@@ -14,8 +14,8 @@ func (batch *PebbleBatch) Del(key []byte) {
 	_ = batch.batch.Delete(key, nil)
 }
 
-func (batch *PebbleBatch) Commit(sync bool) (bool, error) {
-	if err := batch.batch.Commit(&pebble.WriteOptions{Sync: sync}); err != nil {
+func (batch *PebbleBatch) Commit() (bool, error) {
+	if err := batch.batch.Commit(pebble.Sync); err != nil {
 		return false, err
 	}
 	return true, nil

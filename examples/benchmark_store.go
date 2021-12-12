@@ -17,7 +17,7 @@ func randBytes1() []byte {
 
 func main() {
 	for i := 0; i < 10; i++ {
-		store.Set([]byte("h"+strconv.Itoa(i)), []byte("w"+strconv.Itoa(i)), true)
+		store.Set([]byte("h"+strconv.Itoa(i)), []byte("w"+strconv.Itoa(i)))
 	}
 	store.Iterate(&engine.PrefixIteratorOption{Prefix: []byte("h"), Offset: -1, Limit: 3},
 		func(key []byte, value []byte) {
@@ -47,7 +47,7 @@ func main() {
 			go func() {
 				defer wg.Done()
 				s.Acquire(context.Background(), 1)
-				store.Set(randBytes1(), randBytes1(), true)
+				store.Set(randBytes1(), randBytes1())
 				s.Release(1)
 			}()
 			go func() {

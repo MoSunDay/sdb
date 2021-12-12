@@ -11,12 +11,12 @@ type SortedSetServer struct {
 }
 
 func (server *SortedSetServer) ZPush(_ context.Context, request *pb.ZPushRequest) (*pb.ZPushResponse, error) {
-	res, err := service.ZPush(request.Key, request.Tuples, request.Sync)
+	res, err := service.ZPush(request.Key, request.Tuples)
 	return &pb.ZPushResponse{Success: res}, err
 }
 
 func (server *SortedSetServer) ZPop(_ context.Context, request *pb.ZPopRequest) (*pb.ZPopResponse, error) {
-	res, err := service.ZPop(request.Key, request.Values, request.Sync)
+	res, err := service.ZPop(request.Key, request.Values)
 	return &pb.ZPopResponse{Success: res}, err
 }
 
@@ -31,7 +31,7 @@ func (server *SortedSetServer) ZExist(_ context.Context, request *pb.ZExistReque
 }
 
 func (server *SortedSetServer) ZDel(_ context.Context, request *pb.ZDelRequest) (*pb.ZDelResponse, error) {
-	res, err := service.ZDel(request.Key, request.Sync)
+	res, err := service.ZDel(request.Key)
 	return &pb.ZDelResponse{Success: res}, err
 }
 

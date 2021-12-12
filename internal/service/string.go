@@ -8,19 +8,19 @@ import (
 
 const stringKeyPrefixTemplate = "s/%s"
 
-func Set(key []byte, value []byte, sync bool) (bool, error) {
-	return store.Set(generateStringKey(key), value, sync)
+func Set(key []byte, value []byte) (bool, error) {
+	return store.Set(generateStringKey(key), value)
 }
 
 func Get(key []byte) ([]byte, error) {
 	return store.Get(generateStringKey(key))
 }
 
-func Del(key []byte, sync bool) (bool, error) {
-	return store.Del(generateStringKey(key), sync)
+func Del(key []byte) (bool, error) {
+	return store.Del(generateStringKey(key))
 }
 
-func Incr(key []byte, delta int32, sync bool) (bool, error) {
+func Incr(key []byte, delta int32) (bool, error) {
 	lock(LString, key)
 	defer unlock(LString, key)
 
@@ -37,7 +37,7 @@ func Incr(key []byte, delta int32, sync bool) (bool, error) {
 	}
 	valueInt = valueInt + int(delta)
 
-	return store.Set(key, []byte(strconv.Itoa(valueInt)), sync)
+	return store.Set(key, []byte(strconv.Itoa(valueInt)))
 }
 
 func generateStringKey(key []byte) []byte {

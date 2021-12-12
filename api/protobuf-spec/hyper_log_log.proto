@@ -5,7 +5,6 @@ option go_package = "pkg/pb";
 
 message HLLCreateRequest {
   bytes key = 1;
-  bool sync = 100;
 }
 
 message HLLCreateResponse {
@@ -14,7 +13,6 @@ message HLLCreateResponse {
 
 message HLLDelRequest {
   bytes key = 1;
-  bool sync = 100;
 }
 
 message HLLDelResponse {
@@ -24,7 +22,6 @@ message HLLDelResponse {
 message HLLAddRequest {
   bytes key = 1;
   repeated bytes values = 2;
-  bool sync = 100;
 }
 
 message HLLAddResponse {

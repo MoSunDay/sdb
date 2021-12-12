@@ -6,7 +6,6 @@ option go_package = "pkg/pb";
 message SetRequest {
   bytes key = 1;
   bytes value = 2;
-  bool sync = 100;
 }
 
 message SetResponse {
@@ -23,7 +22,6 @@ message GetResponse {
 
 message DelRequest {
   bytes key = 1;
-  bool sync = 100;
 }
 
 message DelResponse {
@@ -33,7 +31,6 @@ message DelResponse {
 message IncrRequest {
   bytes key = 1;
   int32 delta = 2;
-  bool sync = 100;
 }
 
 message IncrResponse {

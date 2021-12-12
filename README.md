@@ -119,10 +119,7 @@ server.slow_query_threshold | 慢查询记录的阈值，单位为 ms | 100
 
 内存：8GB
 
-**NoSync 测试结果： peek QPS > 12k，avg QPS > 7k，set avg time < 3ms，get avg time <
-0.2ms**
-
-**Sync 测试结果： peek QPS > 12k，avg QPS > 7k，set avg time < 70ms，get avg time <
+**测试结果： peek QPS > 12k，avg QPS > 7k，set avg time < 70ms，get avg time <
 0.2ms**
 
 <img src="https://github.com/yemingfeng/sdb/raw/master/docs/benchmark.png" width=80% />
@@ -307,10 +304,7 @@ l/hello/bbb/{unique_ordering_key3} | bbb
 有了这个辅助索引后，我们可以通过前缀检索的方式，判断 List 是否存在某个 value 的元素。从而降低时间复杂度，提高性能。 这里面还需要在写入元素时，将辅助索引写入，所以核心逻辑将改成：
 
 ```go
-func LPush(key []byte, values [][]byte, sync bool) (bool, error) {
-	lock(LList, key)
-	defer unlock(LList, key)
-
+func LPush(key []byte, values [][]byte) (bool, error) {
 	batch := store.NewBatch()
 	defer batch.Close()
 
@@ -323,10 +317,7 @@ func LPush(key []byte, values [][]byte, sync bool) (bool, error) {
 	return batch.Commit()
 }
 
-func LPop(key []byte, values [][]byte, sync bool) (bool, error) {
-	lock(LList, key)
-	defer unlock(LList, key)
-
+func LPop(key []byte, values [][]byte) (bool, error) {
 	batch := store.NewBatch()
 	defer batch.Close()
 

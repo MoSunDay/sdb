@@ -7,7 +7,6 @@ message BFCreateRequest {
   bytes key = 1;
   uint32 n = 2;
   double p = 3;
-  bool sync = 100;
 }
 
 message BFCreateResponse {
@@ -16,7 +15,6 @@ message BFCreateResponse {
 
 message BFDelRequest {
   bytes key = 1;
-  bool sync = 100;
 }
 
 message BFDelResponse {
@@ -26,7 +24,6 @@ message BFDelResponse {
 message BFAddRequest {
   bytes key = 1;
   repeated bytes values = 2;
-  bool sync = 100;
 }
 
 message BFAddResponse {

@@ -12,7 +12,7 @@ var HyperLogLogExistError = errors.New("hyper log log exist, please delete it or
 
 const hyperLogLogKeyTemplate = "h/%s"
 
-func HLLCreate(key []byte, sync bool) (bool, error) {
+func HLLCreate(key []byte) (bool, error) {
 	lock(LHyperLogLog, key)
 	defer unlock(LHyperLogLog, key)
 
@@ -31,14 +31,14 @@ func HLLCreate(key []byte, sync bool) (bool, error) {
 		return false, e
 	}
 
-	return store.Set(hyperLogLogKey, value, sync)
+	return store.Set(hyperLogLogKey, value)
 }
 
-func HLLDel(key []byte, sync bool) (bool, error) {
-	return store.Del(generateHyperLogLogKey(key), sync)
+func HLLDel(key []byte) (bool, error) {
+	return store.Del(generateHyperLogLogKey(key))
 }
 
-func HLLAdd(key []byte, values [][]byte, sync bool) (bool, error) {
+func HLLAdd(key []byte, values [][]byte) (bool, error) {
 	lock(LHyperLogLog, key)
 	defer unlock(LHyperLogLog, key)
 
@@ -63,7 +63,7 @@ func HLLAdd(key []byte, values [][]byte, sync bool) (bool, error) {
 	if e != nil {
 		return false, e
 	}
-	return store.Set(generateHyperLogLogKey(key), value, sync)
+	return store.Set(generateHyperLogLogKey(key), value)
 }
 
 func HLLCount(key []byte) (uint32, error) {

@@ -11,12 +11,12 @@ type SetServer struct {
 }
 
 func (server *SetServer) SPush(_ context.Context, request *pb.SPushRequest) (*pb.SPushResponse, error) {
-	res, err := service.SPush(request.Key, request.Values, request.Sync)
+	res, err := service.SPush(request.Key, request.Values)
 	return &pb.SPushResponse{Success: res}, err
 }
 
 func (server *SetServer) SPop(_ context.Context, request *pb.SPopRequest) (*pb.SPopResponse, error) {
-	res, err := service.SPop(request.Key, request.Values, request.Sync)
+	res, err := service.SPop(request.Key, request.Values)
 	return &pb.SPopResponse{Success: res}, err
 }
 
@@ -26,7 +26,7 @@ func (server *SetServer) SExist(_ context.Context, request *pb.SExistRequest) (*
 }
 
 func (server *SetServer) SDel(_ context.Context, request *pb.SDelRequest) (*pb.SDelResponse, error) {
-	res, err := service.SDel(request.Key, request.Sync)
+	res, err := service.SDel(request.Key)
 	return &pb.SDelResponse{Success: res}, err
 }
 

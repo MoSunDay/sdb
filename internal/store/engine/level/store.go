@@ -26,8 +26,8 @@ func NewLevelStore() *LevelStore {
 	return &LevelStore{db: db}
 }
 
-func (store *LevelStore) Set(key []byte, value []byte, sync bool) (bool, error) {
-	err := store.db.Put(key, value, &opt.WriteOptions{Sync: sync})
+func (store *LevelStore) Set(key []byte, value []byte) (bool, error) {
+	err := store.db.Put(key, value, &opt.WriteOptions{Sync: true})
 	if err != nil {
 		return false, err
 	}
@@ -45,8 +45,8 @@ func (store *LevelStore) Get(key []byte) ([]byte, error) {
 	return value, err
 }
 
-func (store *LevelStore) Del(key []byte, sync bool) (bool, error) {
-	if err := store.db.Delete(key, &opt.WriteOptions{Sync: sync}); err != nil {
+func (store *LevelStore) Del(key []byte) (bool, error) {
+	if err := store.db.Delete(key, &opt.WriteOptions{Sync: true}); err != nil {
 		return false, nil
 	}
 	return true, nil

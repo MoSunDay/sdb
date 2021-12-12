@@ -23,8 +23,8 @@ func NewPebbleStore() *PebbleStore {
 	return &PebbleStore{db: db}
 }
 
-func (store *PebbleStore) Set(key []byte, value []byte, sync bool) (bool, error) {
-	err := store.db.Set(key, value, &pebble.WriteOptions{Sync: sync})
+func (store *PebbleStore) Set(key []byte, value []byte) (bool, error) {
+	err := store.db.Set(key, value, pebble.Sync)
 	if err != nil {
 		return false, err
 	}
@@ -45,8 +45,8 @@ func (store *PebbleStore) Get(key []byte) ([]byte, error) {
 	return value, err
 }
 
-func (store *PebbleStore) Del(key []byte, sync bool) (bool, error) {
-	if err := store.db.Delete(key, &pebble.WriteOptions{Sync: sync}); err != nil {
+func (store *PebbleStore) Del(key []byte) (bool, error) {
+	if err := store.db.Delete(key, pebble.Sync); err != nil {
 		return false, nil
 	}
 	return true, nil

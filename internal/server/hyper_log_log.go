@@ -11,17 +11,17 @@ type HyperLogLogServer struct {
 }
 
 func (server *HyperLogLogServer) HLLCreate(_ context.Context, request *pb.HLLCreateRequest) (*pb.HLLCreateResponse, error) {
-	res, err := service.HLLCreate(request.Key, request.Sync)
+	res, err := service.HLLCreate(request.Key)
 	return &pb.HLLCreateResponse{Success: res}, err
 }
 
 func (server *HyperLogLogServer) HLLDel(_ context.Context, request *pb.HLLDelRequest) (*pb.HLLDelResponse, error) {
-	res, err := service.HLLDel(request.Key, request.Sync)
+	res, err := service.HLLDel(request.Key)
 	return &pb.HLLDelResponse{Success: res}, err
 }
 
 func (server *HyperLogLogServer) HLLAdd(_ context.Context, request *pb.HLLAddRequest) (*pb.HLLAddResponse, error) {
-	res, err := service.HLLAdd(request.Key, request.Values, request.Sync)
+	res, err := service.HLLAdd(request.Key, request.Values)
 	return &pb.HLLAddResponse{Success: res}, err
 }
 

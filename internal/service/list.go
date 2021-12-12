@@ -15,7 +15,7 @@ const listKeyTemplate = listKeyPrefixTemplate + "/%d"
 const listIdKeyPrefixTemplate = "li/%s/%s"
 const listIdKeyTemplate = listIdKeyPrefixTemplate + "/%d"
 
-func LPush(key []byte, values [][]byte, sync bool) (bool, error) {
+func LPush(key []byte, values [][]byte) (bool, error) {
 	lock(LList, key)
 	defer unlock(LList, key)
 
@@ -28,10 +28,10 @@ func LPush(key []byte, values [][]byte, sync bool) (bool, error) {
 		batch.Set(generateListIdKey(key, value, id), value)
 	}
 
-	return batch.Commit(sync)
+	return batch.Commit()
 }
 
-func LPop(key []byte, values [][]byte, sync bool) (bool, error) {
+func LPop(key []byte, values [][]byte) (bool, error) {
 	lock(LList, key)
 	defer unlock(LList, key)
 
@@ -51,7 +51,7 @@ func LPop(key []byte, values [][]byte, sync bool) (bool, error) {
 			})
 	}
 
-	return batch.Commit(sync)
+	return batch.Commit()
 }
 
 func LRange(key []byte, offset int32, limit int32) ([][]byte, error) {
@@ -85,7 +85,7 @@ func LExist(key []byte, values [][]byte) ([]bool, error) {
 	return res, nil
 }
 
-func LDel(key []byte, sync bool) (bool, error) {
+func LDel(key []byte) (bool, error) {
 	lock(LList, key)
 	defer unlock(LList, key)
 
@@ -104,7 +104,7 @@ func LDel(key []byte, sync bool) (bool, error) {
 				})
 		})
 
-	return batch.Commit(sync)
+	return batch.Commit()
 }
 
 func LCount(key []byte) (int32, error) {

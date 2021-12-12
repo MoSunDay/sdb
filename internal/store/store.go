@@ -29,16 +29,16 @@ func init() {
 	}
 }
 
-func Set(key []byte, value []byte, sync bool) (bool, error) {
-	return store.Set(key, value, sync)
+func Set(key []byte, value []byte) (bool, error) {
+	return store.Set(key, value)
 }
 
 func Get(key []byte) ([]byte, error) {
 	return store.Get(key)
 }
 
-func Del(key []byte, sync bool) (bool, error) {
-	return store.Del(key, sync)
+func Del(key []byte) (bool, error) {
+	return store.Del(key)
 }
 
 func NewBatch() engine.Batch {

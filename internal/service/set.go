@@ -9,7 +9,7 @@ import (
 const setKeyPrefixTemplate = "s/%s"
 const setKeyTemplate = setKeyPrefixTemplate + "/%s"
 
-func SPush(key []byte, values [][]byte, sync bool) (bool, error) {
+func SPush(key []byte, values [][]byte) (bool, error) {
 	lock(LSet, key)
 	defer unlock(LSet, key)
 
@@ -20,10 +20,10 @@ func SPush(key []byte, values [][]byte, sync bool) (bool, error) {
 		batch.Set(generateSetKey(key, value), value)
 	}
 
-	return batch.Commit(sync)
+	return batch.Commit()
 }
 
-func SPop(key []byte, values [][]byte, sync bool) (bool, error) {
+func SPop(key []byte, values [][]byte) (bool, error) {
 	lock(LSet, key)
 	defer unlock(LSet, key)
 
@@ -34,7 +34,7 @@ func SPop(key []byte, values [][]byte, sync bool) (bool, error) {
 		batch.Del(generateSetKey(key, value))
 	}
 
-	return batch.Commit(sync)
+	return batch.Commit()
 }
 
 func SExist(key []byte, values [][]byte) ([]bool, error) {
@@ -49,7 +49,7 @@ func SExist(key []byte, values [][]byte) ([]bool, error) {
 	return res, nil
 }
 
-func SDel(key []byte, sync bool) (bool, error) {
+func SDel(key []byte) (bool, error) {
 	lock(LSet, key)
 	defer unlock(LSet, key)
 
@@ -61,7 +61,7 @@ func SDel(key []byte, sync bool) (bool, error) {
 			batch.Del(key)
 		})
 
-	return batch.Commit(sync)
+	return batch.Commit()
 }
 
 func SCount(key []byte) (int32, error) {

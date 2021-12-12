@@ -3,9 +3,9 @@ package service
 import (
 	"errors"
 	"fmt"
-	"github.com/yemingfeng/sdb/internal/store"
 	"github.com/devopsfaith/bloomfilter"
 	baseBloomfilter "github.com/devopsfaith/bloomfilter/bloomfilter"
+	"github.com/yemingfeng/sdb/internal/store"
 )
 
 var NotFoundBloomFilterError = errors.New("not found bloom filter, please create it")
@@ -13,7 +13,7 @@ var BloomFilterExistError = errors.New("bloom filter exist, please delete it or 
 
 const bloomFilterKeyTemplate = "b/%s"
 
-func BFCreate(key []byte, n uint32, p float64, sync bool) (bool, error) {
+func BFCreate(key []byte, n uint32, p float64) (bool, error) {
 	lock(LBloomFilter, key)
 	defer unlock(LBloomFilter, key)
 
@@ -33,14 +33,14 @@ func BFCreate(key []byte, n uint32, p float64, sync bool) (bool, error) {
 		return false, nil
 	}
 
-	return store.Set(bloomFilterKey, value, sync)
+	return store.Set(bloomFilterKey, value)
 }
 
-func BFDel(key []byte, sync bool) (bool, error) {
-	return store.Del(generateBloomFilterKey(key), sync)
+func BFDel(key []byte) (bool, error) {
+	return store.Del(generateBloomFilterKey(key))
 }
 
-func BFAdd(key []byte, values [][]byte, sync bool) (bool, error) {
+func BFAdd(key []byte, values [][]byte) (bool, error) {
 	lock(LBloomFilter, key)
 	defer unlock(LBloomFilter, key)
 
@@ -63,7 +63,7 @@ func BFAdd(key []byte, values [][]byte, sync bool) (bool, error) {
 	}
 
 	value, err = bloomFilter.MarshalBinary()
-	return store.Set(bloomFilterKey, value, sync)
+	return store.Set(bloomFilterKey, value)
 }
 
 func BFExist(key []byte, values [][]byte) ([]bool, error) {

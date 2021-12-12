@@ -16,7 +16,7 @@ func (batch *BadgerBatch) Del(key []byte) {
 	_ = batch.batch.Delete(key)
 }
 
-func (batch *BadgerBatch) Commit(_ bool) (bool, error) {
+func (batch *BadgerBatch) Commit() (bool, error) {
 	if err := batch.batch.Flush(); err != nil {
 		return false, err
 	}

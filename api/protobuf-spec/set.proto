@@ -6,7 +6,6 @@ option go_package = "pkg/pb";
 message SPushRequest {
   bytes key = 1;
   repeated bytes values = 2;
-  bool sync = 100;
 }
 
 message SPushResponse {
@@ -16,7 +15,6 @@ message SPushResponse {
 message SPopRequest {
   bytes key = 1;
   repeated bytes values = 2;
-  bool sync = 100;
 }
 
 message SPopResponse {
@@ -34,7 +32,6 @@ message SExistResponse {
 
 message SDelRequest {
   bytes key = 1;
-  bool sync = 100;
 }
 
 message SDelResponse {

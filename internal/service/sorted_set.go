@@ -16,7 +16,7 @@ const sortedSetScoreKeyTemplate = sortedSetScoreKeyPrefixTemplate + "/%s"
 const sortedSetTupleKeyPrefixTemplate = "z/%s"
 const sortedSetTupleKeyTemplate = sortedSetTupleKeyPrefixTemplate + "/%s/%s"
 
-func ZPush(key []byte, tuples []*pb.Tuple, sync bool) (bool, error) {
+func ZPush(key []byte, tuples []*pb.Tuple) (bool, error) {
 	lock(LSortedSet, key)
 	defer unlock(LSortedSet, key)
 
@@ -45,10 +45,10 @@ func ZPush(key []byte, tuples []*pb.Tuple, sync bool) (bool, error) {
 		batch.Set(generateSortedSetTupleKey(key, tuple.Score, tuple.Value), tuple.Value)
 	}
 
-	return batch.Commit(sync)
+	return batch.Commit()
 }
 
-func ZPop(key []byte, values [][]byte, sync bool) (bool, error) {
+func ZPop(key []byte, values [][]byte) (bool, error) {
 	lock(LSortedSet, key)
 	defer unlock(LSortedSet, key)
 
@@ -70,7 +70,7 @@ func ZPop(key []byte, values [][]byte, sync bool) (bool, error) {
 		}
 	}
 
-	return batch.Commit(sync)
+	return batch.Commit()
 }
 
 func ZRange(key []byte, offset int32, limit int32) ([]*pb.Tuple, error) {
@@ -101,7 +101,7 @@ func ZExist(key []byte, values [][]byte) ([]bool, error) {
 	return res, nil
 }
 
-func ZDel(key []byte, sync bool) (bool, error) {
+func ZDel(key []byte) (bool, error) {
 	lock(LSortedSet, key)
 	defer unlock(LSortedSet, key)
 
@@ -118,7 +118,7 @@ func ZDel(key []byte, sync bool) (bool, error) {
 			batch.Del(key)
 		})
 
-	return batch.Commit(sync)
+	return batch.Commit()
 }
 
 func ZCount(key []byte) (int32, error) {
