@@ -757,6 +757,39 @@
         ]
       }
     },
+    "/v1/setnx": {
+      "post": {
+        "summary": "string 类型的存储",
+        "operationId": "SDB_Set2",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoSetResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/protoSetRequest"
+            }
+          }
+        ],
+        "tags": [
+          "SDB"
+        ]
+      }
+    },
     "/v1/z-count": {
       "post": {
         "operationId": "SDB_ZCount",
@@ -1440,6 +1473,14 @@
       }
     },
     "protoSPushResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "protoSetNXResponse": {
       "type": "object",
       "properties": {
         "success": {

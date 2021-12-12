@@ -9,6 +9,24 @@ import (
 const stringKeyPrefixTemplate = "s/%s"
 
 func Set(key []byte, value []byte) (bool, error) {
+	lock(LString, key)
+	defer unlock(LString, key)
+
+	return store.Set(generateStringKey(key), value)
+}
+
+func SetNX(key []byte, value []byte) (bool, error) {
+	lock(LString, key)
+	defer unlock(LString, key)
+
+	stringKey := generateStringKey(key)
+	exist, err := store.Get(stringKey)
+	if err != nil {
+		return false, err
+	}
+	if len(exist) > 0 {
+		return false, err
+	}
 	return store.Set(generateStringKey(key), value)
 }
 

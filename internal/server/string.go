@@ -15,6 +15,11 @@ func (server *StringServer) Set(_ context.Context, request *pb.SetRequest) (*pb.
 	return &pb.SetResponse{Success: res}, err
 }
 
+func (server *StringServer) SetNX(_ context.Context, request *pb.SetNXRequest) (*pb.SetNXResponse, error) {
+	res, err := service.SetNX(request.Key, request.Value)
+	return &pb.SetNXResponse{Success: res}, err
+}
+
 func (server *StringServer) Get(_ context.Context, request *pb.GetRequest) (*pb.GetResponse, error) {
 	value, err := service.Get(request.Key)
 	return &pb.GetResponse{Value: value}, err

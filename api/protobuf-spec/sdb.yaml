@@ -6,6 +6,9 @@ http:
     - selector: proto.SDB.Set
       post: /v1/set
       body: "*"
+    - selector: proto.SDB.Set
+      post: /v1/setnx
+      body: "*"
     - selector: proto.SDB.Get
       post: /v1/get
       body: "*"
