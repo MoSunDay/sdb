@@ -45,6 +45,34 @@
 
 ------
 
+### 规划
+
+- 实现更多的 api (2021.12.30)
+    - String
+        - [x] SetNX(key, value)
+        - [ ] GetSet(key, value)
+        - [ ] MGet(keys)
+        - [ ] SetBit(key, offset, value)
+        - [ ] GetBit(key, offset)
+        - [ ] MSet(keys, values)
+    - List
+        - [ ] LIndex(key, offset)
+        - [ ] LMembers(key)
+        - [ ] LRandomMembers(key, count)
+    - Set
+        - [ ] SMembers(key)
+        - [ ] SRandomMembers(key, count)
+- 支持更丰富的数据结构 (2021.01.20)
+    - Hash
+    - geo hash
+    - 倒排索引
+    - 向量检索
+    - 布尔表达式
+- 集群方案设计 (2021.01.30)
+- 搭建 admin web ui
+
+------
+
 ### 快速使用
 
 #### 服务端使用
@@ -122,7 +150,7 @@ server.slow_query_threshold | 慢查询记录的阈值，单位为 ms | 100
 **测试结果： peek QPS > 12k，avg QPS > 7k，set avg time < 70ms，get avg time <
 0.2ms**
 
-<img src="https://github.com/yemingfeng/sdb/raw/master/docs/benchmark.png" width=80% />
+<img alt="benchmark" src="https://github.com/yemingfeng/sdb/raw/master/docs/benchmark.png" width=80% />
 
 ------
 
@@ -351,21 +379,6 @@ grpc 是一个非常不错的选择，只需要使用 SDB proto 文件，就能�
 SDB 的集群方案其实是在规划中的，之前也考虑了 TiKV 集群方案和 Redis 集群方案。
 
 但目前 SDB 把注意力放在持久化、数据结构上。增加更多的数据结构，并将易用性做到极致。**之后再实现集群方案。**
-
-------
-
-### 规划
-
-- 支持更多的存储引擎
-    - LSM
-    - B+ Tree
-- 支持对现有数据结构更多的操作
-- 支持更丰富的数据结构
-    - geo hash
-    - 倒排索引
-    - 向量检索
-    - 广告定向
-- 搭建 admin web ui
 
 ------
 
