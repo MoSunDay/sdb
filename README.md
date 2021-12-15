@@ -47,7 +47,7 @@
 
 ### 规划
 
-- [ ] 编写接口文档
+- [x] 编写接口文档
 - [ ] 实现更多的 api (2021.12.30)
     - [x] String
         - [x] SetNX(key, value)
@@ -119,6 +119,7 @@ func main() {
 - [set 操作](https://github.com/yemingfeng/sdb/blob/master/examples/set.go)
 - [sorted set 操作](https://github.com/yemingfeng/sdb/blob/master/examples/sorted_set.go)
 - [bloom filter 操作](https://github.com/yemingfeng/sdb/blob/master/examples/bloom_filter.go)
+- [hyper log log 操作](https://github.com/yemingfeng/sdb/blob/master/examples/hyper_log_log.go)
 - [pub sub 操作](https://github.com/yemingfeng/sdb/blob/master/examples/pub_sub.go)
 
 ------
@@ -133,6 +134,80 @@ server.grpc_port | grpc 监听的端口 | 9000
 server.http_port | http 监控的端口，供 prometheus 使用 | 8081
 server.rate | 每秒 qps 的限制 | 30000
 server.slow_query_threshold | 慢查询记录的阈值，单位为 ms | 100
+
+------
+
+### 接口说明
+
+#### string
+
+接口 | 参数 | 描述
+---- | --- | ---
+Set | key, value | 设置 kv
+MSet | keys, values | 设置一组 kv
+SetNX | key, value | 当 key 不存在时，设置 value
+SetGet | key, value | 设置 kv，并返回原始值，当原始值不存在时，返回 nil
+Get | key | 获取 key 对应的 value
+MGet | keys | 获取一组 key 对应的 value
+Del | key | 删除一个 key
+Incr | key, delta | 对 key 进行加 delta 操作，如果 value 不为数字，则抛出异常。如果 value 不存在，则 value = delta
+
+#### list
+
+接口 | 参数 | 描述
+---- | --- | ---
+LPush | key, values | 把 values 追加到 key 数组后面
+LPop | keys, values | 删除 key 数组中的所有的 values 元素
+LRange | key, offset, limit | 遍历 key，从 0 开始。如果 offset = -1，则从后向前遍历
+LExist | key, values | 判断 values 是否存在 key 数组中
+LDel | key | 删除某个 key 数组
+LCount | key | 返回 key 数组中的元素个数，时间复杂度较高，不推荐使用
+
+#### set
+
+接口 | 参数 | 描述
+---- | --- | ---
+SPush | key, values | 把 values 加到 key 集合中
+SPop | keys, values | 删除 key 集合中的所有的 values 元素
+SExist | key, values | 判断 values 是否存在 key 集合中
+SDel | key | 删除某个 key 集合
+SCount | key | 返回 key 集合中的元素个数，时间复杂度较高，不推荐使用
+
+#### sorted set
+
+接口 | 参数 | 描述
+---- | --- | ---
+ZPush | key, tuples | 把 values 加到 key 有序集合中，按 tuple.score 从小到大排序
+ZPop | keys, values | 删除 key 有序集合中的所有的 values 元素
+ZRange | key, offset, limit | 按 tuple.score 遍历 key，从 score 最小的元素开始。如果 offset = -1，则从后向前遍历
+ZExist | key, values | 判断 values 是否存在 key 有序集合中
+ZDel | key | 删除某个 key 有序集合
+ZCount | key | 返回 key 有序集合中的元素个数，时间复杂度较高，不推荐使用
+
+#### bloom filter
+
+接口 | 参数 | 描述
+---- | --- | ---
+BFCreate | key, n, p | 创建 bloom filter，n 是元素个数，p 是误判率
+BFDel | key | 删除某个 key bloom filter
+BFAdd | key, values | 把 values 加入到 bloom filter 中。当 bloom filter 未创建时，将抛出异常
+BFExist | key, values | 判断 values 是否存在 key bloom filter 中
+
+#### hyper log log
+
+接口 | 参数 | 描述
+---- | --- | ---
+HLLCreate | key | 创建 hyper log log
+HLLDel | key | 删除某个 key hyper log log
+HLLAdd | key, values | 把 values 加入到 hyper log log 中。当 hyper log log 未创建时，将抛出异常
+HLLCount | key | 获取某个 hyper log log 的去重元素个数
+
+#### pub sub
+
+接口 | 参数 | 描述
+---- | --- | ---
+Subscribe | topic | 订阅某个 topic
+Publish | topic, payload | 向某个 topic 发布 payload
 
 ------
 

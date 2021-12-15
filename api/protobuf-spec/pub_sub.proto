@@ -20,11 +20,3 @@ message Message {
   bytes topic = 1;
   bytes payload = 2;
 }
-
-message UnSubscribeRequest {
-  bytes topic = 1;
-}
-
-message UnSubscribeResponse {
-  bool success = 1;
-}
