@@ -45,3 +45,11 @@ message SCountRequest {
 message SCountResponse {
   int32 count = 1;
 }
+
+message SMembersRequest {
+  bytes key = 1;
+}
+
+message SMembersResponse {
+  repeated bytes values = 1;
+}

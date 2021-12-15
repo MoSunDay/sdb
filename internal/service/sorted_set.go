@@ -130,6 +130,22 @@ func ZCount(key []byte) (int32, error) {
 	return count, nil
 }
 
+func ZMembers(key []byte) ([]*pb.Tuple, error) {
+	index := int32(0)
+	res := make([]*pb.Tuple, 0)
+	store.Iterate(&engine.PrefixIteratorOption{Prefix: generateSortedSetTupleKeyPrefix(key),
+		Offset: 0, Limit: math.MaxInt32},
+		func(key []byte, value []byte) {
+			// zs/{key}/{score}/{value} -> {value}
+			infos := strings.Split(string(key), "/")
+			scoreStr := infos[2]
+			score, _ := strconv.ParseFloat(scoreStr, 64)
+			res = append(res, &pb.Tuple{Score: score, Value: value})
+			index++
+		})
+	return res[0:index], nil
+}
+
 func generateSortedSetScoreKey(key []byte, value []byte) []byte {
 	return []byte(fmt.Sprintf(sortedSetScoreKeyTemplate, key, value))
 }

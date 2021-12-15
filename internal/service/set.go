@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/yemingfeng/sdb/internal/store"
 	"github.com/yemingfeng/sdb/internal/store/engine"
+	"math"
 )
 
 const setKeyPrefixTemplate = "s/%s"
@@ -71,6 +72,18 @@ func SCount(key []byte) (int32, error) {
 			count = count + 1
 		})
 	return count, nil
+}
+
+func SMembers(key []byte) ([][]byte, error) {
+	index := int32(0)
+	res := make([][]byte, 0)
+	store.Iterate(&engine.PrefixIteratorOption{
+		Prefix: generateStringKey(key), Offset: 0, Limit: math.MaxInt32},
+		func(key []byte, value []byte) {
+			res = append(res, value)
+			index++
+		})
+	return res[0:index], nil
 }
 
 func generateSetPrefixKey(key []byte) []byte {

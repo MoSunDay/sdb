@@ -60,3 +60,11 @@ message ZCountRequest {
 message ZCountResponse {
   int32 count = 1;
 }
+
+message ZMembersRequest {
+  bytes key = 1;
+}
+
+message ZMembersResponse {
+  repeated Tuple tuples = 1;
+}

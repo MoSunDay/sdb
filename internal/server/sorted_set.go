@@ -39,3 +39,8 @@ func (server *SetServer) ZCount(_ context.Context, request *pb.ZCountRequest) (*
 	res, err := service.ZCount(request.Key)
 	return &pb.ZCountResponse{Count: res}, err
 }
+
+func (server *SetServer) ZMembers(_ context.Context, request *pb.ZMembersRequest) (*pb.ZMembersResponse, error) {
+	res, err := service.ZMembers(request.Key)
+	return &pb.ZMembersResponse{Tuples: res}, err
+}

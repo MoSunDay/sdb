@@ -624,6 +624,100 @@ func (x *LCountResponse) GetCount() int32 {
 	return 0
 }
 
+type LMembersRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Key []byte `protobuf:"bytes,1,opt,name=key,proto3" json:"key,omitempty"`
+}
+
+func (x *LMembersRequest) Reset() {
+	*x = LMembersRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_protobuf_spec_list_proto_msgTypes[12]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *LMembersRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*LMembersRequest) ProtoMessage() {}
+
+func (x *LMembersRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_protobuf_spec_list_proto_msgTypes[12]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use LMembersRequest.ProtoReflect.Descriptor instead.
+func (*LMembersRequest) Descriptor() ([]byte, []int) {
+	return file_api_protobuf_spec_list_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *LMembersRequest) GetKey() []byte {
+	if x != nil {
+		return x.Key
+	}
+	return nil
+}
+
+type LMembersResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Values [][]byte `protobuf:"bytes,1,rep,name=values,proto3" json:"values,omitempty"`
+}
+
+func (x *LMembersResponse) Reset() {
+	*x = LMembersResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_protobuf_spec_list_proto_msgTypes[13]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *LMembersResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*LMembersResponse) ProtoMessage() {}
+
+func (x *LMembersResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_api_protobuf_spec_list_proto_msgTypes[13]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use LMembersResponse.ProtoReflect.Descriptor instead.
+func (*LMembersResponse) Descriptor() ([]byte, []int) {
+	return file_api_protobuf_spec_list_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *LMembersResponse) GetValues() [][]byte {
+	if x != nil {
+		return x.Values
+	}
+	return nil
+}
+
 var File_api_protobuf_spec_list_proto protoreflect.FileDescriptor
 
 var file_api_protobuf_spec_list_proto_rawDesc = []byte{
@@ -665,8 +759,13 @@ var file_api_protobuf_spec_list_proto_rawDesc = []byte{
 	0x18, 0x01, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x22, 0x26, 0x0a, 0x0e, 0x4c,
 	0x43, 0x6f, 0x75, 0x6e, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x14, 0x0a,
 	0x05, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x05, 0x63, 0x6f,
-	0x75, 0x6e, 0x74, 0x42, 0x08, 0x5a, 0x06, 0x70, 0x6b, 0x67, 0x2f, 0x70, 0x62, 0x62, 0x06, 0x70,
-	0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x75, 0x6e, 0x74, 0x22, 0x23, 0x0a, 0x0f, 0x4c, 0x4d, 0x65, 0x6d, 0x62, 0x65, 0x72, 0x73, 0x52,
+	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x01, 0x20,
+	0x01, 0x28, 0x0c, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x22, 0x2a, 0x0a, 0x10, 0x4c, 0x4d, 0x65, 0x6d,
+	0x62, 0x65, 0x72, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x16, 0x0a, 0x06,
+	0x76, 0x61, 0x6c, 0x75, 0x65, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0c, 0x52, 0x06, 0x76, 0x61,
+	0x6c, 0x75, 0x65, 0x73, 0x42, 0x08, 0x5a, 0x06, 0x70, 0x6b, 0x67, 0x2f, 0x70, 0x62, 0x62, 0x06,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -681,20 +780,22 @@ func file_api_protobuf_spec_list_proto_rawDescGZIP() []byte {
 	return file_api_protobuf_spec_list_proto_rawDescData
 }
 
-var file_api_protobuf_spec_list_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
+var file_api_protobuf_spec_list_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
 var file_api_protobuf_spec_list_proto_goTypes = []interface{}{
-	(*LPushRequest)(nil),   // 0: proto.LPushRequest
-	(*LPushResponse)(nil),  // 1: proto.LPushResponse
-	(*LPopRequest)(nil),    // 2: proto.LPopRequest
-	(*LPopResponse)(nil),   // 3: proto.LPopResponse
-	(*LRangeRequest)(nil),  // 4: proto.LRangeRequest
-	(*LRangeResponse)(nil), // 5: proto.LRangeResponse
-	(*LExistRequest)(nil),  // 6: proto.LExistRequest
-	(*LExistResponse)(nil), // 7: proto.LExistResponse
-	(*LDelRequest)(nil),    // 8: proto.LDelRequest
-	(*LDelResponse)(nil),   // 9: proto.LDelResponse
-	(*LCountRequest)(nil),  // 10: proto.LCountRequest
-	(*LCountResponse)(nil), // 11: proto.LCountResponse
+	(*LPushRequest)(nil),     // 0: proto.LPushRequest
+	(*LPushResponse)(nil),    // 1: proto.LPushResponse
+	(*LPopRequest)(nil),      // 2: proto.LPopRequest
+	(*LPopResponse)(nil),     // 3: proto.LPopResponse
+	(*LRangeRequest)(nil),    // 4: proto.LRangeRequest
+	(*LRangeResponse)(nil),   // 5: proto.LRangeResponse
+	(*LExistRequest)(nil),    // 6: proto.LExistRequest
+	(*LExistResponse)(nil),   // 7: proto.LExistResponse
+	(*LDelRequest)(nil),      // 8: proto.LDelRequest
+	(*LDelResponse)(nil),     // 9: proto.LDelResponse
+	(*LCountRequest)(nil),    // 10: proto.LCountRequest
+	(*LCountResponse)(nil),   // 11: proto.LCountResponse
+	(*LMembersRequest)(nil),  // 12: proto.LMembersRequest
+	(*LMembersResponse)(nil), // 13: proto.LMembersResponse
 }
 var file_api_protobuf_spec_list_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -854,6 +955,30 @@ func file_api_protobuf_spec_list_proto_init() {
 				return nil
 			}
 		}
+		file_api_protobuf_spec_list_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*LMembersRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_protobuf_spec_list_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*LMembersResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -861,7 +986,7 @@ func file_api_protobuf_spec_list_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_api_protobuf_spec_list_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   12,
+			NumMessages:   14,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

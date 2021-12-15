@@ -46,6 +46,9 @@ http:
     - selector: proto.SDB.LCount
       post: /v1/l-count
       body: "*"
+    - selector: proto.SDB.LMembers
+      post: /v1/l-members
+      body: "*"
 
     - selector: proto.SDB.SPush
       post: /v1/s-push
@@ -61,6 +64,9 @@ http:
       body: "*"
     - selector: proto.SDB.SCount
       post: /v1/s-count
+      body: "*"
+    - selector: proto.SDB.SMembers
+      post: /v1/s-members
       body: "*"
 
     - selector: proto.SDB.ZPush
@@ -80,6 +86,9 @@ http:
       body: "*"
     - selector: proto.SDB.ZCount
       post: /v1/z-count
+      body: "*"
+    - selector: proto.SDB.ZMembers
+      post: /v1/z-members
       body: "*"
 
     - selector: proto.SDB.BFCreate

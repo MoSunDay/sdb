@@ -34,3 +34,8 @@ func (server *SetServer) SCount(_ context.Context, request *pb.SCountRequest) (*
 	res, err := service.SCount(request.Key)
 	return &pb.SCountResponse{Count: res}, err
 }
+
+func (server *SetServer) SMembers(_ context.Context, request *pb.SMembersRequest) (*pb.SMembersResponse, error) {
+	res, err := service.SMembers(request.Key)
+	return &pb.SMembersResponse{Values: res}, err
+}

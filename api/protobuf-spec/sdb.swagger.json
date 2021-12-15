@@ -466,6 +466,38 @@
         ]
       }
     },
+    "/v1/l-members": {
+      "post": {
+        "operationId": "SDB_LMembers",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoLMembersResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/protoLMembersRequest"
+            }
+          }
+        ],
+        "tags": [
+          "SDB"
+        ]
+      }
+    },
     "/v1/l-pop": {
       "post": {
         "operationId": "SDB_LPop",
@@ -715,6 +747,38 @@
             "required": true,
             "schema": {
               "$ref": "#/definitions/protoSExistRequest"
+            }
+          }
+        ],
+        "tags": [
+          "SDB"
+        ]
+      }
+    },
+    "/v1/s-members": {
+      "post": {
+        "operationId": "SDB_SMembers",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoSMembersResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/protoSMembersRequest"
             }
           }
         ],
@@ -973,6 +1037,38 @@
             "required": true,
             "schema": {
               "$ref": "#/definitions/protoZExistRequest"
+            }
+          }
+        ],
+        "tags": [
+          "SDB"
+        ]
+      }
+    },
+    "/v1/z-members": {
+      "post": {
+        "operationId": "SDB_ZMembers",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoZMembersResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/protoZMembersRequest"
             }
           }
         ],
@@ -1367,6 +1463,27 @@
         }
       }
     },
+    "protoLMembersRequest": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "protoLMembersResponse": {
+      "type": "object",
+      "properties": {
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        }
+      }
+    },
     "protoLPopRequest": {
       "type": "object",
       "properties": {
@@ -1578,6 +1695,27 @@
         }
       }
     },
+    "protoSMembersRequest": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "protoSMembersResponse": {
+      "type": "object",
+      "properties": {
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        }
+      }
+    },
     "protoSPopRequest": {
       "type": "object",
       "properties": {
@@ -1764,6 +1902,26 @@
           "type": "array",
           "items": {
             "type": "boolean"
+          }
+        }
+      }
+    },
+    "protoZMembersRequest": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "protoZMembersResponse": {
+      "type": "object",
+      "properties": {
+        "tuples": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protoTuple"
           }
         }
       }

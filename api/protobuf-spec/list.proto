@@ -55,3 +55,11 @@ message LCountRequest {
 message LCountResponse {
   int32 count = 1;
 }
+
+message LMembersRequest {
+  bytes key = 1;
+}
+
+message LMembersResponse {
+  repeated bytes values = 1;
+}

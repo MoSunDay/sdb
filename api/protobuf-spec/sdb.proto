@@ -29,6 +29,7 @@ service SDB {
   rpc LExist(LExistRequest) returns (LExistResponse) {}
   rpc LDel(LDelRequest) returns (LDelResponse) {}
   rpc LCount(LCountRequest) returns (LCountResponse) {}
+  rpc LMembers(LMembersRequest) returns (LMembersResponse) {}
 
   // set 类型的存储
   rpc SPush(SPushRequest) returns (SPushResponse) {}
@@ -36,6 +37,7 @@ service SDB {
   rpc SExist(SExistRequest) returns (SExistResponse) {}
   rpc SDel(SDelRequest) returns (SDelResponse) {}
   rpc SCount(SCountRequest) returns (SCountResponse) {}
+  rpc SMembers(SMembersRequest) returns (SMembersResponse) {}
 
   // sorted set 类型的存储
   rpc ZPush(ZPushRequest) returns (ZPushResponse) {}
@@ -44,6 +46,7 @@ service SDB {
   rpc ZExist(ZExistRequest) returns (ZExistResponse) {}
   rpc ZDel(ZDelRequest) returns (ZDelResponse) {}
   rpc ZCount(ZCountRequest) returns (ZCountResponse) {}
+  rpc ZMembers(ZMembersRequest) returns (ZMembersResponse) {}
 
   // bloom filter 类型的存储
   rpc BFCreate(BFCreateRequest) returns (BFCreateResponse) {}

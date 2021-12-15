@@ -27,6 +27,10 @@ func main() {
 		&pb.SPushRequest{Key: []byte("h"), Values: values})
 	log.Printf("spushResponse: %+v, err: %+v", spushResponse, err)
 
+	smembersResponse, _ := c.SMembers(context.Background(),
+		&pb.SMembersRequest{Key: []byte("h")})
+	log.Printf("smembersResponse: %+v, err: %+v", smembersResponse, err)
+
 	// 发起 spop 请求
 	values = make([][]byte, 50)
 	for i := 0; i < 50; i++ {

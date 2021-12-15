@@ -34,12 +34,14 @@ type SDBClient interface {
 	LExist(ctx context.Context, in *LExistRequest, opts ...grpc.CallOption) (*LExistResponse, error)
 	LDel(ctx context.Context, in *LDelRequest, opts ...grpc.CallOption) (*LDelResponse, error)
 	LCount(ctx context.Context, in *LCountRequest, opts ...grpc.CallOption) (*LCountResponse, error)
+	LMembers(ctx context.Context, in *LMembersRequest, opts ...grpc.CallOption) (*LMembersResponse, error)
 	// set 类型的存储
 	SPush(ctx context.Context, in *SPushRequest, opts ...grpc.CallOption) (*SPushResponse, error)
 	SPop(ctx context.Context, in *SPopRequest, opts ...grpc.CallOption) (*SPopResponse, error)
 	SExist(ctx context.Context, in *SExistRequest, opts ...grpc.CallOption) (*SExistResponse, error)
 	SDel(ctx context.Context, in *SDelRequest, opts ...grpc.CallOption) (*SDelResponse, error)
 	SCount(ctx context.Context, in *SCountRequest, opts ...grpc.CallOption) (*SCountResponse, error)
+	SMembers(ctx context.Context, in *SMembersRequest, opts ...grpc.CallOption) (*SMembersResponse, error)
 	// sorted set 类型的存储
 	ZPush(ctx context.Context, in *ZPushRequest, opts ...grpc.CallOption) (*ZPushResponse, error)
 	ZPop(ctx context.Context, in *ZPopRequest, opts ...grpc.CallOption) (*ZPopResponse, error)
@@ -47,6 +49,7 @@ type SDBClient interface {
 	ZExist(ctx context.Context, in *ZExistRequest, opts ...grpc.CallOption) (*ZExistResponse, error)
 	ZDel(ctx context.Context, in *ZDelRequest, opts ...grpc.CallOption) (*ZDelResponse, error)
 	ZCount(ctx context.Context, in *ZCountRequest, opts ...grpc.CallOption) (*ZCountResponse, error)
+	ZMembers(ctx context.Context, in *ZMembersRequest, opts ...grpc.CallOption) (*ZMembersResponse, error)
 	// bloom filter 类型的存储
 	BFCreate(ctx context.Context, in *BFCreateRequest, opts ...grpc.CallOption) (*BFCreateResponse, error)
 	BFDel(ctx context.Context, in *BFDelRequest, opts ...grpc.CallOption) (*BFDelResponse, error)
@@ -196,6 +199,15 @@ func (c *sDBClient) LCount(ctx context.Context, in *LCountRequest, opts ...grpc.
 	return out, nil
 }
 
+func (c *sDBClient) LMembers(ctx context.Context, in *LMembersRequest, opts ...grpc.CallOption) (*LMembersResponse, error) {
+	out := new(LMembersResponse)
+	err := c.cc.Invoke(ctx, "/proto.SDB/LMembers", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *sDBClient) SPush(ctx context.Context, in *SPushRequest, opts ...grpc.CallOption) (*SPushResponse, error) {
 	out := new(SPushResponse)
 	err := c.cc.Invoke(ctx, "/proto.SDB/SPush", in, out, opts...)
@@ -235,6 +247,15 @@ func (c *sDBClient) SDel(ctx context.Context, in *SDelRequest, opts ...grpc.Call
 func (c *sDBClient) SCount(ctx context.Context, in *SCountRequest, opts ...grpc.CallOption) (*SCountResponse, error) {
 	out := new(SCountResponse)
 	err := c.cc.Invoke(ctx, "/proto.SDB/SCount", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *sDBClient) SMembers(ctx context.Context, in *SMembersRequest, opts ...grpc.CallOption) (*SMembersResponse, error) {
+	out := new(SMembersResponse)
+	err := c.cc.Invoke(ctx, "/proto.SDB/SMembers", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -289,6 +310,15 @@ func (c *sDBClient) ZDel(ctx context.Context, in *ZDelRequest, opts ...grpc.Call
 func (c *sDBClient) ZCount(ctx context.Context, in *ZCountRequest, opts ...grpc.CallOption) (*ZCountResponse, error) {
 	out := new(ZCountResponse)
 	err := c.cc.Invoke(ctx, "/proto.SDB/ZCount", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *sDBClient) ZMembers(ctx context.Context, in *ZMembersRequest, opts ...grpc.CallOption) (*ZMembersResponse, error) {
+	out := new(ZMembersResponse)
+	err := c.cc.Invoke(ctx, "/proto.SDB/ZMembers", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -428,12 +458,14 @@ type SDBServer interface {
 	LExist(context.Context, *LExistRequest) (*LExistResponse, error)
 	LDel(context.Context, *LDelRequest) (*LDelResponse, error)
 	LCount(context.Context, *LCountRequest) (*LCountResponse, error)
+	LMembers(context.Context, *LMembersRequest) (*LMembersResponse, error)
 	// set 类型的存储
 	SPush(context.Context, *SPushRequest) (*SPushResponse, error)
 	SPop(context.Context, *SPopRequest) (*SPopResponse, error)
 	SExist(context.Context, *SExistRequest) (*SExistResponse, error)
 	SDel(context.Context, *SDelRequest) (*SDelResponse, error)
 	SCount(context.Context, *SCountRequest) (*SCountResponse, error)
+	SMembers(context.Context, *SMembersRequest) (*SMembersResponse, error)
 	// sorted set 类型的存储
 	ZPush(context.Context, *ZPushRequest) (*ZPushResponse, error)
 	ZPop(context.Context, *ZPopRequest) (*ZPopResponse, error)
@@ -441,6 +473,7 @@ type SDBServer interface {
 	ZExist(context.Context, *ZExistRequest) (*ZExistResponse, error)
 	ZDel(context.Context, *ZDelRequest) (*ZDelResponse, error)
 	ZCount(context.Context, *ZCountRequest) (*ZCountResponse, error)
+	ZMembers(context.Context, *ZMembersRequest) (*ZMembersResponse, error)
 	// bloom filter 类型的存储
 	BFCreate(context.Context, *BFCreateRequest) (*BFCreateResponse, error)
 	BFDel(context.Context, *BFDelRequest) (*BFDelResponse, error)
@@ -502,6 +535,9 @@ func (UnimplementedSDBServer) LDel(context.Context, *LDelRequest) (*LDelResponse
 func (UnimplementedSDBServer) LCount(context.Context, *LCountRequest) (*LCountResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LCount not implemented")
 }
+func (UnimplementedSDBServer) LMembers(context.Context, *LMembersRequest) (*LMembersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LMembers not implemented")
+}
 func (UnimplementedSDBServer) SPush(context.Context, *SPushRequest) (*SPushResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SPush not implemented")
 }
@@ -516,6 +552,9 @@ func (UnimplementedSDBServer) SDel(context.Context, *SDelRequest) (*SDelResponse
 }
 func (UnimplementedSDBServer) SCount(context.Context, *SCountRequest) (*SCountResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SCount not implemented")
+}
+func (UnimplementedSDBServer) SMembers(context.Context, *SMembersRequest) (*SMembersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SMembers not implemented")
 }
 func (UnimplementedSDBServer) ZPush(context.Context, *ZPushRequest) (*ZPushResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ZPush not implemented")
@@ -534,6 +573,9 @@ func (UnimplementedSDBServer) ZDel(context.Context, *ZDelRequest) (*ZDelResponse
 }
 func (UnimplementedSDBServer) ZCount(context.Context, *ZCountRequest) (*ZCountResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ZCount not implemented")
+}
+func (UnimplementedSDBServer) ZMembers(context.Context, *ZMembersRequest) (*ZMembersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ZMembers not implemented")
 }
 func (UnimplementedSDBServer) BFCreate(context.Context, *BFCreateRequest) (*BFCreateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BFCreate not implemented")
@@ -829,6 +871,24 @@ func _SDB_LCount_Handler(srv interface{}, ctx context.Context, dec func(interfac
 	return interceptor(ctx, in, info, handler)
 }
 
+func _SDB_LMembers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LMembersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SDBServer).LMembers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.SDB/LMembers",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SDBServer).LMembers(ctx, req.(*LMembersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _SDB_SPush_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SPushRequest)
 	if err := dec(in); err != nil {
@@ -915,6 +975,24 @@ func _SDB_SCount_Handler(srv interface{}, ctx context.Context, dec func(interfac
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(SDBServer).SCount(ctx, req.(*SCountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SDB_SMembers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SMembersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SDBServer).SMembers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.SDB/SMembers",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SDBServer).SMembers(ctx, req.(*SMembersRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1023,6 +1101,24 @@ func _SDB_ZCount_Handler(srv interface{}, ctx context.Context, dec func(interfac
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(SDBServer).ZCount(ctx, req.(*ZCountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SDB_ZMembers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ZMembersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SDBServer).ZMembers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.SDB/ZMembers",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SDBServer).ZMembers(ctx, req.(*ZMembersRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1274,6 +1370,10 @@ var SDB_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _SDB_LCount_Handler,
 		},
 		{
+			MethodName: "LMembers",
+			Handler:    _SDB_LMembers_Handler,
+		},
+		{
 			MethodName: "SPush",
 			Handler:    _SDB_SPush_Handler,
 		},
@@ -1292,6 +1392,10 @@ var SDB_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SCount",
 			Handler:    _SDB_SCount_Handler,
+		},
+		{
+			MethodName: "SMembers",
+			Handler:    _SDB_SMembers_Handler,
 		},
 		{
 			MethodName: "ZPush",
@@ -1316,6 +1420,10 @@ var SDB_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ZCount",
 			Handler:    _SDB_ZCount_Handler,
+		},
+		{
+			MethodName: "ZMembers",
+			Handler:    _SDB_ZMembers_Handler,
 		},
 		{
 			MethodName: "BFCreate",

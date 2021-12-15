@@ -26,6 +26,9 @@ func main() {
 				{Value: []byte("eee"), Score: 0.7},
 			}})
 	log.Printf("zpushResponse: %+v, err: %+v", zpushResponse, err)
+	zmembersResponse, _ := c.ZMembers(context.Background(),
+		&pb.ZMembersRequest{Key: []byte("h")})
+	log.Printf("zmembersResponse: %+v, err: %+v", zmembersResponse, err)
 	zrangeResponse, err := c.ZRange(context.Background(),
 		&pb.ZRangeRequest{Key: []byte("h"), Offset: 1, Limit: 100})
 	log.Printf("zrangeResponse: %+v, err: %+v", zrangeResponse, err)

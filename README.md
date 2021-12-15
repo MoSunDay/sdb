@@ -48,19 +48,18 @@
 ### 规划
 
 - [x] 编写接口文档
-- [ ] 实现更多的 api (2021.12.30)
+- [x] 实现更多的 api (2021.12.30)
     - [x] String
         - [x] SetNX
         - [x] GetSet
         - [x] MGet
         - [x] MSet
-    - [ ] List
-        - [ ] LIndex
-        - [ ] LMembers
-        - [ ] LRandomMembers
-    - [ ] Set
-        - [ ] SMembers
-        - [ ] SRandomMembers
+    - [x] List
+        - [x] LMembers
+    - [x] Set
+        - [x] SMembers
+    - [x] Sorted Set
+        - [x] ZMembers
 - [ ] 支持更丰富的数据结构 (2021.01.20)
     - [ ] Bitmap
     - [ ] Hash
@@ -158,10 +157,11 @@ Incr | key, delta | 对 key 进行加 delta 操作，如果 value 不为数字�
 ---- | --- | ---
 LPush | key, values | 把 values 追加到 key 数组后面
 LPop | keys, values | 删除 key 数组中的所有的 values 元素
-LRange | key, offset, limit | 遍历 key，从 0 开始。如果 offset = -1，则从后向前遍历
+LRange | key, offset, limit | 按数组顺序遍历 key，从 0 开始。如果 offset = -1，则从后向前遍历
 LExist | key, values | 判断 values 是否存在 key 数组中
 LDel | key | 删除某个 key 数组
 LCount | key | 返回 key 数组中的元素个数，时间复杂度较高，不推荐使用
+LMembers | key | 按数组顺利遍历 key。时间复杂度较高，不推荐使用
 
 #### set
 
@@ -172,6 +172,7 @@ SPop | keys, values | 删除 key 集合中的所有的 values 元素
 SExist | key, values | 判断 values 是否存在 key 集合中
 SDel | key | 删除某个 key 集合
 SCount | key | 返回 key 集合中的元素个数，时间复杂度较高，不推荐使用
+SMembers | key | 按 value 大小遍历 key。时间复杂度较高，不推荐使用
 
 #### sorted set
 
@@ -179,10 +180,11 @@ SCount | key | 返回 key 集合中的元素个数，时间复杂度较高，不
 ---- | --- | ---
 ZPush | key, tuples | 把 values 加到 key 有序集合中，按 tuple.score 从小到大排序
 ZPop | keys, values | 删除 key 有序集合中的所有的 values 元素
-ZRange | key, offset, limit | 按 tuple.score 遍历 key，从 score 最小的元素开始。如果 offset = -1，则从后向前遍历
+ZRange | key, offset, limit | 按 score 大小，从小到大遍历 key。如果 offset = -1，则按 score 从大到小开始遍历
 ZExist | key, values | 判断 values 是否存在 key 有序集合中
 ZDel | key | 删除某个 key 有序集合
 ZCount | key | 返回 key 有序集合中的元素个数，时间复杂度较高，不推荐使用
+ZMembers | key | 按 score 大小，从小到大遍历 key。时间复杂度较高，不推荐使用
 
 #### bloom filter
 

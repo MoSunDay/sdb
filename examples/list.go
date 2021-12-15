@@ -27,6 +27,10 @@ func main() {
 		&pb.LPushRequest{Key: []byte("h"), Values: values})
 	log.Printf("lpushResponse: %+v, err: %+v", lpushResponse, err)
 
+	lmembersResponse, _ := c.LMembers(context.Background(),
+		&pb.LMembersRequest{Key: []byte("h")})
+	log.Printf("lmembersResponse: %+v, err: %+v", lmembersResponse, err)
+
 	// 发起 lpop 请求
 	length = 50
 	values = make([][]byte, length)

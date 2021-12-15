@@ -39,3 +39,8 @@ func (server *ListServer) LCount(_ context.Context, request *pb.LCountRequest) (
 	res, err := service.LCount(request.Key)
 	return &pb.LCountResponse{Count: res}, err
 }
+
+func (server *ListServer) LMembers(_ context.Context, request *pb.LMembersRequest) (*pb.LMembersResponse, error) {
+	res, err := service.LMembers(request.Key)
+	return &pb.LMembersResponse{Values: res}, err
+}

@@ -679,6 +679,100 @@ func (x *ZCountResponse) GetCount() int32 {
 	return 0
 }
 
+type ZMembersRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Key []byte `protobuf:"bytes,1,opt,name=key,proto3" json:"key,omitempty"`
+}
+
+func (x *ZMembersRequest) Reset() {
+	*x = ZMembersRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_protobuf_spec_sorted_set_proto_msgTypes[13]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ZMembersRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ZMembersRequest) ProtoMessage() {}
+
+func (x *ZMembersRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_protobuf_spec_sorted_set_proto_msgTypes[13]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ZMembersRequest.ProtoReflect.Descriptor instead.
+func (*ZMembersRequest) Descriptor() ([]byte, []int) {
+	return file_api_protobuf_spec_sorted_set_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *ZMembersRequest) GetKey() []byte {
+	if x != nil {
+		return x.Key
+	}
+	return nil
+}
+
+type ZMembersResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Tuples []*Tuple `protobuf:"bytes,1,rep,name=tuples,proto3" json:"tuples,omitempty"`
+}
+
+func (x *ZMembersResponse) Reset() {
+	*x = ZMembersResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_protobuf_spec_sorted_set_proto_msgTypes[14]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ZMembersResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ZMembersResponse) ProtoMessage() {}
+
+func (x *ZMembersResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_api_protobuf_spec_sorted_set_proto_msgTypes[14]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ZMembersResponse.ProtoReflect.Descriptor instead.
+func (*ZMembersResponse) Descriptor() ([]byte, []int) {
+	return file_api_protobuf_spec_sorted_set_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *ZMembersResponse) GetTuples() []*Tuple {
+	if x != nil {
+		return x.Tuples
+	}
+	return nil
+}
+
 var File_api_protobuf_spec_sorted_set_proto protoreflect.FileDescriptor
 
 var file_api_protobuf_spec_sorted_set_proto_rawDesc = []byte{
@@ -725,8 +819,14 @@ var file_api_protobuf_spec_sorted_set_proto_rawDesc = []byte{
 	0x12, 0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x03, 0x6b,
 	0x65, 0x79, 0x22, 0x26, 0x0a, 0x0e, 0x5a, 0x43, 0x6f, 0x75, 0x6e, 0x74, 0x52, 0x65, 0x73, 0x70,
 	0x6f, 0x6e, 0x73, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x18, 0x01, 0x20,
-	0x01, 0x28, 0x05, 0x52, 0x05, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x42, 0x08, 0x5a, 0x06, 0x70, 0x6b,
-	0x67, 0x2f, 0x70, 0x62, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x01, 0x28, 0x05, 0x52, 0x05, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x22, 0x23, 0x0a, 0x0f, 0x5a, 0x4d,
+	0x65, 0x6d, 0x62, 0x65, 0x72, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x10, 0x0a,
+	0x03, 0x6b, 0x65, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x22,
+	0x38, 0x0a, 0x10, 0x5a, 0x4d, 0x65, 0x6d, 0x62, 0x65, 0x72, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f,
+	0x6e, 0x73, 0x65, 0x12, 0x24, 0x0a, 0x06, 0x74, 0x75, 0x70, 0x6c, 0x65, 0x73, 0x18, 0x01, 0x20,
+	0x03, 0x28, 0x0b, 0x32, 0x0c, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x54, 0x75, 0x70, 0x6c,
+	0x65, 0x52, 0x06, 0x74, 0x75, 0x70, 0x6c, 0x65, 0x73, 0x42, 0x08, 0x5a, 0x06, 0x70, 0x6b, 0x67,
+	0x2f, 0x70, 0x62, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -741,30 +841,33 @@ func file_api_protobuf_spec_sorted_set_proto_rawDescGZIP() []byte {
 	return file_api_protobuf_spec_sorted_set_proto_rawDescData
 }
 
-var file_api_protobuf_spec_sorted_set_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
+var file_api_protobuf_spec_sorted_set_proto_msgTypes = make([]protoimpl.MessageInfo, 15)
 var file_api_protobuf_spec_sorted_set_proto_goTypes = []interface{}{
-	(*Tuple)(nil),          // 0: proto.Tuple
-	(*ZPushRequest)(nil),   // 1: proto.ZPushRequest
-	(*ZPushResponse)(nil),  // 2: proto.ZPushResponse
-	(*ZPopRequest)(nil),    // 3: proto.ZPopRequest
-	(*ZPopResponse)(nil),   // 4: proto.ZPopResponse
-	(*ZRangeRequest)(nil),  // 5: proto.ZRangeRequest
-	(*ZRangeResponse)(nil), // 6: proto.ZRangeResponse
-	(*ZExistRequest)(nil),  // 7: proto.ZExistRequest
-	(*ZExistResponse)(nil), // 8: proto.ZExistResponse
-	(*ZDelRequest)(nil),    // 9: proto.ZDelRequest
-	(*ZDelResponse)(nil),   // 10: proto.ZDelResponse
-	(*ZCountRequest)(nil),  // 11: proto.ZCountRequest
-	(*ZCountResponse)(nil), // 12: proto.ZCountResponse
+	(*Tuple)(nil),            // 0: proto.Tuple
+	(*ZPushRequest)(nil),     // 1: proto.ZPushRequest
+	(*ZPushResponse)(nil),    // 2: proto.ZPushResponse
+	(*ZPopRequest)(nil),      // 3: proto.ZPopRequest
+	(*ZPopResponse)(nil),     // 4: proto.ZPopResponse
+	(*ZRangeRequest)(nil),    // 5: proto.ZRangeRequest
+	(*ZRangeResponse)(nil),   // 6: proto.ZRangeResponse
+	(*ZExistRequest)(nil),    // 7: proto.ZExistRequest
+	(*ZExistResponse)(nil),   // 8: proto.ZExistResponse
+	(*ZDelRequest)(nil),      // 9: proto.ZDelRequest
+	(*ZDelResponse)(nil),     // 10: proto.ZDelResponse
+	(*ZCountRequest)(nil),    // 11: proto.ZCountRequest
+	(*ZCountResponse)(nil),   // 12: proto.ZCountResponse
+	(*ZMembersRequest)(nil),  // 13: proto.ZMembersRequest
+	(*ZMembersResponse)(nil), // 14: proto.ZMembersResponse
 }
 var file_api_protobuf_spec_sorted_set_proto_depIdxs = []int32{
 	0, // 0: proto.ZPushRequest.tuples:type_name -> proto.Tuple
 	0, // 1: proto.ZRangeResponse.tuples:type_name -> proto.Tuple
-	2, // [2:2] is the sub-list for method output_type
-	2, // [2:2] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	0, // 2: proto.ZMembersResponse.tuples:type_name -> proto.Tuple
+	3, // [3:3] is the sub-list for method output_type
+	3, // [3:3] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_api_protobuf_spec_sorted_set_proto_init() }
@@ -929,6 +1032,30 @@ func file_api_protobuf_spec_sorted_set_proto_init() {
 				return nil
 			}
 		}
+		file_api_protobuf_spec_sorted_set_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ZMembersRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_protobuf_spec_sorted_set_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ZMembersResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -936,7 +1063,7 @@ func file_api_protobuf_spec_sorted_set_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_api_protobuf_spec_sorted_set_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   13,
+			NumMessages:   15,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
