@@ -50,17 +50,17 @@
 - [x] 编写接口文档
 - [ ] 实现更多的 api (2021.12.30)
     - [x] String
-        - [x] SetNX(key, value)
-        - [x] GetSet(key, value)
-        - [x] MGet(keys)
-        - [x] MSet(keys, values)
+        - [x] SetNX
+        - [x] GetSet
+        - [x] MGet
+        - [x] MSet
     - [ ] List
-        - [ ] LIndex(key, offset)
-        - [ ] LMembers(key)
-        - [ ] LRandomMembers(key, count)
+        - [ ] LIndex
+        - [ ] LMembers
+        - [ ] LRandomMembers
     - [ ] Set
-        - [ ] SMembers(key)
-        - [ ] SRandomMembers(key, count)
+        - [ ] SMembers
+        - [ ] SRandomMembers
 - [ ] 支持更丰富的数据结构 (2021.01.20)
     - [ ] Bitmap
     - [ ] Hash
