@@ -20,8 +20,11 @@ const _ = grpc.SupportPackageIsVersion7
 type SDBClient interface {
 	// string 类型的存储
 	Set(ctx context.Context, in *SetRequest, opts ...grpc.CallOption) (*SetResponse, error)
+	MSet(ctx context.Context, in *MSetRequest, opts ...grpc.CallOption) (*MSetResponse, error)
 	SetNX(ctx context.Context, in *SetNXRequest, opts ...grpc.CallOption) (*SetNXResponse, error)
+	SetGet(ctx context.Context, in *SetGetRequest, opts ...grpc.CallOption) (*SetGetResponse, error)
 	Get(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*GetResponse, error)
+	MGet(ctx context.Context, in *MGetRequest, opts ...grpc.CallOption) (*MGetResponse, error)
 	Del(ctx context.Context, in *DelRequest, opts ...grpc.CallOption) (*DelResponse, error)
 	Incr(ctx context.Context, in *IncrRequest, opts ...grpc.CallOption) (*IncrResponse, error)
 	// list 类型的存储
@@ -76,6 +79,15 @@ func (c *sDBClient) Set(ctx context.Context, in *SetRequest, opts ...grpc.CallOp
 	return out, nil
 }
 
+func (c *sDBClient) MSet(ctx context.Context, in *MSetRequest, opts ...grpc.CallOption) (*MSetResponse, error) {
+	out := new(MSetResponse)
+	err := c.cc.Invoke(ctx, "/proto.SDB/MSet", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *sDBClient) SetNX(ctx context.Context, in *SetNXRequest, opts ...grpc.CallOption) (*SetNXResponse, error) {
 	out := new(SetNXResponse)
 	err := c.cc.Invoke(ctx, "/proto.SDB/SetNX", in, out, opts...)
@@ -85,9 +97,27 @@ func (c *sDBClient) SetNX(ctx context.Context, in *SetNXRequest, opts ...grpc.Ca
 	return out, nil
 }
 
+func (c *sDBClient) SetGet(ctx context.Context, in *SetGetRequest, opts ...grpc.CallOption) (*SetGetResponse, error) {
+	out := new(SetGetResponse)
+	err := c.cc.Invoke(ctx, "/proto.SDB/SetGet", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *sDBClient) Get(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*GetResponse, error) {
 	out := new(GetResponse)
 	err := c.cc.Invoke(ctx, "/proto.SDB/Get", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *sDBClient) MGet(ctx context.Context, in *MGetRequest, opts ...grpc.CallOption) (*MGetResponse, error) {
+	out := new(MGetResponse)
+	err := c.cc.Invoke(ctx, "/proto.SDB/MGet", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -384,8 +414,11 @@ func (c *sDBClient) Publish(ctx context.Context, in *PublishRequest, opts ...grp
 type SDBServer interface {
 	// string 类型的存储
 	Set(context.Context, *SetRequest) (*SetResponse, error)
+	MSet(context.Context, *MSetRequest) (*MSetResponse, error)
 	SetNX(context.Context, *SetNXRequest) (*SetNXResponse, error)
+	SetGet(context.Context, *SetGetRequest) (*SetGetResponse, error)
 	Get(context.Context, *GetRequest) (*GetResponse, error)
+	MGet(context.Context, *MGetRequest) (*MGetResponse, error)
 	Del(context.Context, *DelRequest) (*DelResponse, error)
 	Incr(context.Context, *IncrRequest) (*IncrResponse, error)
 	// list 类型的存储
@@ -430,11 +463,20 @@ type UnimplementedSDBServer struct {
 func (UnimplementedSDBServer) Set(context.Context, *SetRequest) (*SetResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Set not implemented")
 }
+func (UnimplementedSDBServer) MSet(context.Context, *MSetRequest) (*MSetResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MSet not implemented")
+}
 func (UnimplementedSDBServer) SetNX(context.Context, *SetNXRequest) (*SetNXResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetNX not implemented")
 }
+func (UnimplementedSDBServer) SetGet(context.Context, *SetGetRequest) (*SetGetResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetGet not implemented")
+}
 func (UnimplementedSDBServer) Get(context.Context, *GetRequest) (*GetResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Get not implemented")
+}
+func (UnimplementedSDBServer) MGet(context.Context, *MGetRequest) (*MGetResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MGet not implemented")
 }
 func (UnimplementedSDBServer) Del(context.Context, *DelRequest) (*DelResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Del not implemented")
@@ -553,6 +595,24 @@ func _SDB_Set_Handler(srv interface{}, ctx context.Context, dec func(interface{}
 	return interceptor(ctx, in, info, handler)
 }
 
+func _SDB_MSet_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MSetRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SDBServer).MSet(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.SDB/MSet",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SDBServer).MSet(ctx, req.(*MSetRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _SDB_SetNX_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SetNXRequest)
 	if err := dec(in); err != nil {
@@ -571,6 +631,24 @@ func _SDB_SetNX_Handler(srv interface{}, ctx context.Context, dec func(interface
 	return interceptor(ctx, in, info, handler)
 }
 
+func _SDB_SetGet_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetGetRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SDBServer).SetGet(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.SDB/SetGet",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SDBServer).SetGet(ctx, req.(*SetGetRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _SDB_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetRequest)
 	if err := dec(in); err != nil {
@@ -585,6 +663,24 @@ func _SDB_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(SDBServer).Get(ctx, req.(*GetRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SDB_MGet_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MGetRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SDBServer).MGet(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.SDB/MGet",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SDBServer).MGet(ctx, req.(*MGetRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1126,12 +1222,24 @@ var SDB_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _SDB_Set_Handler,
 		},
 		{
+			MethodName: "MSet",
+			Handler:    _SDB_MSet_Handler,
+		},
+		{
 			MethodName: "SetNX",
 			Handler:    _SDB_SetNX_Handler,
 		},
 		{
+			MethodName: "SetGet",
+			Handler:    _SDB_SetGet_Handler,
+		},
+		{
 			MethodName: "Get",
 			Handler:    _SDB_Get_Handler,
+		},
+		{
+			MethodName: "MGet",
+			Handler:    _SDB_MGet_Handler,
 		},
 		{
 			MethodName: "Del",

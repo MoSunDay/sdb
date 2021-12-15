@@ -17,6 +17,27 @@ func main() {
 
 	// 连接服务器
 	c := pb.NewSDBClient(conn)
+	// 发起 mset 请求
+	msetResponse, err := c.MSet(context.Background(),
+		&pb.MSetRequest{Keys: [][]byte{[]byte("1"), []byte("2"), []byte("3")},
+			Values: [][]byte{[]byte("4"), []byte("5"), []byte("6")}})
+	log.Printf("msetResponse: %+v, err: %+v", msetResponse, err)
+	// 发起 setget 请求
+	setGetResponse, err := c.SetGet(context.Background(),
+		&pb.SetGetRequest{Key: []byte("1"), Value: []byte("10")})
+	log.Printf("setGetResponse: %+v, err: %+v", setGetResponse, err)
+	// 发起 setnx 请求
+	setNXResponse, err := c.SetNX(context.Background(),
+		&pb.SetNXRequest{Key: []byte("1"), Value: []byte("11")})
+	log.Printf("setNXResponse: %+v, err: %+v", setNXResponse, err)
+	// 发起 setnx 请求
+	setNXResponse, err = c.SetNX(context.Background(),
+		&pb.SetNXRequest{Key: []byte("10"), Value: []byte("11")})
+	log.Printf("setNXResponse: %+v, err: %+v", setNXResponse, err)
+	// 发起 mget 请求
+	mGetResponse, err := c.MGet(context.Background(),
+		&pb.MGetRequest{Keys: [][]byte{[]byte("1"), []byte("2"), []byte("3"), []byte("10")}})
+	log.Printf("mGetResponse: %+v, err: %+v", mGetResponse, err)
 	// 发起 incr 请求
 	incrResponse, err := c.Incr(context.Background(),
 		&pb.IncrRequest{Key: []byte("abc"), Delta: 10})

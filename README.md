@@ -47,29 +47,28 @@
 
 ### 规划
 
-- 实现更多的 api (2021.12.30)
-    - String
+- [ ] 编写接口文档
+- [ ] 实现更多的 api (2021.12.30)
+    - [x] String
         - [x] SetNX(key, value)
-        - [ ] GetSet(key, value)
-        - [ ] MGet(keys)
-        - [ ] SetBit(key, offset, value)
-        - [ ] GetBit(key, offset)
-        - [ ] MSet(keys, values)
-    - List
+        - [x] GetSet(key, value)
+        - [x] MGet(keys)
+        - [x] MSet(keys, values)
+    - [ ] List
         - [ ] LIndex(key, offset)
         - [ ] LMembers(key)
         - [ ] LRandomMembers(key, count)
-    - Set
+    - [ ] Set
         - [ ] SMembers(key)
         - [ ] SRandomMembers(key, count)
-- 支持更丰富的数据结构 (2021.01.20)
-    - Hash
-    - geo hash
-    - 倒排索引
-    - 向量检索
-    - 布尔表达式
-- 集群方案设计 (2021.01.30)
-- 搭建 admin web ui
+- [ ] 支持更丰富的数据结构 (2021.01.20)
+    - [ ] Bitmap
+    - [ ] Hash
+    - [ ] geo hash
+    - [ ] reverted index
+    - [ ] vector search
+- [ ] 集群方案设计 (2021.01.30)
+- [ ] 搭建 admin web ui
 
 ------
 

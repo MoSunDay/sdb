@@ -6,11 +6,20 @@ http:
     - selector: proto.SDB.Set
       post: /v1/set
       body: "*"
-    - selector: proto.SDB.Set
-      post: /v1/setnx
+    - selector: proto.SDB.MSet
+      post: /v1/m-set
+      body: "*"
+    - selector: proto.SDB.SetNX
+      post: /v1/set-nx
+      body: "*"
+    - selector: proto.SDB.SetGet
+      post: /v1/set-get
       body: "*"
     - selector: proto.SDB.Get
       post: /v1/get
+      body: "*"
+    - selector: proto.SDB.MGet
+      post: /v1/m-get
       body: "*"
     - selector: proto.SDB.Del
       post: /v1/del

@@ -14,8 +14,11 @@ import "api/protobuf-spec/pub_sub.proto";
 service SDB {
   // string 类型的存储
   rpc Set(SetRequest) returns (SetResponse) {}
+  rpc MSet(MSetRequest) returns (MSetResponse) {}
   rpc SetNX(SetNXRequest) returns (SetNXResponse) {}
+  rpc SetGet(SetGetRequest) returns (SetGetResponse) {}
   rpc Get(GetRequest) returns (GetResponse) {}
+  rpc MGet(MGetRequest) returns (MGetResponse) {}
   rpc Del(DelRequest) returns (DelResponse) {}
   rpc Incr(IncrRequest) returns (IncrResponse) {}
 
