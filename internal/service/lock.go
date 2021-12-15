@@ -16,6 +16,7 @@ const (
 	LSortedSet   DataType = 0x3
 	LBloomFilter DataType = 0x4
 	LHyperLogLog DataType = 0x5
+	LBitset      DataType = 0x6
 )
 
 var lockerCounts = map[DataType]int{
@@ -25,6 +26,7 @@ var lockerCounts = map[DataType]int{
 	LSortedSet:   16,
 	LBloomFilter: 16,
 	LHyperLogLog: 16,
+	LBitset:      16,
 }
 
 func init() {

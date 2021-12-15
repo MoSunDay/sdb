@@ -9,6 +9,7 @@ import "api/protobuf-spec/set.proto";
 import "api/protobuf-spec/sorted_set.proto";
 import "api/protobuf-spec/bloom_filter.proto";
 import "api/protobuf-spec/hyper_log_log.proto";
+import "api/protobuf-spec/bitset.proto";
 import "api/protobuf-spec/pub_sub.proto";
 
 service SDB {
@@ -59,6 +60,16 @@ service SDB {
   rpc HLLDel(HLLDelRequest) returns (HLLDelResponse) {}
   rpc HLLAdd(HLLAddRequest) returns (HLLAddResponse) {}
   rpc HLLCount(HLLCountRequest) returns (HLLCountResponse) {}
+
+  // bitset 类型的存储
+  rpc BSCreate(BSCreateRequest) returns (BSCreateResponse) {}
+  rpc BSDel(BSDelRequest) returns (BSDelResponse) {}
+  rpc BSSetRange(BSSetRangeRequest) returns (BSSetRangeResponse) {}
+  rpc BSMSet(BSMSetRequest) returns (BSMSetResponse) {}
+  rpc BSGetRange(BSGetRangeRequest) returns (BSGetRangeResponse) {}
+  rpc BSMGet(BSMGetRequest) returns (BSMGetResponse) {}
+  rpc BSCount(BSCountRequest) returns (BSCountResponse) {}
+  rpc BSCountRange(BSCountRangeRequest) returns (BSCountRangeResponse) {}
 
   // pub/sub
   rpc Subscribe(SubscribeRequest) returns (stream Message) {}

@@ -60,6 +60,15 @@ type SDBClient interface {
 	HLLDel(ctx context.Context, in *HLLDelRequest, opts ...grpc.CallOption) (*HLLDelResponse, error)
 	HLLAdd(ctx context.Context, in *HLLAddRequest, opts ...grpc.CallOption) (*HLLAddResponse, error)
 	HLLCount(ctx context.Context, in *HLLCountRequest, opts ...grpc.CallOption) (*HLLCountResponse, error)
+	// bitset 类型的存储
+	BSCreate(ctx context.Context, in *BSCreateRequest, opts ...grpc.CallOption) (*BSCreateResponse, error)
+	BSDel(ctx context.Context, in *BSDelRequest, opts ...grpc.CallOption) (*BSDelResponse, error)
+	BSSetRange(ctx context.Context, in *BSSetRangeRequest, opts ...grpc.CallOption) (*BSSetRangeResponse, error)
+	BSMSet(ctx context.Context, in *BSMSetRequest, opts ...grpc.CallOption) (*BSMSetResponse, error)
+	BSGetRange(ctx context.Context, in *BSGetRangeRequest, opts ...grpc.CallOption) (*BSGetRangeResponse, error)
+	BSMGet(ctx context.Context, in *BSMGetRequest, opts ...grpc.CallOption) (*BSMGetResponse, error)
+	BSCount(ctx context.Context, in *BSCountRequest, opts ...grpc.CallOption) (*BSCountResponse, error)
+	BSCountRange(ctx context.Context, in *BSCountRangeRequest, opts ...grpc.CallOption) (*BSCountRangeResponse, error)
 	// pub/sub
 	Subscribe(ctx context.Context, in *SubscribeRequest, opts ...grpc.CallOption) (SDB_SubscribeClient, error)
 	Publish(ctx context.Context, in *PublishRequest, opts ...grpc.CallOption) (*PublishResponse, error)
@@ -397,6 +406,78 @@ func (c *sDBClient) HLLCount(ctx context.Context, in *HLLCountRequest, opts ...g
 	return out, nil
 }
 
+func (c *sDBClient) BSCreate(ctx context.Context, in *BSCreateRequest, opts ...grpc.CallOption) (*BSCreateResponse, error) {
+	out := new(BSCreateResponse)
+	err := c.cc.Invoke(ctx, "/proto.SDB/BSCreate", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *sDBClient) BSDel(ctx context.Context, in *BSDelRequest, opts ...grpc.CallOption) (*BSDelResponse, error) {
+	out := new(BSDelResponse)
+	err := c.cc.Invoke(ctx, "/proto.SDB/BSDel", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *sDBClient) BSSetRange(ctx context.Context, in *BSSetRangeRequest, opts ...grpc.CallOption) (*BSSetRangeResponse, error) {
+	out := new(BSSetRangeResponse)
+	err := c.cc.Invoke(ctx, "/proto.SDB/BSSetRange", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *sDBClient) BSMSet(ctx context.Context, in *BSMSetRequest, opts ...grpc.CallOption) (*BSMSetResponse, error) {
+	out := new(BSMSetResponse)
+	err := c.cc.Invoke(ctx, "/proto.SDB/BSMSet", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *sDBClient) BSGetRange(ctx context.Context, in *BSGetRangeRequest, opts ...grpc.CallOption) (*BSGetRangeResponse, error) {
+	out := new(BSGetRangeResponse)
+	err := c.cc.Invoke(ctx, "/proto.SDB/BSGetRange", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *sDBClient) BSMGet(ctx context.Context, in *BSMGetRequest, opts ...grpc.CallOption) (*BSMGetResponse, error) {
+	out := new(BSMGetResponse)
+	err := c.cc.Invoke(ctx, "/proto.SDB/BSMGet", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *sDBClient) BSCount(ctx context.Context, in *BSCountRequest, opts ...grpc.CallOption) (*BSCountResponse, error) {
+	out := new(BSCountResponse)
+	err := c.cc.Invoke(ctx, "/proto.SDB/BSCount", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *sDBClient) BSCountRange(ctx context.Context, in *BSCountRangeRequest, opts ...grpc.CallOption) (*BSCountRangeResponse, error) {
+	out := new(BSCountRangeResponse)
+	err := c.cc.Invoke(ctx, "/proto.SDB/BSCountRange", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *sDBClient) Subscribe(ctx context.Context, in *SubscribeRequest, opts ...grpc.CallOption) (SDB_SubscribeClient, error) {
 	stream, err := c.cc.NewStream(ctx, &SDB_ServiceDesc.Streams[0], "/proto.SDB/Subscribe", opts...)
 	if err != nil {
@@ -484,6 +565,15 @@ type SDBServer interface {
 	HLLDel(context.Context, *HLLDelRequest) (*HLLDelResponse, error)
 	HLLAdd(context.Context, *HLLAddRequest) (*HLLAddResponse, error)
 	HLLCount(context.Context, *HLLCountRequest) (*HLLCountResponse, error)
+	// bitset 类型的存储
+	BSCreate(context.Context, *BSCreateRequest) (*BSCreateResponse, error)
+	BSDel(context.Context, *BSDelRequest) (*BSDelResponse, error)
+	BSSetRange(context.Context, *BSSetRangeRequest) (*BSSetRangeResponse, error)
+	BSMSet(context.Context, *BSMSetRequest) (*BSMSetResponse, error)
+	BSGetRange(context.Context, *BSGetRangeRequest) (*BSGetRangeResponse, error)
+	BSMGet(context.Context, *BSMGetRequest) (*BSMGetResponse, error)
+	BSCount(context.Context, *BSCountRequest) (*BSCountResponse, error)
+	BSCountRange(context.Context, *BSCountRangeRequest) (*BSCountRangeResponse, error)
 	// pub/sub
 	Subscribe(*SubscribeRequest, SDB_SubscribeServer) error
 	Publish(context.Context, *PublishRequest) (*PublishResponse, error)
@@ -600,6 +690,30 @@ func (UnimplementedSDBServer) HLLAdd(context.Context, *HLLAddRequest) (*HLLAddRe
 }
 func (UnimplementedSDBServer) HLLCount(context.Context, *HLLCountRequest) (*HLLCountResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method HLLCount not implemented")
+}
+func (UnimplementedSDBServer) BSCreate(context.Context, *BSCreateRequest) (*BSCreateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BSCreate not implemented")
+}
+func (UnimplementedSDBServer) BSDel(context.Context, *BSDelRequest) (*BSDelResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BSDel not implemented")
+}
+func (UnimplementedSDBServer) BSSetRange(context.Context, *BSSetRangeRequest) (*BSSetRangeResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BSSetRange not implemented")
+}
+func (UnimplementedSDBServer) BSMSet(context.Context, *BSMSetRequest) (*BSMSetResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BSMSet not implemented")
+}
+func (UnimplementedSDBServer) BSGetRange(context.Context, *BSGetRangeRequest) (*BSGetRangeResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BSGetRange not implemented")
+}
+func (UnimplementedSDBServer) BSMGet(context.Context, *BSMGetRequest) (*BSMGetResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BSMGet not implemented")
+}
+func (UnimplementedSDBServer) BSCount(context.Context, *BSCountRequest) (*BSCountResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BSCount not implemented")
+}
+func (UnimplementedSDBServer) BSCountRange(context.Context, *BSCountRangeRequest) (*BSCountRangeResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BSCountRange not implemented")
 }
 func (UnimplementedSDBServer) Subscribe(*SubscribeRequest, SDB_SubscribeServer) error {
 	return status.Errorf(codes.Unimplemented, "method Subscribe not implemented")
@@ -1267,6 +1381,150 @@ func _SDB_HLLCount_Handler(srv interface{}, ctx context.Context, dec func(interf
 	return interceptor(ctx, in, info, handler)
 }
 
+func _SDB_BSCreate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BSCreateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SDBServer).BSCreate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.SDB/BSCreate",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SDBServer).BSCreate(ctx, req.(*BSCreateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SDB_BSDel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BSDelRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SDBServer).BSDel(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.SDB/BSDel",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SDBServer).BSDel(ctx, req.(*BSDelRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SDB_BSSetRange_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BSSetRangeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SDBServer).BSSetRange(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.SDB/BSSetRange",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SDBServer).BSSetRange(ctx, req.(*BSSetRangeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SDB_BSMSet_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BSMSetRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SDBServer).BSMSet(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.SDB/BSMSet",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SDBServer).BSMSet(ctx, req.(*BSMSetRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SDB_BSGetRange_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BSGetRangeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SDBServer).BSGetRange(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.SDB/BSGetRange",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SDBServer).BSGetRange(ctx, req.(*BSGetRangeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SDB_BSMGet_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BSMGetRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SDBServer).BSMGet(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.SDB/BSMGet",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SDBServer).BSMGet(ctx, req.(*BSMGetRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SDB_BSCount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BSCountRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SDBServer).BSCount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.SDB/BSCount",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SDBServer).BSCount(ctx, req.(*BSCountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SDB_BSCountRange_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BSCountRangeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SDBServer).BSCountRange(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.SDB/BSCountRange",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SDBServer).BSCountRange(ctx, req.(*BSCountRangeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _SDB_Subscribe_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(SubscribeRequest)
 	if err := stream.RecvMsg(m); err != nil {
@@ -1456,6 +1714,38 @@ var SDB_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "HLLCount",
 			Handler:    _SDB_HLLCount_Handler,
+		},
+		{
+			MethodName: "BSCreate",
+			Handler:    _SDB_BSCreate_Handler,
+		},
+		{
+			MethodName: "BSDel",
+			Handler:    _SDB_BSDel_Handler,
+		},
+		{
+			MethodName: "BSSetRange",
+			Handler:    _SDB_BSSetRange_Handler,
+		},
+		{
+			MethodName: "BSMSet",
+			Handler:    _SDB_BSMSet_Handler,
+		},
+		{
+			MethodName: "BSGetRange",
+			Handler:    _SDB_BSGetRange_Handler,
+		},
+		{
+			MethodName: "BSMGet",
+			Handler:    _SDB_BSMGet_Handler,
+		},
+		{
+			MethodName: "BSCount",
+			Handler:    _SDB_BSCount_Handler,
+		},
+		{
+			MethodName: "BSCountRange",
+			Handler:    _SDB_BSCountRange_Handler,
 		},
 		{
 			MethodName: "Publish",

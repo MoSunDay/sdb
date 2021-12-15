@@ -2,12 +2,12 @@ package server
 
 import (
 	"context"
-	"github.com/yemingfeng/sdb/internal/conf"
-	"github.com/yemingfeng/sdb/pkg/pb"
 	grpcmiddleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	"github.com/grpc-ecosystem/go-grpc-middleware/ratelimit"
 	grpcrecovery "github.com/grpc-ecosystem/go-grpc-middleware/recovery"
 	grpcprometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
+	"github.com/yemingfeng/sdb/internal/conf"
+	"github.com/yemingfeng/sdb/pkg/pb"
 	"google.golang.org/grpc"
 	"log"
 	"net"
@@ -23,6 +23,7 @@ type SDBGrpcServer struct {
 	SortedSetServer
 	BloomFilterServer
 	HyperLogLogServer
+	BitsetServer
 	PubSubServer
 }
 

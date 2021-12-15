@@ -31,6 +31,7 @@
     - [sorted set](https://github.com/yemingfeng/sdb/blob/master/api/protobuf-spec/sorted_set.proto)
     - [bloom filter](https://github.com/yemingfeng/sdb/blob/master/api/protobuf-spec/bloom_filter.proto)
     - [hyper log log](https://github.com/yemingfeng/sdb/blob/master/api/protobuf-spec/hyper_log_log.proto)
+    - [bitset](https://github.com/yemingfeng/sdb/blob/master/api/protobuf-spec/bitset.proto)
     - [pub sub](https://github.com/yemingfeng/sdb/blob/master/api/protobuf-spec/pub_sub.proto)
 - 持久化
     - 兼容 [pebble](https://github.com/cockroachdb/pebble)
@@ -61,7 +62,7 @@
     - [x] Sorted Set
         - [x] ZMembers
 - [ ] 支持更丰富的数据结构 (2021.01.20)
-    - [ ] Bitmap
+    - [x] Bitset
     - [ ] Hash
     - [ ] geo hash
     - [ ] reverted index
@@ -119,6 +120,7 @@ func main() {
 - [sorted set 操作](https://github.com/yemingfeng/sdb/blob/master/examples/sorted_set.go)
 - [bloom filter 操作](https://github.com/yemingfeng/sdb/blob/master/examples/bloom_filter.go)
 - [hyper log log 操作](https://github.com/yemingfeng/sdb/blob/master/examples/hyper_log_log.go)
+- [bitset 操作](https://github.com/yemingfeng/sdb/blob/master/examples/bitset.go)
 - [pub sub 操作](https://github.com/yemingfeng/sdb/blob/master/examples/pub_sub.go)
 
 ------
@@ -203,6 +205,19 @@ HLLCreate | key | 创建 hyper log log
 HLLDel | key | 删除某个 key hyper log log
 HLLAdd | key, values | 把 values 加入到 hyper log log 中。当 hyper log log 未创建时，将抛出异常
 HLLCount | key | 获取某个 hyper log log 的去重元素个数
+
+#### bitset
+
+接口 | 参数 | 描述
+---- | --- | ---
+BSCreate | key | 创建 bitset
+BSDel | key | 删除某个 key bitset
+BSSetRange | key, start, end, value | 将 key [start, end) 范围的 bit 设置为 value
+BSMSet | key, bits, value | 将 key bits 设置为 value
+BSGetRange | key, start, end | 获取 key [start, end) 范围的 bit
+BSMGet | key, bits | 获取 key bits 的 bit
+BSMCount | key | 获取 key bit = 1 的个数
+BSMCountRange | key, start, end | 获取 key [start, end) bit = 1 的个数
 
 #### pub sub
 

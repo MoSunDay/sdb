@@ -116,3 +116,28 @@ http:
     - selector: proto.SDB.HLLCount
       post: /v1/hll-count
       body: "*"
+
+    - selector: proto.SDB.BSCreate
+      post: /v1/bs-create
+      body: "*"
+    - selector: proto.SDB.BSDel
+      post: /v1/bs-del
+      body: "*"
+    - selector: proto.SDB.BSSetRange
+      post: /v1/bs-set-range
+      body: "*"
+    - selector: proto.SDB.BSMSet
+      post: /v1/bs-m-set
+      body: "*"
+    - selector: proto.SDB.BSGetRange
+      post: /v1/bs-get-range
+      body: "*"
+    - selector: proto.SDB.BSMGet
+      post: /v1/bs-m-get
+      body: "*"
+    - selector: proto.SDB.BSCount
+      post: /v1/bs-count
+      body: "*"
+    - selector: proto.SDB.BSCountRange
+      post: /v1/bs-count-range
+      body: "*"

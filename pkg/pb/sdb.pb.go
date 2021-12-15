@@ -37,9 +37,11 @@ var file_api_protobuf_spec_sdb_proto_rawDesc = []byte{
 	0x74, 0x65, 0x72, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x1a, 0x25, 0x61, 0x70, 0x69, 0x2f, 0x70,
 	0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2d, 0x73, 0x70, 0x65, 0x63, 0x2f, 0x68, 0x79, 0x70,
 	0x65, 0x72, 0x5f, 0x6c, 0x6f, 0x67, 0x5f, 0x6c, 0x6f, 0x67, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
+	0x1a, 0x1e, 0x61, 0x70, 0x69, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2d, 0x73,
+	0x70, 0x65, 0x63, 0x2f, 0x62, 0x69, 0x74, 0x73, 0x65, 0x74, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
 	0x1a, 0x1f, 0x61, 0x70, 0x69, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2d, 0x73,
 	0x70, 0x65, 0x63, 0x2f, 0x70, 0x75, 0x62, 0x5f, 0x73, 0x75, 0x62, 0x2e, 0x70, 0x72, 0x6f, 0x74,
-	0x6f, 0x32, 0xc6, 0x10, 0x0a, 0x03, 0x53, 0x44, 0x42, 0x12, 0x2e, 0x0a, 0x03, 0x53, 0x65, 0x74,
+	0x6f, 0x32, 0xbe, 0x14, 0x0a, 0x03, 0x53, 0x44, 0x42, 0x12, 0x2e, 0x0a, 0x03, 0x53, 0x65, 0x74,
 	0x12, 0x11, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x53, 0x65, 0x74, 0x52, 0x65, 0x71, 0x75,
 	0x65, 0x73, 0x74, 0x1a, 0x12, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x53, 0x65, 0x74, 0x52,
 	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x31, 0x0a, 0x04, 0x4d, 0x53, 0x65,
@@ -164,94 +166,142 @@ var file_api_protobuf_spec_sdb_proto_rawDesc = []byte{
 	0x74, 0x12, 0x16, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x48, 0x4c, 0x4c, 0x43, 0x6f, 0x75,
 	0x6e, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x17, 0x2e, 0x70, 0x72, 0x6f, 0x74,
 	0x6f, 0x2e, 0x48, 0x4c, 0x4c, 0x43, 0x6f, 0x75, 0x6e, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
-	0x73, 0x65, 0x22, 0x00, 0x12, 0x38, 0x0a, 0x09, 0x53, 0x75, 0x62, 0x73, 0x63, 0x72, 0x69, 0x62,
-	0x65, 0x12, 0x17, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x53, 0x75, 0x62, 0x73, 0x63, 0x72,
-	0x69, 0x62, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x0e, 0x2e, 0x70, 0x72, 0x6f,
-	0x74, 0x6f, 0x2e, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x22, 0x00, 0x30, 0x01, 0x12, 0x3a,
-	0x0a, 0x07, 0x50, 0x75, 0x62, 0x6c, 0x69, 0x73, 0x68, 0x12, 0x15, 0x2e, 0x70, 0x72, 0x6f, 0x74,
-	0x6f, 0x2e, 0x50, 0x75, 0x62, 0x6c, 0x69, 0x73, 0x68, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
-	0x1a, 0x16, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x50, 0x75, 0x62, 0x6c, 0x69, 0x73, 0x68,
-	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x42, 0x08, 0x5a, 0x06, 0x70, 0x6b,
-	0x67, 0x2f, 0x70, 0x62, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x73, 0x65, 0x22, 0x00, 0x12, 0x3d, 0x0a, 0x08, 0x42, 0x53, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65,
+	0x12, 0x16, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x42, 0x53, 0x43, 0x72, 0x65, 0x61, 0x74,
+	0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x17, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
+	0x2e, 0x42, 0x53, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
+	0x65, 0x22, 0x00, 0x12, 0x34, 0x0a, 0x05, 0x42, 0x53, 0x44, 0x65, 0x6c, 0x12, 0x13, 0x2e, 0x70,
+	0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x42, 0x53, 0x44, 0x65, 0x6c, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
+	0x74, 0x1a, 0x14, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x42, 0x53, 0x44, 0x65, 0x6c, 0x52,
+	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x43, 0x0a, 0x0a, 0x42, 0x53, 0x53,
+	0x65, 0x74, 0x52, 0x61, 0x6e, 0x67, 0x65, 0x12, 0x18, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e,
+	0x42, 0x53, 0x53, 0x65, 0x74, 0x52, 0x61, 0x6e, 0x67, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
+	0x74, 0x1a, 0x19, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x42, 0x53, 0x53, 0x65, 0x74, 0x52,
+	0x61, 0x6e, 0x67, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x37,
+	0x0a, 0x06, 0x42, 0x53, 0x4d, 0x53, 0x65, 0x74, 0x12, 0x14, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
+	0x2e, 0x42, 0x53, 0x4d, 0x53, 0x65, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x15,
+	0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x42, 0x53, 0x4d, 0x53, 0x65, 0x74, 0x52, 0x65, 0x73,
+	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x43, 0x0a, 0x0a, 0x42, 0x53, 0x47, 0x65, 0x74,
+	0x52, 0x61, 0x6e, 0x67, 0x65, 0x12, 0x18, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x42, 0x53,
+	0x47, 0x65, 0x74, 0x52, 0x61, 0x6e, 0x67, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a,
+	0x19, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x42, 0x53, 0x47, 0x65, 0x74, 0x52, 0x61, 0x6e,
+	0x67, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x37, 0x0a, 0x06,
+	0x42, 0x53, 0x4d, 0x47, 0x65, 0x74, 0x12, 0x14, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x42,
+	0x53, 0x4d, 0x47, 0x65, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x15, 0x2e, 0x70,
+	0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x42, 0x53, 0x4d, 0x47, 0x65, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f,
+	0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x3a, 0x0a, 0x07, 0x42, 0x53, 0x43, 0x6f, 0x75, 0x6e, 0x74,
+	0x12, 0x15, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x42, 0x53, 0x43, 0x6f, 0x75, 0x6e, 0x74,
+	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x16, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e,
+	0x42, 0x53, 0x43, 0x6f, 0x75, 0x6e, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22,
+	0x00, 0x12, 0x49, 0x0a, 0x0c, 0x42, 0x53, 0x43, 0x6f, 0x75, 0x6e, 0x74, 0x52, 0x61, 0x6e, 0x67,
+	0x65, 0x12, 0x1a, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x42, 0x53, 0x43, 0x6f, 0x75, 0x6e,
+	0x74, 0x52, 0x61, 0x6e, 0x67, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1b, 0x2e,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x42, 0x53, 0x43, 0x6f, 0x75, 0x6e, 0x74, 0x52, 0x61, 0x6e,
+	0x67, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x38, 0x0a, 0x09,
+	0x53, 0x75, 0x62, 0x73, 0x63, 0x72, 0x69, 0x62, 0x65, 0x12, 0x17, 0x2e, 0x70, 0x72, 0x6f, 0x74,
+	0x6f, 0x2e, 0x53, 0x75, 0x62, 0x73, 0x63, 0x72, 0x69, 0x62, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65,
+	0x73, 0x74, 0x1a, 0x0e, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x4d, 0x65, 0x73, 0x73, 0x61,
+	0x67, 0x65, 0x22, 0x00, 0x30, 0x01, 0x12, 0x3a, 0x0a, 0x07, 0x50, 0x75, 0x62, 0x6c, 0x69, 0x73,
+	0x68, 0x12, 0x15, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x50, 0x75, 0x62, 0x6c, 0x69, 0x73,
+	0x68, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x16, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
+	0x2e, 0x50, 0x75, 0x62, 0x6c, 0x69, 0x73, 0x68, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
+	0x22, 0x00, 0x42, 0x08, 0x5a, 0x06, 0x70, 0x6b, 0x67, 0x2f, 0x70, 0x62, 0x62, 0x06, 0x70, 0x72,
+	0x6f, 0x74, 0x6f, 0x33,
 }
 
 var file_api_protobuf_spec_sdb_proto_goTypes = []interface{}{
-	(*SetRequest)(nil),        // 0: proto.SetRequest
-	(*MSetRequest)(nil),       // 1: proto.MSetRequest
-	(*SetNXRequest)(nil),      // 2: proto.SetNXRequest
-	(*SetGetRequest)(nil),     // 3: proto.SetGetRequest
-	(*GetRequest)(nil),        // 4: proto.GetRequest
-	(*MGetRequest)(nil),       // 5: proto.MGetRequest
-	(*DelRequest)(nil),        // 6: proto.DelRequest
-	(*IncrRequest)(nil),       // 7: proto.IncrRequest
-	(*LPushRequest)(nil),      // 8: proto.LPushRequest
-	(*LPopRequest)(nil),       // 9: proto.LPopRequest
-	(*LRangeRequest)(nil),     // 10: proto.LRangeRequest
-	(*LExistRequest)(nil),     // 11: proto.LExistRequest
-	(*LDelRequest)(nil),       // 12: proto.LDelRequest
-	(*LCountRequest)(nil),     // 13: proto.LCountRequest
-	(*LMembersRequest)(nil),   // 14: proto.LMembersRequest
-	(*SPushRequest)(nil),      // 15: proto.SPushRequest
-	(*SPopRequest)(nil),       // 16: proto.SPopRequest
-	(*SExistRequest)(nil),     // 17: proto.SExistRequest
-	(*SDelRequest)(nil),       // 18: proto.SDelRequest
-	(*SCountRequest)(nil),     // 19: proto.SCountRequest
-	(*SMembersRequest)(nil),   // 20: proto.SMembersRequest
-	(*ZPushRequest)(nil),      // 21: proto.ZPushRequest
-	(*ZPopRequest)(nil),       // 22: proto.ZPopRequest
-	(*ZRangeRequest)(nil),     // 23: proto.ZRangeRequest
-	(*ZExistRequest)(nil),     // 24: proto.ZExistRequest
-	(*ZDelRequest)(nil),       // 25: proto.ZDelRequest
-	(*ZCountRequest)(nil),     // 26: proto.ZCountRequest
-	(*ZMembersRequest)(nil),   // 27: proto.ZMembersRequest
-	(*BFCreateRequest)(nil),   // 28: proto.BFCreateRequest
-	(*BFDelRequest)(nil),      // 29: proto.BFDelRequest
-	(*BFAddRequest)(nil),      // 30: proto.BFAddRequest
-	(*BFExistRequest)(nil),    // 31: proto.BFExistRequest
-	(*HLLCreateRequest)(nil),  // 32: proto.HLLCreateRequest
-	(*HLLDelRequest)(nil),     // 33: proto.HLLDelRequest
-	(*HLLAddRequest)(nil),     // 34: proto.HLLAddRequest
-	(*HLLCountRequest)(nil),   // 35: proto.HLLCountRequest
-	(*SubscribeRequest)(nil),  // 36: proto.SubscribeRequest
-	(*PublishRequest)(nil),    // 37: proto.PublishRequest
-	(*SetResponse)(nil),       // 38: proto.SetResponse
-	(*MSetResponse)(nil),      // 39: proto.MSetResponse
-	(*SetNXResponse)(nil),     // 40: proto.SetNXResponse
-	(*SetGetResponse)(nil),    // 41: proto.SetGetResponse
-	(*GetResponse)(nil),       // 42: proto.GetResponse
-	(*MGetResponse)(nil),      // 43: proto.MGetResponse
-	(*DelResponse)(nil),       // 44: proto.DelResponse
-	(*IncrResponse)(nil),      // 45: proto.IncrResponse
-	(*LPushResponse)(nil),     // 46: proto.LPushResponse
-	(*LPopResponse)(nil),      // 47: proto.LPopResponse
-	(*LRangeResponse)(nil),    // 48: proto.LRangeResponse
-	(*LExistResponse)(nil),    // 49: proto.LExistResponse
-	(*LDelResponse)(nil),      // 50: proto.LDelResponse
-	(*LCountResponse)(nil),    // 51: proto.LCountResponse
-	(*LMembersResponse)(nil),  // 52: proto.LMembersResponse
-	(*SPushResponse)(nil),     // 53: proto.SPushResponse
-	(*SPopResponse)(nil),      // 54: proto.SPopResponse
-	(*SExistResponse)(nil),    // 55: proto.SExistResponse
-	(*SDelResponse)(nil),      // 56: proto.SDelResponse
-	(*SCountResponse)(nil),    // 57: proto.SCountResponse
-	(*SMembersResponse)(nil),  // 58: proto.SMembersResponse
-	(*ZPushResponse)(nil),     // 59: proto.ZPushResponse
-	(*ZPopResponse)(nil),      // 60: proto.ZPopResponse
-	(*ZRangeResponse)(nil),    // 61: proto.ZRangeResponse
-	(*ZExistResponse)(nil),    // 62: proto.ZExistResponse
-	(*ZDelResponse)(nil),      // 63: proto.ZDelResponse
-	(*ZCountResponse)(nil),    // 64: proto.ZCountResponse
-	(*ZMembersResponse)(nil),  // 65: proto.ZMembersResponse
-	(*BFCreateResponse)(nil),  // 66: proto.BFCreateResponse
-	(*BFDelResponse)(nil),     // 67: proto.BFDelResponse
-	(*BFAddResponse)(nil),     // 68: proto.BFAddResponse
-	(*BFExistResponse)(nil),   // 69: proto.BFExistResponse
-	(*HLLCreateResponse)(nil), // 70: proto.HLLCreateResponse
-	(*HLLDelResponse)(nil),    // 71: proto.HLLDelResponse
-	(*HLLAddResponse)(nil),    // 72: proto.HLLAddResponse
-	(*HLLCountResponse)(nil),  // 73: proto.HLLCountResponse
-	(*Message)(nil),           // 74: proto.Message
-	(*PublishResponse)(nil),   // 75: proto.PublishResponse
+	(*SetRequest)(nil),           // 0: proto.SetRequest
+	(*MSetRequest)(nil),          // 1: proto.MSetRequest
+	(*SetNXRequest)(nil),         // 2: proto.SetNXRequest
+	(*SetGetRequest)(nil),        // 3: proto.SetGetRequest
+	(*GetRequest)(nil),           // 4: proto.GetRequest
+	(*MGetRequest)(nil),          // 5: proto.MGetRequest
+	(*DelRequest)(nil),           // 6: proto.DelRequest
+	(*IncrRequest)(nil),          // 7: proto.IncrRequest
+	(*LPushRequest)(nil),         // 8: proto.LPushRequest
+	(*LPopRequest)(nil),          // 9: proto.LPopRequest
+	(*LRangeRequest)(nil),        // 10: proto.LRangeRequest
+	(*LExistRequest)(nil),        // 11: proto.LExistRequest
+	(*LDelRequest)(nil),          // 12: proto.LDelRequest
+	(*LCountRequest)(nil),        // 13: proto.LCountRequest
+	(*LMembersRequest)(nil),      // 14: proto.LMembersRequest
+	(*SPushRequest)(nil),         // 15: proto.SPushRequest
+	(*SPopRequest)(nil),          // 16: proto.SPopRequest
+	(*SExistRequest)(nil),        // 17: proto.SExistRequest
+	(*SDelRequest)(nil),          // 18: proto.SDelRequest
+	(*SCountRequest)(nil),        // 19: proto.SCountRequest
+	(*SMembersRequest)(nil),      // 20: proto.SMembersRequest
+	(*ZPushRequest)(nil),         // 21: proto.ZPushRequest
+	(*ZPopRequest)(nil),          // 22: proto.ZPopRequest
+	(*ZRangeRequest)(nil),        // 23: proto.ZRangeRequest
+	(*ZExistRequest)(nil),        // 24: proto.ZExistRequest
+	(*ZDelRequest)(nil),          // 25: proto.ZDelRequest
+	(*ZCountRequest)(nil),        // 26: proto.ZCountRequest
+	(*ZMembersRequest)(nil),      // 27: proto.ZMembersRequest
+	(*BFCreateRequest)(nil),      // 28: proto.BFCreateRequest
+	(*BFDelRequest)(nil),         // 29: proto.BFDelRequest
+	(*BFAddRequest)(nil),         // 30: proto.BFAddRequest
+	(*BFExistRequest)(nil),       // 31: proto.BFExistRequest
+	(*HLLCreateRequest)(nil),     // 32: proto.HLLCreateRequest
+	(*HLLDelRequest)(nil),        // 33: proto.HLLDelRequest
+	(*HLLAddRequest)(nil),        // 34: proto.HLLAddRequest
+	(*HLLCountRequest)(nil),      // 35: proto.HLLCountRequest
+	(*BSCreateRequest)(nil),      // 36: proto.BSCreateRequest
+	(*BSDelRequest)(nil),         // 37: proto.BSDelRequest
+	(*BSSetRangeRequest)(nil),    // 38: proto.BSSetRangeRequest
+	(*BSMSetRequest)(nil),        // 39: proto.BSMSetRequest
+	(*BSGetRangeRequest)(nil),    // 40: proto.BSGetRangeRequest
+	(*BSMGetRequest)(nil),        // 41: proto.BSMGetRequest
+	(*BSCountRequest)(nil),       // 42: proto.BSCountRequest
+	(*BSCountRangeRequest)(nil),  // 43: proto.BSCountRangeRequest
+	(*SubscribeRequest)(nil),     // 44: proto.SubscribeRequest
+	(*PublishRequest)(nil),       // 45: proto.PublishRequest
+	(*SetResponse)(nil),          // 46: proto.SetResponse
+	(*MSetResponse)(nil),         // 47: proto.MSetResponse
+	(*SetNXResponse)(nil),        // 48: proto.SetNXResponse
+	(*SetGetResponse)(nil),       // 49: proto.SetGetResponse
+	(*GetResponse)(nil),          // 50: proto.GetResponse
+	(*MGetResponse)(nil),         // 51: proto.MGetResponse
+	(*DelResponse)(nil),          // 52: proto.DelResponse
+	(*IncrResponse)(nil),         // 53: proto.IncrResponse
+	(*LPushResponse)(nil),        // 54: proto.LPushResponse
+	(*LPopResponse)(nil),         // 55: proto.LPopResponse
+	(*LRangeResponse)(nil),       // 56: proto.LRangeResponse
+	(*LExistResponse)(nil),       // 57: proto.LExistResponse
+	(*LDelResponse)(nil),         // 58: proto.LDelResponse
+	(*LCountResponse)(nil),       // 59: proto.LCountResponse
+	(*LMembersResponse)(nil),     // 60: proto.LMembersResponse
+	(*SPushResponse)(nil),        // 61: proto.SPushResponse
+	(*SPopResponse)(nil),         // 62: proto.SPopResponse
+	(*SExistResponse)(nil),       // 63: proto.SExistResponse
+	(*SDelResponse)(nil),         // 64: proto.SDelResponse
+	(*SCountResponse)(nil),       // 65: proto.SCountResponse
+	(*SMembersResponse)(nil),     // 66: proto.SMembersResponse
+	(*ZPushResponse)(nil),        // 67: proto.ZPushResponse
+	(*ZPopResponse)(nil),         // 68: proto.ZPopResponse
+	(*ZRangeResponse)(nil),       // 69: proto.ZRangeResponse
+	(*ZExistResponse)(nil),       // 70: proto.ZExistResponse
+	(*ZDelResponse)(nil),         // 71: proto.ZDelResponse
+	(*ZCountResponse)(nil),       // 72: proto.ZCountResponse
+	(*ZMembersResponse)(nil),     // 73: proto.ZMembersResponse
+	(*BFCreateResponse)(nil),     // 74: proto.BFCreateResponse
+	(*BFDelResponse)(nil),        // 75: proto.BFDelResponse
+	(*BFAddResponse)(nil),        // 76: proto.BFAddResponse
+	(*BFExistResponse)(nil),      // 77: proto.BFExistResponse
+	(*HLLCreateResponse)(nil),    // 78: proto.HLLCreateResponse
+	(*HLLDelResponse)(nil),       // 79: proto.HLLDelResponse
+	(*HLLAddResponse)(nil),       // 80: proto.HLLAddResponse
+	(*HLLCountResponse)(nil),     // 81: proto.HLLCountResponse
+	(*BSCreateResponse)(nil),     // 82: proto.BSCreateResponse
+	(*BSDelResponse)(nil),        // 83: proto.BSDelResponse
+	(*BSSetRangeResponse)(nil),   // 84: proto.BSSetRangeResponse
+	(*BSMSetResponse)(nil),       // 85: proto.BSMSetResponse
+	(*BSGetRangeResponse)(nil),   // 86: proto.BSGetRangeResponse
+	(*BSMGetResponse)(nil),       // 87: proto.BSMGetResponse
+	(*BSCountResponse)(nil),      // 88: proto.BSCountResponse
+	(*BSCountRangeResponse)(nil), // 89: proto.BSCountRangeResponse
+	(*Message)(nil),              // 90: proto.Message
+	(*PublishResponse)(nil),      // 91: proto.PublishResponse
 }
 var file_api_protobuf_spec_sdb_proto_depIdxs = []int32{
 	0,  // 0: proto.SDB.Set:input_type -> proto.SetRequest
@@ -290,48 +340,64 @@ var file_api_protobuf_spec_sdb_proto_depIdxs = []int32{
 	33, // 33: proto.SDB.HLLDel:input_type -> proto.HLLDelRequest
 	34, // 34: proto.SDB.HLLAdd:input_type -> proto.HLLAddRequest
 	35, // 35: proto.SDB.HLLCount:input_type -> proto.HLLCountRequest
-	36, // 36: proto.SDB.Subscribe:input_type -> proto.SubscribeRequest
-	37, // 37: proto.SDB.Publish:input_type -> proto.PublishRequest
-	38, // 38: proto.SDB.Set:output_type -> proto.SetResponse
-	39, // 39: proto.SDB.MSet:output_type -> proto.MSetResponse
-	40, // 40: proto.SDB.SetNX:output_type -> proto.SetNXResponse
-	41, // 41: proto.SDB.SetGet:output_type -> proto.SetGetResponse
-	42, // 42: proto.SDB.Get:output_type -> proto.GetResponse
-	43, // 43: proto.SDB.MGet:output_type -> proto.MGetResponse
-	44, // 44: proto.SDB.Del:output_type -> proto.DelResponse
-	45, // 45: proto.SDB.Incr:output_type -> proto.IncrResponse
-	46, // 46: proto.SDB.LPush:output_type -> proto.LPushResponse
-	47, // 47: proto.SDB.LPop:output_type -> proto.LPopResponse
-	48, // 48: proto.SDB.LRange:output_type -> proto.LRangeResponse
-	49, // 49: proto.SDB.LExist:output_type -> proto.LExistResponse
-	50, // 50: proto.SDB.LDel:output_type -> proto.LDelResponse
-	51, // 51: proto.SDB.LCount:output_type -> proto.LCountResponse
-	52, // 52: proto.SDB.LMembers:output_type -> proto.LMembersResponse
-	53, // 53: proto.SDB.SPush:output_type -> proto.SPushResponse
-	54, // 54: proto.SDB.SPop:output_type -> proto.SPopResponse
-	55, // 55: proto.SDB.SExist:output_type -> proto.SExistResponse
-	56, // 56: proto.SDB.SDel:output_type -> proto.SDelResponse
-	57, // 57: proto.SDB.SCount:output_type -> proto.SCountResponse
-	58, // 58: proto.SDB.SMembers:output_type -> proto.SMembersResponse
-	59, // 59: proto.SDB.ZPush:output_type -> proto.ZPushResponse
-	60, // 60: proto.SDB.ZPop:output_type -> proto.ZPopResponse
-	61, // 61: proto.SDB.ZRange:output_type -> proto.ZRangeResponse
-	62, // 62: proto.SDB.ZExist:output_type -> proto.ZExistResponse
-	63, // 63: proto.SDB.ZDel:output_type -> proto.ZDelResponse
-	64, // 64: proto.SDB.ZCount:output_type -> proto.ZCountResponse
-	65, // 65: proto.SDB.ZMembers:output_type -> proto.ZMembersResponse
-	66, // 66: proto.SDB.BFCreate:output_type -> proto.BFCreateResponse
-	67, // 67: proto.SDB.BFDel:output_type -> proto.BFDelResponse
-	68, // 68: proto.SDB.BFAdd:output_type -> proto.BFAddResponse
-	69, // 69: proto.SDB.BFExist:output_type -> proto.BFExistResponse
-	70, // 70: proto.SDB.HLLCreate:output_type -> proto.HLLCreateResponse
-	71, // 71: proto.SDB.HLLDel:output_type -> proto.HLLDelResponse
-	72, // 72: proto.SDB.HLLAdd:output_type -> proto.HLLAddResponse
-	73, // 73: proto.SDB.HLLCount:output_type -> proto.HLLCountResponse
-	74, // 74: proto.SDB.Subscribe:output_type -> proto.Message
-	75, // 75: proto.SDB.Publish:output_type -> proto.PublishResponse
-	38, // [38:76] is the sub-list for method output_type
-	0,  // [0:38] is the sub-list for method input_type
+	36, // 36: proto.SDB.BSCreate:input_type -> proto.BSCreateRequest
+	37, // 37: proto.SDB.BSDel:input_type -> proto.BSDelRequest
+	38, // 38: proto.SDB.BSSetRange:input_type -> proto.BSSetRangeRequest
+	39, // 39: proto.SDB.BSMSet:input_type -> proto.BSMSetRequest
+	40, // 40: proto.SDB.BSGetRange:input_type -> proto.BSGetRangeRequest
+	41, // 41: proto.SDB.BSMGet:input_type -> proto.BSMGetRequest
+	42, // 42: proto.SDB.BSCount:input_type -> proto.BSCountRequest
+	43, // 43: proto.SDB.BSCountRange:input_type -> proto.BSCountRangeRequest
+	44, // 44: proto.SDB.Subscribe:input_type -> proto.SubscribeRequest
+	45, // 45: proto.SDB.Publish:input_type -> proto.PublishRequest
+	46, // 46: proto.SDB.Set:output_type -> proto.SetResponse
+	47, // 47: proto.SDB.MSet:output_type -> proto.MSetResponse
+	48, // 48: proto.SDB.SetNX:output_type -> proto.SetNXResponse
+	49, // 49: proto.SDB.SetGet:output_type -> proto.SetGetResponse
+	50, // 50: proto.SDB.Get:output_type -> proto.GetResponse
+	51, // 51: proto.SDB.MGet:output_type -> proto.MGetResponse
+	52, // 52: proto.SDB.Del:output_type -> proto.DelResponse
+	53, // 53: proto.SDB.Incr:output_type -> proto.IncrResponse
+	54, // 54: proto.SDB.LPush:output_type -> proto.LPushResponse
+	55, // 55: proto.SDB.LPop:output_type -> proto.LPopResponse
+	56, // 56: proto.SDB.LRange:output_type -> proto.LRangeResponse
+	57, // 57: proto.SDB.LExist:output_type -> proto.LExistResponse
+	58, // 58: proto.SDB.LDel:output_type -> proto.LDelResponse
+	59, // 59: proto.SDB.LCount:output_type -> proto.LCountResponse
+	60, // 60: proto.SDB.LMembers:output_type -> proto.LMembersResponse
+	61, // 61: proto.SDB.SPush:output_type -> proto.SPushResponse
+	62, // 62: proto.SDB.SPop:output_type -> proto.SPopResponse
+	63, // 63: proto.SDB.SExist:output_type -> proto.SExistResponse
+	64, // 64: proto.SDB.SDel:output_type -> proto.SDelResponse
+	65, // 65: proto.SDB.SCount:output_type -> proto.SCountResponse
+	66, // 66: proto.SDB.SMembers:output_type -> proto.SMembersResponse
+	67, // 67: proto.SDB.ZPush:output_type -> proto.ZPushResponse
+	68, // 68: proto.SDB.ZPop:output_type -> proto.ZPopResponse
+	69, // 69: proto.SDB.ZRange:output_type -> proto.ZRangeResponse
+	70, // 70: proto.SDB.ZExist:output_type -> proto.ZExistResponse
+	71, // 71: proto.SDB.ZDel:output_type -> proto.ZDelResponse
+	72, // 72: proto.SDB.ZCount:output_type -> proto.ZCountResponse
+	73, // 73: proto.SDB.ZMembers:output_type -> proto.ZMembersResponse
+	74, // 74: proto.SDB.BFCreate:output_type -> proto.BFCreateResponse
+	75, // 75: proto.SDB.BFDel:output_type -> proto.BFDelResponse
+	76, // 76: proto.SDB.BFAdd:output_type -> proto.BFAddResponse
+	77, // 77: proto.SDB.BFExist:output_type -> proto.BFExistResponse
+	78, // 78: proto.SDB.HLLCreate:output_type -> proto.HLLCreateResponse
+	79, // 79: proto.SDB.HLLDel:output_type -> proto.HLLDelResponse
+	80, // 80: proto.SDB.HLLAdd:output_type -> proto.HLLAddResponse
+	81, // 81: proto.SDB.HLLCount:output_type -> proto.HLLCountResponse
+	82, // 82: proto.SDB.BSCreate:output_type -> proto.BSCreateResponse
+	83, // 83: proto.SDB.BSDel:output_type -> proto.BSDelResponse
+	84, // 84: proto.SDB.BSSetRange:output_type -> proto.BSSetRangeResponse
+	85, // 85: proto.SDB.BSMSet:output_type -> proto.BSMSetResponse
+	86, // 86: proto.SDB.BSGetRange:output_type -> proto.BSGetRangeResponse
+	87, // 87: proto.SDB.BSMGet:output_type -> proto.BSMGetResponse
+	88, // 88: proto.SDB.BSCount:output_type -> proto.BSCountResponse
+	89, // 89: proto.SDB.BSCountRange:output_type -> proto.BSCountRangeResponse
+	90, // 90: proto.SDB.Subscribe:output_type -> proto.Message
+	91, // 91: proto.SDB.Publish:output_type -> proto.PublishResponse
+	46, // [46:92] is the sub-list for method output_type
+	0,  // [0:46] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name
 	0,  // [0:0] is the sub-list for extension extendee
 	0,  // [0:0] is the sub-list for field type_name
@@ -348,6 +414,7 @@ func file_api_protobuf_spec_sdb_proto_init() {
 	file_api_protobuf_spec_sorted_set_proto_init()
 	file_api_protobuf_spec_bloom_filter_proto_init()
 	file_api_protobuf_spec_hyper_log_log_proto_init()
+	file_api_protobuf_spec_bitset_proto_init()
 	file_api_protobuf_spec_pub_sub_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
