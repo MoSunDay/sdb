@@ -11,7 +11,7 @@ import (
 var NotFoundBloomFilterError = errors.New("not found bloom filter, please create it")
 var BloomFilterExistError = errors.New("bloom filter exist, please delete it or change other")
 
-const bloomFilterKeyTemplate = "b/%s"
+const bloomFilterKeyTemplate = "bf/%s"
 
 func BFCreate(key []byte, n uint32, p float64) (bool, error) {
 	lock(LBloomFilter, key)

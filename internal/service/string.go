@@ -6,7 +6,7 @@ import (
 	"strconv"
 )
 
-const stringKeyPrefixTemplate = "s/%s"
+const stringKeyPrefixTemplate = "ss/%s"
 
 func Set(key []byte, value []byte) (bool, error) {
 	lock(LString, key)

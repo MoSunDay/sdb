@@ -13,7 +13,7 @@ import (
 
 const sortedSetScoreKeyPrefixTemplate = "zs/%s"
 const sortedSetScoreKeyTemplate = sortedSetScoreKeyPrefixTemplate + "/%s"
-const sortedSetTupleKeyPrefixTemplate = "z/%s"
+const sortedSetTupleKeyPrefixTemplate = "zt/%s"
 const sortedSetTupleKeyTemplate = sortedSetTupleKeyPrefixTemplate + "/%s/%s"
 
 func ZPush(key []byte, tuples []*pb.Tuple) (bool, error) {

@@ -11,7 +11,7 @@ import (
 	"strings"
 )
 
-const listKeyPrefixTemplate = "l/%s"
+const listKeyPrefixTemplate = "ll/%s"
 const listKeyTemplate = listKeyPrefixTemplate + "/%d"
 const listIdKeyPrefixTemplate = "li/%s/%s"
 const listIdKeyTemplate = listIdKeyPrefixTemplate + "/%d"

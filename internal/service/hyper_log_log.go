@@ -3,14 +3,14 @@ package service
 import (
 	"errors"
 	"fmt"
-	"github.com/yemingfeng/sdb/internal/store"
 	"github.com/axiomhq/hyperloglog"
+	"github.com/yemingfeng/sdb/internal/store"
 )
 
 var NotFoundHyperLogLogError = errors.New("not found hyper log log, please create it")
 var HyperLogLogExistError = errors.New("hyper log log exist, please delete it or change other")
 
-const hyperLogLogKeyTemplate = "h/%s"
+const hyperLogLogKeyTemplate = "hl/%s"
 
 func HLLCreate(key []byte) (bool, error) {
 	lock(LHyperLogLog, key)
