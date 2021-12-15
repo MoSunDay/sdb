@@ -7,7 +7,7 @@ import (
 	"math"
 )
 
-const setKeyPrefixTemplate = "s/%s"
+const setKeyPrefixTemplate = "sk/%s"
 const setKeyTemplate = setKeyPrefixTemplate + "/%s"
 
 func SPush(key []byte, values [][]byte) (bool, error) {
