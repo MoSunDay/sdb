@@ -158,35 +158,35 @@ Incr | key, delta | 对 key 进行加 delta 操作，如果 value 不为数字�
 接口 | 参数 | 描述
 ---- | --- | ---
 LPush | key, values | 把 values 追加到 key 数组后面
-LPop | keys, values | 删除 key 数组中的所有的 values 元素
+LPop | keys, values | 删除 key 数组中所有的 values 元素
 LRange | key, offset, limit | 按数组顺序遍历 key，从 0 开始。如果 offset = -1，则从后向前遍历
 LExist | key, values | 判断 values 是否存在 key 数组中
 LDel | key | 删除某个 key 数组
-LCount | key | 返回 key 数组中的元素个数，时间复杂度较高，不推荐使用
-LMembers | key | 按数组顺利遍历 key。时间复杂度较高，不推荐使用
+LCount | key | 返回 key 数组中的元素个数，时间复杂度较高，**不推荐使用**
+LMembers | key | 按数组顺序遍历 key。时间复杂度较高，**不推荐使用**
 
 #### set
 
 接口 | 参数 | 描述
 ---- | --- | ---
 SPush | key, values | 把 values 加到 key 集合中
-SPop | keys, values | 删除 key 集合中的所有的 values 元素
+SPop | keys, values | 删除 key 集合中所有的 values 元素
 SExist | key, values | 判断 values 是否存在 key 集合中
 SDel | key | 删除某个 key 集合
-SCount | key | 返回 key 集合中的元素个数，时间复杂度较高，不推荐使用
-SMembers | key | 按 value 大小遍历 key。时间复杂度较高，不推荐使用
+SCount | key | 返回 key 集合中的元素个数，时间复杂度较高，**不推荐使用**
+SMembers | key | 按 value 大小遍历 key。时间复杂度较高，**不推荐使用**
 
 #### sorted set
 
 接口 | 参数 | 描述
 ---- | --- | ---
 ZPush | key, tuples | 把 values 加到 key 有序集合中，按 tuple.score 从小到大排序
-ZPop | keys, values | 删除 key 有序集合中的所有的 values 元素
+ZPop | keys, values | 删除 key 有序集合中所有的 values 元素
 ZRange | key, offset, limit | 按 score 大小，从小到大遍历 key。如果 offset = -1，则按 score 从大到小开始遍历
 ZExist | key, values | 判断 values 是否存在 key 有序集合中
 ZDel | key | 删除某个 key 有序集合
-ZCount | key | 返回 key 有序集合中的元素个数，时间复杂度较高，不推荐使用
-ZMembers | key | 按 score 大小，从小到大遍历 key。时间复杂度较高，不推荐使用
+ZCount | key | 返回 key 有序集合中的元素个数，时间复杂度较高，**不推荐使用**
+ZMembers | key | 按 score 大小，从小到大遍历 key。时间复杂度较高，**不推荐使用**
 
 #### bloom filter
 
@@ -376,14 +376,14 @@ func LPop(key []byte, values [][]byte) (bool, error) {
 
 和删除逻辑类似，通过 iterator
 接口进行遍历。 [这里对反向迭代做了额外的支持](https://github.com/yemingfeng/sdb/blob/master/internal/store/engine/pebble/store.go#L93)
-允许 Offset 传入 -1，代表从后进行迭代。
+允许 offset 传入 -1，代表从后进行迭代。
 
 ```go
-func LRange(key []byte, offset int32, limit int32) ([][]byte, error) {
+func LRange(key []byte, offset int32, limit uint32) ([][]byte, error) {
 	index := int32(0)
 	res := make([][]byte, limit)
-	store.Iterate(&store.IteratorOption{
-		Prefix: generateListPrefixKey(key), Offset: int(offset), Limit: int(limit)},
+	store.Iterate(&engine.PrefixIteratorOption{
+		Prefix: generateListPrefixKey(key), Offset: offset, Limit: limit},
 		func(key []byte, value []byte) {
 			res[index] = value
 			index++
