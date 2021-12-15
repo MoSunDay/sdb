@@ -10,6 +10,6 @@ server:
   # http 配置
   http_port: 8081
   # 限流容量，每秒的 qps 限制
-  rate: 300000
+  rate: 1000
   # 慢请求的阈值，单位为 ms
   slow_query_threshold: 100

@@ -125,7 +125,7 @@ func main() {
 
 ------
 
-### [配置大全](https://github.com/yemingfeng/sdb/blob/master/configs/config.yml)
+### [配置参数](https://github.com/yemingfeng/sdb/blob/master/configs/config.yml)
 
 参数名 | 含义 | 默认值
 ---- | --- | ---
@@ -133,7 +133,7 @@ store.engine | 存储引擎，可选 pebble、level、badger | pebble
 store.path | 存储目录 | ./db
 server.grpc_port | grpc 监听的端口 | 9000
 server.http_port | http 监控的端口，供 prometheus 使用 | 8081
-server.rate | 每秒 qps 的限制 | 30000
+server.rate | 每秒 qps 的限制 | 1000
 server.slow_query_threshold | 慢查询记录的阈值，单位为 ms | 100
 
 ------
