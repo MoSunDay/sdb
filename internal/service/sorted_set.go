@@ -73,11 +73,11 @@ func ZPop(key []byte, values [][]byte) (bool, error) {
 	return batch.Commit()
 }
 
-func ZRange(key []byte, offset int32, limit int32) ([]*pb.Tuple, error) {
+func ZRange(key []byte, offset int32, limit uint32) ([]*pb.Tuple, error) {
 	index := int32(0)
 	res := make([]*pb.Tuple, limit)
 	store.Iterate(&engine.PrefixIteratorOption{Prefix: generateSortedSetTupleKeyPrefix(key),
-		Offset: int(offset), Limit: int(limit)},
+		Offset: offset, Limit: limit},
 		func(key []byte, value []byte) {
 			// zs/{key}/{score}/{value} -> {value}
 			infos := strings.Split(string(key), "/")
@@ -121,8 +121,8 @@ func ZDel(key []byte) (bool, error) {
 	return batch.Commit()
 }
 
-func ZCount(key []byte) (int32, error) {
-	count := int32(0)
+func ZCount(key []byte) (uint32, error) {
+	count := uint32(0)
 	store.Iterate(&engine.PrefixIteratorOption{Prefix: generateSortedSetTupleKeyPrefix(key)},
 		func(_ []byte, _ []byte) {
 			count++

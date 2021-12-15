@@ -71,7 +71,7 @@ func (store *BadgerStore) Iterate(opt *engine.PrefixIteratorOption, handle func(
 		}
 
 		i := 0
-		for it.Seek(prefix); i < opt.Offset && it.ValidForPrefix(opt.Prefix); it.Next() {
+		for it.Seek(prefix); i < int(opt.Offset) && it.ValidForPrefix(opt.Prefix); it.Next() {
 			i++
 		}
 
@@ -82,7 +82,7 @@ func (store *BadgerStore) Iterate(opt *engine.PrefixIteratorOption, handle func(
 				return nil
 			})
 			i++
-			if opt.Limit > 0 && i == opt.Limit {
+			if opt.Limit > 0 && i == int(opt.Limit) {
 				break
 			}
 		}

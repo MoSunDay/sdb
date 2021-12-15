@@ -64,7 +64,7 @@ func (store *LevelStore) Iterate(opt *engine.PrefixIteratorOption, handle func([
 
 	if opt.Offset >= 0 {
 		i := 0
-		for it.First(); i < opt.Offset && it.Valid(); it.Next() {
+		for it.First(); i < int(opt.Offset) && it.Valid(); it.Next() {
 			i++
 		}
 
@@ -72,13 +72,13 @@ func (store *LevelStore) Iterate(opt *engine.PrefixIteratorOption, handle func([
 		for ; it.Valid(); it.Next() {
 			handle(util2.Copy2(it.Key()), util2.Copy2(it.Value()))
 			i++
-			if opt.Limit > 0 && i == opt.Limit {
+			if opt.Limit > 0 && i == int(opt.Limit) {
 				break
 			}
 		}
 	} else {
 		i := 0
-		for it.Last(); i < -opt.Offset-1 && it.Valid(); it.Prev() {
+		for it.Last(); i < int(-opt.Offset-1) && it.Valid(); it.Prev() {
 			i++
 		}
 
@@ -86,7 +86,7 @@ func (store *LevelStore) Iterate(opt *engine.PrefixIteratorOption, handle func([
 		for ; it.Valid(); it.Prev() {
 			handle(util2.Copy2(it.Key()), util2.Copy2(it.Value()))
 			i++
-			if opt.Limit > 0 && i == opt.Limit {
+			if opt.Limit > 0 && i == int(opt.Limit) {
 				break
 			}
 		}

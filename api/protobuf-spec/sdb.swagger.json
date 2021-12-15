@@ -1864,7 +1864,7 @@
       "properties": {
         "count": {
           "type": "integer",
-          "format": "int32"
+          "format": "int64"
         }
       }
     },
@@ -1994,7 +1994,7 @@
         },
         "limit": {
           "type": "integer",
-          "format": "int32"
+          "format": "int64"
         }
       }
     },
@@ -2096,7 +2096,7 @@
       "properties": {
         "count": {
           "type": "integer",
-          "format": "int32"
+          "format": "int64"
         }
       }
     },
@@ -2307,7 +2307,7 @@
       "properties": {
         "count": {
           "type": "integer",
-          "format": "int32"
+          "format": "int64"
         }
       }
     },
@@ -2435,7 +2435,7 @@
         },
         "limit": {
           "type": "integer",
-          "format": "int32"
+          "format": "int64"
         }
       }
     },

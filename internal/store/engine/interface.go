@@ -19,6 +19,6 @@ type Batch interface {
 type PrefixIteratorOption struct {
 	Prefix []byte
 
-	Offset int
-	Limit  int
+	Offset int32
+	Limit  uint32
 }

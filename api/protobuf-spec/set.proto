@@ -43,7 +43,7 @@ message SCountRequest {
 }
 
 message SCountResponse {
-  int32 count = 1;
+  uint32 count = 1;
 }
 
 message SMembersRequest {

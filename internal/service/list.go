@@ -55,11 +55,11 @@ func LPop(key []byte, values [][]byte) (bool, error) {
 	return batch.Commit()
 }
 
-func LRange(key []byte, offset int32, limit int32) ([][]byte, error) {
+func LRange(key []byte, offset int32, limit uint32) ([][]byte, error) {
 	index := int32(0)
 	res := make([][]byte, limit)
 	store.Iterate(&engine.PrefixIteratorOption{
-		Prefix: generateListPrefixKey(key), Offset: int(offset), Limit: int(limit)},
+		Prefix: generateListPrefixKey(key), Offset: offset, Limit: limit},
 		func(key []byte, value []byte) {
 			res[index] = value
 			index++
@@ -108,8 +108,8 @@ func LDel(key []byte) (bool, error) {
 	return batch.Commit()
 }
 
-func LCount(key []byte) (int32, error) {
-	count := int32(0)
+func LCount(key []byte) (uint32, error) {
+	count := uint32(0)
 	store.Iterate(&engine.PrefixIteratorOption{Prefix: generateListPrefixKey(key)},
 		func(key []byte, value []byte) {
 			count++

@@ -65,8 +65,8 @@ func SDel(key []byte) (bool, error) {
 	return batch.Commit()
 }
 
-func SCount(key []byte) (int32, error) {
-	count := int32(0)
+func SCount(key []byte) (uint32, error) {
+	count := uint32(0)
 	store.Iterate(&engine.PrefixIteratorOption{Prefix: generateSetPrefixKey(key)},
 		func(key []byte, value []byte) {
 			count = count + 1
