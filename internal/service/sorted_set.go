@@ -1,14 +1,12 @@
 package service
 
 import (
-	"encoding/binary"
 	"fmt"
 	"github.com/yemingfeng/sdb/internal/store"
 	"github.com/yemingfeng/sdb/internal/store/engine"
 	"github.com/yemingfeng/sdb/pkg/pb"
+	"google.golang.org/protobuf/proto"
 	"math"
-	"strconv"
-	"strings"
 )
 
 const sortedSetScoreKeyPrefixTemplate = "zs/%s"
@@ -25,24 +23,31 @@ func ZPush(key []byte, tuples []*pb.Tuple) (bool, error) {
 	defer batch.Close()
 
 	for _, tuple := range tuples {
-		// get key z/{key}/{value} 获取 score
-		existScoreBytes, err := store.Get(generateSortedSetScoreKey(key, tuple.Value))
+		value, err := proto.Marshal(tuple)
+		if err != nil {
+			return false, err
+		}
+		// get key z/{key}/{value} 获取 tuple
+		exist, err := store.Get(generateSortedSetScoreKey(key, tuple.Value))
 		if err != nil {
 			return false, err
 		}
 
 		// remove key zs/{key}/{score}/{value}
-		if existScoreBytes != nil {
-			existScore := math.Float64frombits(binary.LittleEndian.Uint64(existScoreBytes))
-			batch.Del(generateSortedSetTupleKey(key, existScore, tuple.Value))
+		if exist != nil && len(exist) > 0 {
+			existTuple := pb.Tuple{}
+			err := proto.Unmarshal(exist, &existTuple)
+			if err != nil {
+				return false, err
+			}
+			batch.Del(generateSortedSetTupleKey(key, existTuple.Score, tuple.Value))
 		}
 
-		// add key z/{key}/{value} -> score
-		batch.Set(generateSortedSetScoreKey(key, tuple.Value),
-			generateSortedSetScoreKeyValue(tuple.Score))
+		// add key z/{key}/{value} -> tuple
+		batch.Set(generateSortedSetScoreKey(key, tuple.Value), value)
 
-		// add key zs/{key}/{score}/{value} -> value
-		batch.Set(generateSortedSetTupleKey(key, tuple.Score, tuple.Value), tuple.Value)
+		// add key zs/{key}/{score}/{value} -> tuple
+		batch.Set(generateSortedSetTupleKey(key, tuple.Score, tuple.Value), value)
 	}
 
 	return batch.Commit()
@@ -56,17 +61,17 @@ func ZPop(key []byte, values [][]byte) (bool, error) {
 	defer batch.Close()
 
 	for _, value := range values {
-		existScoreStr, err := store.Get(generateSortedSetScoreKey(key, value))
+		exist, err := store.Get(generateSortedSetScoreKey(key, value))
 		if err != nil {
 			return false, err
 		}
-		if existScoreStr != nil {
-			batch.Del(generateSortedSetScoreKey(key, value))
-			existScore, err := strconv.ParseFloat(string(existScoreStr), 64)
-			if err != nil {
+		if exist != nil && len(exist) > 0 {
+			existTuple := pb.Tuple{}
+			if err := proto.Unmarshal(exist, &existTuple); err != nil {
 				return false, err
 			}
-			batch.Del(generateSortedSetTupleKey(key, existScore, value))
+			batch.Del(generateSortedSetScoreKey(key, value))
+			batch.Del(generateSortedSetTupleKey(key, existTuple.Score, value))
 		}
 	}
 
@@ -79,11 +84,9 @@ func ZRange(key []byte, offset int32, limit uint32) ([]*pb.Tuple, error) {
 	store.Iterate(&engine.PrefixIteratorOption{Prefix: generateSortedSetTupleKeyPrefix(key),
 		Offset: offset, Limit: limit},
 		func(key []byte, value []byte) {
-			// zs/{key}/{score}/{value} -> {value}
-			infos := strings.Split(string(key), "/")
-			scoreStr := infos[2]
-			score, _ := strconv.ParseFloat(scoreStr, 64)
-			res[index] = &pb.Tuple{Score: score, Value: value}
+			tuple := pb.Tuple{}
+			_ = proto.Unmarshal(value, &tuple)
+			res[index] = &tuple
 			index++
 		})
 	return res[0:index], nil
@@ -92,11 +95,11 @@ func ZRange(key []byte, offset int32, limit uint32) ([]*pb.Tuple, error) {
 func ZExist(key []byte, values [][]byte) ([]bool, error) {
 	res := make([]bool, len(values))
 	for i, value := range values {
-		scoreStr, err := store.Get(generateSortedSetScoreKey(key, value))
+		exist, err := store.Get(generateSortedSetScoreKey(key, value))
 		if err != nil {
 			return nil, err
 		}
-		res[i] = len(scoreStr) > 0
+		res[i] = len(exist) > 0
 	}
 	return res, nil
 }
@@ -136,11 +139,10 @@ func ZMembers(key []byte) ([]*pb.Tuple, error) {
 	store.Iterate(&engine.PrefixIteratorOption{Prefix: generateSortedSetTupleKeyPrefix(key),
 		Offset: 0, Limit: math.MaxInt32},
 		func(key []byte, value []byte) {
-			// zs/{key}/{score}/{value} -> {value}
-			infos := strings.Split(string(key), "/")
-			scoreStr := infos[2]
-			score, _ := strconv.ParseFloat(scoreStr, 64)
-			res = append(res, &pb.Tuple{Score: score, Value: value})
+			// zs/{key}/{score}/{value} -> {tuple}
+			tuple := pb.Tuple{}
+			_ = proto.Unmarshal(value, &tuple)
+			res = append(res, &tuple)
 			index++
 		})
 	return res[0:index], nil
