@@ -24,6 +24,7 @@ type SDBGrpcServer struct {
 	BloomFilterServer
 	HyperLogLogServer
 	BitsetServer
+	MapServer
 	PubSubServer
 }
 

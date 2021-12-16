@@ -32,6 +32,7 @@
     - [bloom filter](https://github.com/yemingfeng/sdb/blob/master/api/protobuf-spec/bloom_filter.proto)
     - [hyper log log](https://github.com/yemingfeng/sdb/blob/master/api/protobuf-spec/hyper_log_log.proto)
     - [bitset](https://github.com/yemingfeng/sdb/blob/master/api/protobuf-spec/bitset.proto)
+    - [map](https://github.com/yemingfeng/sdb/blob/master/api/protobuf-spec/map.proto)
     - [pub sub](https://github.com/yemingfeng/sdb/blob/master/api/protobuf-spec/pub_sub.proto)
 - 持久化
     - 兼容 [pebble](https://github.com/cockroachdb/pebble)
@@ -63,8 +64,8 @@
     - [x] Sorted Set
         - [x] ZMembers
 - [ ] 支持更丰富的数据结构 (2021.01.20)
-    - [x] Bitset
-    - [ ] Hash
+    - [x] bitset
+    - [x] map
     - [ ] geo hash
     - [ ] reverted index
     - [ ] vector search
@@ -122,6 +123,7 @@ func main() {
 - [bloom filter 操作](https://github.com/yemingfeng/sdb/blob/master/examples/bloom_filter.go)
 - [hyper log log 操作](https://github.com/yemingfeng/sdb/blob/master/examples/hyper_log_log.go)
 - [bitset 操作](https://github.com/yemingfeng/sdb/blob/master/examples/bitset.go)
+- [map 操作](https://github.com/yemingfeng/sdb/blob/master/examples/map.go)
 - [pub sub 操作](https://github.com/yemingfeng/sdb/blob/master/examples/pub_sub.go)
 
 ------
@@ -220,6 +222,17 @@ BSGetRange | key, start, end | 获取 key [start, end) 范围的 bit
 BSMGet | key, bits | 获取 key bits 的 bit
 BSMCount | key | 获取 key bit = 1 的个数
 BSMCountRange | key, start, end | 获取 key [start, end) bit = 1 的个数
+
+#### map
+
+接口 | 参数 | 描述
+---- | --- | ---
+MPush | key, pairs | 把 pairs KV 对加到 key map 中
+MPop | key, keys | 删除 key map 中所有的 keys 元素
+MExist | key, keys | 判断 keys 是否存在 key map 中
+MDel | key | 删除某个 key map
+MCount | key | 返回 key map 中的元素个数，时间复杂度较高，**不推荐使用**
+MMembers | key | 按 pair.key 大小遍历 pair。时间复杂度较高，**不推荐使用**
 
 #### pub sub
 

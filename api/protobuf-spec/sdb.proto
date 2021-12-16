@@ -10,6 +10,7 @@ import "api/protobuf-spec/sorted_set.proto";
 import "api/protobuf-spec/bloom_filter.proto";
 import "api/protobuf-spec/hyper_log_log.proto";
 import "api/protobuf-spec/bitset.proto";
+import "api/protobuf-spec/map.proto";
 import "api/protobuf-spec/pub_sub.proto";
 
 service SDB {
@@ -71,6 +72,14 @@ service SDB {
   rpc BSMGet(BSMGetRequest) returns (BSMGetResponse) {}
   rpc BSCount(BSCountRequest) returns (BSCountResponse) {}
   rpc BSCountRange(BSCountRangeRequest) returns (BSCountRangeResponse) {}
+
+  // map 类型的存储
+  rpc MPush(MPushRequest) returns (MPushResponse) {}
+  rpc MPop(MPopRequest) returns (MPopResponse) {}
+  rpc MExist(MExistRequest) returns (MExistResponse) {}
+  rpc MDel(MDelRequest) returns (MDelResponse) {}
+  rpc MCount(MCountRequest) returns (MCountResponse) {}
+  rpc MMembers(MMembersRequest) returns (MMembersResponse) {}
 
   // pub/sub
   rpc Subscribe(SubscribeRequest) returns (stream Message) {}

@@ -144,3 +144,22 @@ http:
     - selector: proto.SDB.BSCountRange
       post: /v1/bs-count-range
       body: "*"
+
+    - selector: proto.SDB.MPush
+      post: /v1/m-push
+      body: "*"
+    - selector: proto.SDB.MPop
+      post: /v1/m-pop
+      body: "*"
+    - selector: proto.SDB.MExist
+      post: /v1/m-exist
+      body: "*"
+    - selector: proto.SDB.MDel
+      post: /v1/m-del
+      body: "*"
+    - selector: proto.SDB.MCount
+      post: /v1/m-count
+      body: "*"
+    - selector: proto.SDB.MMembers
+      post: /v1/m-members
+      body: "*"

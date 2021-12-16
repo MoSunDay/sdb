@@ -70,6 +70,13 @@ type SDBClient interface {
 	BSMGet(ctx context.Context, in *BSMGetRequest, opts ...grpc.CallOption) (*BSMGetResponse, error)
 	BSCount(ctx context.Context, in *BSCountRequest, opts ...grpc.CallOption) (*BSCountResponse, error)
 	BSCountRange(ctx context.Context, in *BSCountRangeRequest, opts ...grpc.CallOption) (*BSCountRangeResponse, error)
+	// map 类型的存储
+	MPush(ctx context.Context, in *MPushRequest, opts ...grpc.CallOption) (*MPushResponse, error)
+	MPop(ctx context.Context, in *MPopRequest, opts ...grpc.CallOption) (*MPopResponse, error)
+	MExist(ctx context.Context, in *MExistRequest, opts ...grpc.CallOption) (*MExistResponse, error)
+	MDel(ctx context.Context, in *MDelRequest, opts ...grpc.CallOption) (*MDelResponse, error)
+	MCount(ctx context.Context, in *MCountRequest, opts ...grpc.CallOption) (*MCountResponse, error)
+	MMembers(ctx context.Context, in *MMembersRequest, opts ...grpc.CallOption) (*MMembersResponse, error)
 	// pub/sub
 	Subscribe(ctx context.Context, in *SubscribeRequest, opts ...grpc.CallOption) (SDB_SubscribeClient, error)
 	Publish(ctx context.Context, in *PublishRequest, opts ...grpc.CallOption) (*PublishResponse, error)
@@ -488,6 +495,60 @@ func (c *sDBClient) BSCountRange(ctx context.Context, in *BSCountRangeRequest, o
 	return out, nil
 }
 
+func (c *sDBClient) MPush(ctx context.Context, in *MPushRequest, opts ...grpc.CallOption) (*MPushResponse, error) {
+	out := new(MPushResponse)
+	err := c.cc.Invoke(ctx, "/proto.SDB/MPush", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *sDBClient) MPop(ctx context.Context, in *MPopRequest, opts ...grpc.CallOption) (*MPopResponse, error) {
+	out := new(MPopResponse)
+	err := c.cc.Invoke(ctx, "/proto.SDB/MPop", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *sDBClient) MExist(ctx context.Context, in *MExistRequest, opts ...grpc.CallOption) (*MExistResponse, error) {
+	out := new(MExistResponse)
+	err := c.cc.Invoke(ctx, "/proto.SDB/MExist", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *sDBClient) MDel(ctx context.Context, in *MDelRequest, opts ...grpc.CallOption) (*MDelResponse, error) {
+	out := new(MDelResponse)
+	err := c.cc.Invoke(ctx, "/proto.SDB/MDel", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *sDBClient) MCount(ctx context.Context, in *MCountRequest, opts ...grpc.CallOption) (*MCountResponse, error) {
+	out := new(MCountResponse)
+	err := c.cc.Invoke(ctx, "/proto.SDB/MCount", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *sDBClient) MMembers(ctx context.Context, in *MMembersRequest, opts ...grpc.CallOption) (*MMembersResponse, error) {
+	out := new(MMembersResponse)
+	err := c.cc.Invoke(ctx, "/proto.SDB/MMembers", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *sDBClient) Subscribe(ctx context.Context, in *SubscribeRequest, opts ...grpc.CallOption) (SDB_SubscribeClient, error) {
 	stream, err := c.cc.NewStream(ctx, &SDB_ServiceDesc.Streams[0], "/proto.SDB/Subscribe", opts...)
 	if err != nil {
@@ -585,6 +646,13 @@ type SDBServer interface {
 	BSMGet(context.Context, *BSMGetRequest) (*BSMGetResponse, error)
 	BSCount(context.Context, *BSCountRequest) (*BSCountResponse, error)
 	BSCountRange(context.Context, *BSCountRangeRequest) (*BSCountRangeResponse, error)
+	// map 类型的存储
+	MPush(context.Context, *MPushRequest) (*MPushResponse, error)
+	MPop(context.Context, *MPopRequest) (*MPopResponse, error)
+	MExist(context.Context, *MExistRequest) (*MExistResponse, error)
+	MDel(context.Context, *MDelRequest) (*MDelResponse, error)
+	MCount(context.Context, *MCountRequest) (*MCountResponse, error)
+	MMembers(context.Context, *MMembersRequest) (*MMembersResponse, error)
 	// pub/sub
 	Subscribe(*SubscribeRequest, SDB_SubscribeServer) error
 	Publish(context.Context, *PublishRequest) (*PublishResponse, error)
@@ -728,6 +796,24 @@ func (UnimplementedSDBServer) BSCount(context.Context, *BSCountRequest) (*BSCoun
 }
 func (UnimplementedSDBServer) BSCountRange(context.Context, *BSCountRangeRequest) (*BSCountRangeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BSCountRange not implemented")
+}
+func (UnimplementedSDBServer) MPush(context.Context, *MPushRequest) (*MPushResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MPush not implemented")
+}
+func (UnimplementedSDBServer) MPop(context.Context, *MPopRequest) (*MPopResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MPop not implemented")
+}
+func (UnimplementedSDBServer) MExist(context.Context, *MExistRequest) (*MExistResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MExist not implemented")
+}
+func (UnimplementedSDBServer) MDel(context.Context, *MDelRequest) (*MDelResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MDel not implemented")
+}
+func (UnimplementedSDBServer) MCount(context.Context, *MCountRequest) (*MCountResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MCount not implemented")
+}
+func (UnimplementedSDBServer) MMembers(context.Context, *MMembersRequest) (*MMembersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MMembers not implemented")
 }
 func (UnimplementedSDBServer) Subscribe(*SubscribeRequest, SDB_SubscribeServer) error {
 	return status.Errorf(codes.Unimplemented, "method Subscribe not implemented")
@@ -1557,6 +1643,114 @@ func _SDB_BSCountRange_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _SDB_MPush_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MPushRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SDBServer).MPush(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.SDB/MPush",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SDBServer).MPush(ctx, req.(*MPushRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SDB_MPop_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MPopRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SDBServer).MPop(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.SDB/MPop",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SDBServer).MPop(ctx, req.(*MPopRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SDB_MExist_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MExistRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SDBServer).MExist(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.SDB/MExist",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SDBServer).MExist(ctx, req.(*MExistRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SDB_MDel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MDelRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SDBServer).MDel(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.SDB/MDel",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SDBServer).MDel(ctx, req.(*MDelRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SDB_MCount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MCountRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SDBServer).MCount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.SDB/MCount",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SDBServer).MCount(ctx, req.(*MCountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SDB_MMembers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MMembersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SDBServer).MMembers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.SDB/MMembers",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SDBServer).MMembers(ctx, req.(*MMembersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _SDB_Subscribe_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(SubscribeRequest)
 	if err := stream.RecvMsg(m); err != nil {
@@ -1782,6 +1976,30 @@ var SDB_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "BSCountRange",
 			Handler:    _SDB_BSCountRange_Handler,
+		},
+		{
+			MethodName: "MPush",
+			Handler:    _SDB_MPush_Handler,
+		},
+		{
+			MethodName: "MPop",
+			Handler:    _SDB_MPop_Handler,
+		},
+		{
+			MethodName: "MExist",
+			Handler:    _SDB_MExist_Handler,
+		},
+		{
+			MethodName: "MDel",
+			Handler:    _SDB_MDel_Handler,
+		},
+		{
+			MethodName: "MCount",
+			Handler:    _SDB_MCount_Handler,
+		},
+		{
+			MethodName: "MMembers",
+			Handler:    _SDB_MMembers_Handler,
 		},
 		{
 			MethodName: "Publish",

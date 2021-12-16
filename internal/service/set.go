@@ -78,7 +78,7 @@ func SMembers(key []byte) ([][]byte, error) {
 	index := int32(0)
 	res := make([][]byte, 0)
 	store.Iterate(&engine.PrefixIteratorOption{
-		Prefix: generateStringKey(key), Offset: 0, Limit: math.MaxInt32},
+		Prefix: generateSetPrefixKey(key), Offset: 0, Limit: math.MaxInt32},
 		func(key []byte, value []byte) {
 			res = append(res, value)
 			index++

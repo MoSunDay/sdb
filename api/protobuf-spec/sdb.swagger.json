@@ -884,6 +884,102 @@
         ]
       }
     },
+    "/v1/m-count": {
+      "post": {
+        "operationId": "SDB_MCount",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoMCountResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/protoMCountRequest"
+            }
+          }
+        ],
+        "tags": [
+          "SDB"
+        ]
+      }
+    },
+    "/v1/m-del": {
+      "post": {
+        "operationId": "SDB_MDel",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoMDelResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/protoMDelRequest"
+            }
+          }
+        ],
+        "tags": [
+          "SDB"
+        ]
+      }
+    },
+    "/v1/m-exist": {
+      "post": {
+        "operationId": "SDB_MExist",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoMExistResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/protoMExistRequest"
+            }
+          }
+        ],
+        "tags": [
+          "SDB"
+        ]
+      }
+    },
     "/v1/m-get": {
       "post": {
         "operationId": "SDB_MGet",
@@ -908,6 +1004,103 @@
             "required": true,
             "schema": {
               "$ref": "#/definitions/protoMGetRequest"
+            }
+          }
+        ],
+        "tags": [
+          "SDB"
+        ]
+      }
+    },
+    "/v1/m-members": {
+      "post": {
+        "operationId": "SDB_MMembers",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoMMembersResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/protoMMembersRequest"
+            }
+          }
+        ],
+        "tags": [
+          "SDB"
+        ]
+      }
+    },
+    "/v1/m-pop": {
+      "post": {
+        "operationId": "SDB_MPop",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoMPopResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/protoMPopRequest"
+            }
+          }
+        ],
+        "tags": [
+          "SDB"
+        ]
+      }
+    },
+    "/v1/m-push": {
+      "post": {
+        "summary": "map 类型的存储",
+        "operationId": "SDB_MPush",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoMPushResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/protoMPushRequest"
             }
           }
         ],
@@ -2066,6 +2259,68 @@
         }
       }
     },
+    "protoMCountRequest": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "protoMCountResponse": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "protoMDelRequest": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "protoMDelResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "protoMExistRequest": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "format": "byte"
+        },
+        "keys": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        }
+      }
+    },
+    "protoMExistResponse": {
+      "type": "object",
+      "properties": {
+        "exists": {
+          "type": "array",
+          "items": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
     "protoMGetRequest": {
       "type": "object",
       "properties": {
@@ -2087,6 +2342,73 @@
             "type": "string",
             "format": "byte"
           }
+        }
+      }
+    },
+    "protoMMembersRequest": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "protoMMembersResponse": {
+      "type": "object",
+      "properties": {
+        "pairs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protoPair"
+          }
+        }
+      }
+    },
+    "protoMPopRequest": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "format": "byte"
+        },
+        "keys": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        }
+      }
+    },
+    "protoMPopResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "protoMPushRequest": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "format": "byte"
+        },
+        "pairs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protoPair"
+          }
+        }
+      }
+    },
+    "protoMPushResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
         }
       }
     },
@@ -2125,6 +2447,19 @@
           "format": "byte"
         },
         "payload": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "protoPair": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "format": "byte"
+        },
+        "value": {
           "type": "string",
           "format": "byte"
         }
