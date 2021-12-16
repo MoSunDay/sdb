@@ -5,8 +5,8 @@ import (
 	"github.com/yemingfeng/sdb/internal/store"
 	"github.com/yemingfeng/sdb/internal/store/engine"
 	"github.com/yemingfeng/sdb/pkg/pb"
+	"google.golang.org/protobuf/proto"
 	"math"
-	"strings"
 )
 
 const mapKeyPrefixTemplate = "mk/%s"
@@ -20,7 +20,11 @@ func MPush(key []byte, pairs []*pb.Pair) (bool, error) {
 	defer batch.Close()
 
 	for i := range pairs {
-		batch.Set(generateMapKey(key, pairs[i].Key), pairs[i].Value)
+		rawPair, err := proto.Marshal(pairs[i])
+		if err != nil {
+			return false, nil
+		}
+		batch.Set(generateMapKey(key, pairs[i].Key), rawPair)
 	}
 
 	return batch.Commit()
@@ -82,8 +86,9 @@ func MMembers(key []byte) ([]*pb.Pair, error) {
 	store.Iterate(&engine.PrefixIteratorOption{
 		Prefix: generateMapPrefixKey(key), Offset: 0, Limit: math.MaxInt32},
 		func(key []byte, value []byte) {
-			infos := strings.Split(string(key), "/")
-			res = append(res, &pb.Pair{Key: []byte(infos[2]), Value: value})
+			var pair pb.Pair
+			_ = proto.Unmarshal(value, &pair)
+			res = append(res, &pb.Pair{Key: pair.Key, Value: pair.Value})
 			index++
 		})
 	return res[0:index], nil
