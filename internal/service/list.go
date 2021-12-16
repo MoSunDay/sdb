@@ -16,7 +16,7 @@ const listKeyTemplate = listKeyPrefixTemplate + "/%d"
 const listIdKeyPrefixTemplate = "li/%s/%s"
 const listIdKeyTemplate = listIdKeyPrefixTemplate + "/%d"
 
-func LPush(key []byte, values [][]byte) (bool, error) {
+func LRPush(key []byte, values [][]byte) (bool, error) {
 	lock(LList, key)
 	defer unlock(LList, key)
 
@@ -25,6 +25,22 @@ func LPush(key []byte, values [][]byte) (bool, error) {
 
 	for _, value := range values {
 		id := util.GetOrderingKey()
+		batch.Set(generateListKey(key, id), value)
+		batch.Set(generateListIdKey(key, value, id), value)
+	}
+
+	return batch.Commit()
+}
+
+func LLPush(key []byte, values [][]byte) (bool, error) {
+	lock(LList, key)
+	defer unlock(LList, key)
+
+	batch := store.NewBatch()
+	defer batch.Close()
+
+	for i, value := range values {
+		id := -util.GetOrderingKey() - int64(i)
 		batch.Set(generateListKey(key, id), value)
 		batch.Set(generateListIdKey(key, value, id), value)
 	}

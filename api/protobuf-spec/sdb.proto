@@ -24,7 +24,8 @@ service SDB {
   rpc Incr(IncrRequest) returns (IncrResponse) {}
 
   // list 类型的存储
-  rpc LPush(LPushRequest) returns (LPushResponse) {}
+  rpc LRPush(LRPushRequest) returns (LRPushResponse) {}
+  rpc LLPush(LLPushRequest) returns (LLPushResponse) {}
   rpc LPop(LPopRequest) returns (LPopResponse) {}
   rpc LRange(LRangeRequest) returns (LRangeResponse) {}
   rpc LExist(LExistRequest) returns (LExistResponse) {}

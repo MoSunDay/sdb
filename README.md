@@ -57,6 +57,7 @@
         - [x] MSet
     - [x] List
         - [x] LMembers
+        - [x] LLPush
     - [x] Set
         - [x] SMembers
     - [x] Sorted Set
@@ -157,7 +158,8 @@ Incr | key, delta | 对 key 进行加 delta 操作，如果 value 不为数字�
 
 接口 | 参数 | 描述
 ---- | --- | ---
-LPush | key, values | 把 values 追加到 key 数组后面
+LRPush | key, values | 从 key 数组后面追加 values
+LLPush | key, values | 从 key 数组前面追加 values
 LPop | keys, values | 删除 key 数组中所有的 values 元素
 LRange | key, offset, limit | 按数组顺序遍历 key，从 0 开始。如果 offset = -1，则从后向前遍历
 LExist | key, values | 判断 values 是否存在 key 数组中
@@ -310,7 +312,7 @@ SDB 已经通过上面三款存储引擎解决了数据存储的问题了。 但
 
 接下来，我以支持 List 数据结构为例子，剖析下 SDB 是如何通过 pebble 存储引擎支持 List 的。
 
-List 数据结构提供了以下接口：LPush、LPop、LExist、LRange、LCount。
+List 数据结构提供了以下接口：LRPush、LLPush、LPop、LExist、LRange、LCount。
 
 如果一个 List 的 key 为：[hello]，该 List 的列表元素有：[aaa, ccc, bbb]，那么该 List 的每个元素在 pebble 的存储为：
 
@@ -332,12 +334,12 @@ List 元素的 pebble key 生成策略：
 这是因为 pebble 是 LSM 的实现，内部使用 key 的字典序排序。为了保证插入顺序，SDB 在 pebble key 中增加了 unique_ordering_key
 作为排序的依据，从而保证了插入顺序。
 
-有了 pebble key 的生成策略，一切都变得简单起来了。我们看看 LPush、LPop、LRange 的核心逻辑：
+有了 pebble key 的生成策略，一切都变得简单起来了。我们看看 LRPush、LLPush、LPop、LRange 的核心逻辑：
 
-##### LPush
+##### LRPush
 
 ```go
-func LPush(key []byte, values [][]byte) (bool, error) {
+func LRPush(key []byte, values [][]byte) (bool, error) {
 	batchAction := store.NewBatchAction()
 	defer batchAction.Close()
 
@@ -346,6 +348,24 @@ func LPush(key []byte, values [][]byte) (bool, error) {
 	}
 
 	return batchAction.Commit()
+}
+```
+
+##### LLPush
+
+LLPush 的逻辑和 LRPush 的逻辑非常类似，不同的地方在于，只要将 {unique_ordering_key} 取负数，变成最小值就可以了。 为了保证 values 内部有序，所以还得 -
+index。 逻辑如下：
+
+```go
+func LLPush(key []byte, values [][]byte) (bool, error) {
+	batch := store.NewBatch()
+	defer batch.Close()
+
+	for i, value := range values {
+		batch.Set(generateListKey(key, -util.GetOrderingKey() - int64(i)), value)
+	}
+
+	return batch.Commit()
 }
 ```
 
@@ -423,12 +443,25 @@ l/hello/bbb/{unique_ordering_key3} | bbb
 有了这个辅助索引后，我们可以通过前缀检索的方式，判断 List 是否存在某个 value 的元素。从而降低时间复杂度，提高性能。 这里面还需要在写入元素时，将辅助索引写入，所以核心逻辑将改成：
 
 ```go
-func LPush(key []byte, values [][]byte) (bool, error) {
+func LRPush(key []byte, values [][]byte) (bool, error) {
 	batch := store.NewBatch()
 	defer batch.Close()
 
 	for _, value := range values {
 		id := util.GetOrderingKey()
+		batch.Set(generateListKey(key, id), value)
+		batch.Set(generateListIdKey(key, value, id), value)
+	}
+
+	return batch.Commit()
+}
+
+func LLPush(key []byte, values [][]byte) (bool, error) {
+	batch := store.NewBatch()
+	defer batch.Close()
+
+	for i, value := range values {
+		id := -util.GetOrderingKey() - int64(i)
 		batch.Set(generateListKey(key, id), value)
 		batch.Set(generateListIdKey(key, value, id), value)
 	}

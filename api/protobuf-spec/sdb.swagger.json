@@ -723,6 +723,38 @@
         ]
       }
     },
+    "/v1/l-lpush": {
+      "post": {
+        "operationId": "SDB_LLPush",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoLLPushResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/protoLLPushRequest"
+            }
+          }
+        ],
+        "tags": [
+          "SDB"
+        ]
+      }
+    },
     "/v1/l-members": {
       "post": {
         "operationId": "SDB_LMembers",
@@ -787,39 +819,6 @@
         ]
       }
     },
-    "/v1/l-push": {
-      "post": {
-        "summary": "list 类型的存储",
-        "operationId": "SDB_LPush",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/protoLPushResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/protoLPushRequest"
-            }
-          }
-        ],
-        "tags": [
-          "SDB"
-        ]
-      }
-    },
     "/v1/l-range": {
       "post": {
         "operationId": "SDB_LRange",
@@ -844,6 +843,39 @@
             "required": true,
             "schema": {
               "$ref": "#/definitions/protoLRangeRequest"
+            }
+          }
+        ],
+        "tags": [
+          "SDB"
+        ]
+      }
+    },
+    "/v1/l-rpush": {
+      "post": {
+        "summary": "list 类型的存储",
+        "operationId": "SDB_LRPush",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoLRPushResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/protoLRPushRequest"
             }
           }
         ],
@@ -1912,6 +1944,30 @@
         }
       }
     },
+    "protoLLPushRequest": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "format": "byte"
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        }
+      }
+    },
+    "protoLLPushResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
     "protoLMembersRequest": {
       "type": "object",
       "properties": {
@@ -1957,7 +2013,7 @@
         }
       }
     },
-    "protoLPushRequest": {
+    "protoLRPushRequest": {
       "type": "object",
       "properties": {
         "key": {
@@ -1973,7 +2029,7 @@
         }
       }
     },
-    "protoLPushResponse": {
+    "protoLRPushResponse": {
       "type": "object",
       "properties": {
         "success": {

@@ -28,8 +28,11 @@ http:
       post: /v1/incr
       body: "*"
 
-    - selector: proto.SDB.LPush
-      post: /v1/l-push
+    - selector: proto.SDB.LRPush
+      post: /v1/l-rpush
+      body: "*"
+    - selector: proto.SDB.LLPush
+      post: /v1/l-lpush
       body: "*"
     - selector: proto.SDB.LPop
       post: /v1/l-pop

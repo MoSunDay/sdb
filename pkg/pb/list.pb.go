@@ -20,7 +20,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type LPushRequest struct {
+type LRPushRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -29,8 +29,8 @@ type LPushRequest struct {
 	Values [][]byte `protobuf:"bytes,2,rep,name=values,proto3" json:"values,omitempty"`
 }
 
-func (x *LPushRequest) Reset() {
-	*x = LPushRequest{}
+func (x *LRPushRequest) Reset() {
+	*x = LRPushRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_api_protobuf_spec_list_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -38,13 +38,13 @@ func (x *LPushRequest) Reset() {
 	}
 }
 
-func (x *LPushRequest) String() string {
+func (x *LRPushRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*LPushRequest) ProtoMessage() {}
+func (*LRPushRequest) ProtoMessage() {}
 
-func (x *LPushRequest) ProtoReflect() protoreflect.Message {
+func (x *LRPushRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_api_protobuf_spec_list_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -56,26 +56,26 @@ func (x *LPushRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use LPushRequest.ProtoReflect.Descriptor instead.
-func (*LPushRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use LRPushRequest.ProtoReflect.Descriptor instead.
+func (*LRPushRequest) Descriptor() ([]byte, []int) {
 	return file_api_protobuf_spec_list_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *LPushRequest) GetKey() []byte {
+func (x *LRPushRequest) GetKey() []byte {
 	if x != nil {
 		return x.Key
 	}
 	return nil
 }
 
-func (x *LPushRequest) GetValues() [][]byte {
+func (x *LRPushRequest) GetValues() [][]byte {
 	if x != nil {
 		return x.Values
 	}
 	return nil
 }
 
-type LPushResponse struct {
+type LRPushResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -83,8 +83,8 @@ type LPushResponse struct {
 	Success bool `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
 }
 
-func (x *LPushResponse) Reset() {
-	*x = LPushResponse{}
+func (x *LRPushResponse) Reset() {
+	*x = LRPushResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_api_protobuf_spec_list_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -92,13 +92,13 @@ func (x *LPushResponse) Reset() {
 	}
 }
 
-func (x *LPushResponse) String() string {
+func (x *LRPushResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*LPushResponse) ProtoMessage() {}
+func (*LRPushResponse) ProtoMessage() {}
 
-func (x *LPushResponse) ProtoReflect() protoreflect.Message {
+func (x *LRPushResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_api_protobuf_spec_list_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -110,12 +110,114 @@ func (x *LPushResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use LPushResponse.ProtoReflect.Descriptor instead.
-func (*LPushResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use LRPushResponse.ProtoReflect.Descriptor instead.
+func (*LRPushResponse) Descriptor() ([]byte, []int) {
 	return file_api_protobuf_spec_list_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *LPushResponse) GetSuccess() bool {
+func (x *LRPushResponse) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
+type LLPushRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Key    []byte   `protobuf:"bytes,1,opt,name=key,proto3" json:"key,omitempty"`
+	Values [][]byte `protobuf:"bytes,2,rep,name=values,proto3" json:"values,omitempty"`
+}
+
+func (x *LLPushRequest) Reset() {
+	*x = LLPushRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_protobuf_spec_list_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *LLPushRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*LLPushRequest) ProtoMessage() {}
+
+func (x *LLPushRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_protobuf_spec_list_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use LLPushRequest.ProtoReflect.Descriptor instead.
+func (*LLPushRequest) Descriptor() ([]byte, []int) {
+	return file_api_protobuf_spec_list_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *LLPushRequest) GetKey() []byte {
+	if x != nil {
+		return x.Key
+	}
+	return nil
+}
+
+func (x *LLPushRequest) GetValues() [][]byte {
+	if x != nil {
+		return x.Values
+	}
+	return nil
+}
+
+type LLPushResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Success bool `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+}
+
+func (x *LLPushResponse) Reset() {
+	*x = LLPushResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_protobuf_spec_list_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *LLPushResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*LLPushResponse) ProtoMessage() {}
+
+func (x *LLPushResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_api_protobuf_spec_list_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use LLPushResponse.ProtoReflect.Descriptor instead.
+func (*LLPushResponse) Descriptor() ([]byte, []int) {
+	return file_api_protobuf_spec_list_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *LLPushResponse) GetSuccess() bool {
 	if x != nil {
 		return x.Success
 	}
@@ -134,7 +236,7 @@ type LPopRequest struct {
 func (x *LPopRequest) Reset() {
 	*x = LPopRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_protobuf_spec_list_proto_msgTypes[2]
+		mi := &file_api_protobuf_spec_list_proto_msgTypes[4]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -147,7 +249,7 @@ func (x *LPopRequest) String() string {
 func (*LPopRequest) ProtoMessage() {}
 
 func (x *LPopRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_protobuf_spec_list_proto_msgTypes[2]
+	mi := &file_api_protobuf_spec_list_proto_msgTypes[4]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -160,7 +262,7 @@ func (x *LPopRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LPopRequest.ProtoReflect.Descriptor instead.
 func (*LPopRequest) Descriptor() ([]byte, []int) {
-	return file_api_protobuf_spec_list_proto_rawDescGZIP(), []int{2}
+	return file_api_protobuf_spec_list_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *LPopRequest) GetKey() []byte {
@@ -188,7 +290,7 @@ type LPopResponse struct {
 func (x *LPopResponse) Reset() {
 	*x = LPopResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_protobuf_spec_list_proto_msgTypes[3]
+		mi := &file_api_protobuf_spec_list_proto_msgTypes[5]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -201,7 +303,7 @@ func (x *LPopResponse) String() string {
 func (*LPopResponse) ProtoMessage() {}
 
 func (x *LPopResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_api_protobuf_spec_list_proto_msgTypes[3]
+	mi := &file_api_protobuf_spec_list_proto_msgTypes[5]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -214,7 +316,7 @@ func (x *LPopResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LPopResponse.ProtoReflect.Descriptor instead.
 func (*LPopResponse) Descriptor() ([]byte, []int) {
-	return file_api_protobuf_spec_list_proto_rawDescGZIP(), []int{3}
+	return file_api_protobuf_spec_list_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *LPopResponse) GetSuccess() bool {
@@ -237,7 +339,7 @@ type LRangeRequest struct {
 func (x *LRangeRequest) Reset() {
 	*x = LRangeRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_protobuf_spec_list_proto_msgTypes[4]
+		mi := &file_api_protobuf_spec_list_proto_msgTypes[6]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -250,7 +352,7 @@ func (x *LRangeRequest) String() string {
 func (*LRangeRequest) ProtoMessage() {}
 
 func (x *LRangeRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_protobuf_spec_list_proto_msgTypes[4]
+	mi := &file_api_protobuf_spec_list_proto_msgTypes[6]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -263,7 +365,7 @@ func (x *LRangeRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LRangeRequest.ProtoReflect.Descriptor instead.
 func (*LRangeRequest) Descriptor() ([]byte, []int) {
-	return file_api_protobuf_spec_list_proto_rawDescGZIP(), []int{4}
+	return file_api_protobuf_spec_list_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *LRangeRequest) GetKey() []byte {
@@ -298,7 +400,7 @@ type LRangeResponse struct {
 func (x *LRangeResponse) Reset() {
 	*x = LRangeResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_protobuf_spec_list_proto_msgTypes[5]
+		mi := &file_api_protobuf_spec_list_proto_msgTypes[7]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -311,7 +413,7 @@ func (x *LRangeResponse) String() string {
 func (*LRangeResponse) ProtoMessage() {}
 
 func (x *LRangeResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_api_protobuf_spec_list_proto_msgTypes[5]
+	mi := &file_api_protobuf_spec_list_proto_msgTypes[7]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -324,7 +426,7 @@ func (x *LRangeResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LRangeResponse.ProtoReflect.Descriptor instead.
 func (*LRangeResponse) Descriptor() ([]byte, []int) {
-	return file_api_protobuf_spec_list_proto_rawDescGZIP(), []int{5}
+	return file_api_protobuf_spec_list_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *LRangeResponse) GetValues() [][]byte {
@@ -346,7 +448,7 @@ type LExistRequest struct {
 func (x *LExistRequest) Reset() {
 	*x = LExistRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_protobuf_spec_list_proto_msgTypes[6]
+		mi := &file_api_protobuf_spec_list_proto_msgTypes[8]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -359,7 +461,7 @@ func (x *LExistRequest) String() string {
 func (*LExistRequest) ProtoMessage() {}
 
 func (x *LExistRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_protobuf_spec_list_proto_msgTypes[6]
+	mi := &file_api_protobuf_spec_list_proto_msgTypes[8]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -372,7 +474,7 @@ func (x *LExistRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LExistRequest.ProtoReflect.Descriptor instead.
 func (*LExistRequest) Descriptor() ([]byte, []int) {
-	return file_api_protobuf_spec_list_proto_rawDescGZIP(), []int{6}
+	return file_api_protobuf_spec_list_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *LExistRequest) GetKey() []byte {
@@ -400,7 +502,7 @@ type LExistResponse struct {
 func (x *LExistResponse) Reset() {
 	*x = LExistResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_protobuf_spec_list_proto_msgTypes[7]
+		mi := &file_api_protobuf_spec_list_proto_msgTypes[9]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -413,7 +515,7 @@ func (x *LExistResponse) String() string {
 func (*LExistResponse) ProtoMessage() {}
 
 func (x *LExistResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_api_protobuf_spec_list_proto_msgTypes[7]
+	mi := &file_api_protobuf_spec_list_proto_msgTypes[9]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -426,7 +528,7 @@ func (x *LExistResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LExistResponse.ProtoReflect.Descriptor instead.
 func (*LExistResponse) Descriptor() ([]byte, []int) {
-	return file_api_protobuf_spec_list_proto_rawDescGZIP(), []int{7}
+	return file_api_protobuf_spec_list_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *LExistResponse) GetExists() []bool {
@@ -447,7 +549,7 @@ type LDelRequest struct {
 func (x *LDelRequest) Reset() {
 	*x = LDelRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_protobuf_spec_list_proto_msgTypes[8]
+		mi := &file_api_protobuf_spec_list_proto_msgTypes[10]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -460,7 +562,7 @@ func (x *LDelRequest) String() string {
 func (*LDelRequest) ProtoMessage() {}
 
 func (x *LDelRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_protobuf_spec_list_proto_msgTypes[8]
+	mi := &file_api_protobuf_spec_list_proto_msgTypes[10]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -473,7 +575,7 @@ func (x *LDelRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LDelRequest.ProtoReflect.Descriptor instead.
 func (*LDelRequest) Descriptor() ([]byte, []int) {
-	return file_api_protobuf_spec_list_proto_rawDescGZIP(), []int{8}
+	return file_api_protobuf_spec_list_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *LDelRequest) GetKey() []byte {
@@ -494,7 +596,7 @@ type LDelResponse struct {
 func (x *LDelResponse) Reset() {
 	*x = LDelResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_protobuf_spec_list_proto_msgTypes[9]
+		mi := &file_api_protobuf_spec_list_proto_msgTypes[11]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -507,7 +609,7 @@ func (x *LDelResponse) String() string {
 func (*LDelResponse) ProtoMessage() {}
 
 func (x *LDelResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_api_protobuf_spec_list_proto_msgTypes[9]
+	mi := &file_api_protobuf_spec_list_proto_msgTypes[11]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -520,7 +622,7 @@ func (x *LDelResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LDelResponse.ProtoReflect.Descriptor instead.
 func (*LDelResponse) Descriptor() ([]byte, []int) {
-	return file_api_protobuf_spec_list_proto_rawDescGZIP(), []int{9}
+	return file_api_protobuf_spec_list_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *LDelResponse) GetSuccess() bool {
@@ -541,7 +643,7 @@ type LCountRequest struct {
 func (x *LCountRequest) Reset() {
 	*x = LCountRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_protobuf_spec_list_proto_msgTypes[10]
+		mi := &file_api_protobuf_spec_list_proto_msgTypes[12]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -554,7 +656,7 @@ func (x *LCountRequest) String() string {
 func (*LCountRequest) ProtoMessage() {}
 
 func (x *LCountRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_protobuf_spec_list_proto_msgTypes[10]
+	mi := &file_api_protobuf_spec_list_proto_msgTypes[12]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -567,7 +669,7 @@ func (x *LCountRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LCountRequest.ProtoReflect.Descriptor instead.
 func (*LCountRequest) Descriptor() ([]byte, []int) {
-	return file_api_protobuf_spec_list_proto_rawDescGZIP(), []int{10}
+	return file_api_protobuf_spec_list_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *LCountRequest) GetKey() []byte {
@@ -588,7 +690,7 @@ type LCountResponse struct {
 func (x *LCountResponse) Reset() {
 	*x = LCountResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_protobuf_spec_list_proto_msgTypes[11]
+		mi := &file_api_protobuf_spec_list_proto_msgTypes[13]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -601,7 +703,7 @@ func (x *LCountResponse) String() string {
 func (*LCountResponse) ProtoMessage() {}
 
 func (x *LCountResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_api_protobuf_spec_list_proto_msgTypes[11]
+	mi := &file_api_protobuf_spec_list_proto_msgTypes[13]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -614,7 +716,7 @@ func (x *LCountResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LCountResponse.ProtoReflect.Descriptor instead.
 func (*LCountResponse) Descriptor() ([]byte, []int) {
-	return file_api_protobuf_spec_list_proto_rawDescGZIP(), []int{11}
+	return file_api_protobuf_spec_list_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *LCountResponse) GetCount() uint32 {
@@ -635,7 +737,7 @@ type LMembersRequest struct {
 func (x *LMembersRequest) Reset() {
 	*x = LMembersRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_protobuf_spec_list_proto_msgTypes[12]
+		mi := &file_api_protobuf_spec_list_proto_msgTypes[14]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -648,7 +750,7 @@ func (x *LMembersRequest) String() string {
 func (*LMembersRequest) ProtoMessage() {}
 
 func (x *LMembersRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_protobuf_spec_list_proto_msgTypes[12]
+	mi := &file_api_protobuf_spec_list_proto_msgTypes[14]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -661,7 +763,7 @@ func (x *LMembersRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LMembersRequest.ProtoReflect.Descriptor instead.
 func (*LMembersRequest) Descriptor() ([]byte, []int) {
-	return file_api_protobuf_spec_list_proto_rawDescGZIP(), []int{12}
+	return file_api_protobuf_spec_list_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *LMembersRequest) GetKey() []byte {
@@ -682,7 +784,7 @@ type LMembersResponse struct {
 func (x *LMembersResponse) Reset() {
 	*x = LMembersResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_protobuf_spec_list_proto_msgTypes[13]
+		mi := &file_api_protobuf_spec_list_proto_msgTypes[15]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -695,7 +797,7 @@ func (x *LMembersResponse) String() string {
 func (*LMembersResponse) ProtoMessage() {}
 
 func (x *LMembersResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_api_protobuf_spec_list_proto_msgTypes[13]
+	mi := &file_api_protobuf_spec_list_proto_msgTypes[15]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -708,7 +810,7 @@ func (x *LMembersResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LMembersResponse.ProtoReflect.Descriptor instead.
 func (*LMembersResponse) Descriptor() ([]byte, []int) {
-	return file_api_protobuf_spec_list_proto_rawDescGZIP(), []int{13}
+	return file_api_protobuf_spec_list_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *LMembersResponse) GetValues() [][]byte {
@@ -723,49 +825,55 @@ var File_api_protobuf_spec_list_proto protoreflect.FileDescriptor
 var file_api_protobuf_spec_list_proto_rawDesc = []byte{
 	0x0a, 0x1c, 0x61, 0x70, 0x69, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2d, 0x73,
 	0x70, 0x65, 0x63, 0x2f, 0x6c, 0x69, 0x73, 0x74, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x05,
-	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0x38, 0x0a, 0x0c, 0x4c, 0x50, 0x75, 0x73, 0x68, 0x52, 0x65,
-	0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x01, 0x20, 0x01,
-	0x28, 0x0c, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x12, 0x16, 0x0a, 0x06, 0x76, 0x61, 0x6c, 0x75, 0x65,
-	0x73, 0x18, 0x02, 0x20, 0x03, 0x28, 0x0c, 0x52, 0x06, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x73, 0x22,
-	0x29, 0x0a, 0x0d, 0x4c, 0x50, 0x75, 0x73, 0x68, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
-	0x12, 0x18, 0x0a, 0x07, 0x73, 0x75, 0x63, 0x63, 0x65, 0x73, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28,
-	0x08, 0x52, 0x07, 0x73, 0x75, 0x63, 0x63, 0x65, 0x73, 0x73, 0x22, 0x37, 0x0a, 0x0b, 0x4c, 0x50,
-	0x6f, 0x70, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79,
-	0x18, 0x01, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x12, 0x16, 0x0a, 0x06, 0x76,
-	0x61, 0x6c, 0x75, 0x65, 0x73, 0x18, 0x02, 0x20, 0x03, 0x28, 0x0c, 0x52, 0x06, 0x76, 0x61, 0x6c,
-	0x75, 0x65, 0x73, 0x22, 0x28, 0x0a, 0x0c, 0x4c, 0x50, 0x6f, 0x70, 0x52, 0x65, 0x73, 0x70, 0x6f,
-	0x6e, 0x73, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x73, 0x75, 0x63, 0x63, 0x65, 0x73, 0x73, 0x18, 0x01,
-	0x20, 0x01, 0x28, 0x08, 0x52, 0x07, 0x73, 0x75, 0x63, 0x63, 0x65, 0x73, 0x73, 0x22, 0x4f, 0x0a,
-	0x0d, 0x4c, 0x52, 0x61, 0x6e, 0x67, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x10,
-	0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x03, 0x6b, 0x65, 0x79,
-	0x12, 0x16, 0x0a, 0x06, 0x6f, 0x66, 0x66, 0x73, 0x65, 0x74, 0x18, 0x02, 0x20, 0x01, 0x28, 0x05,
-	0x52, 0x06, 0x6f, 0x66, 0x66, 0x73, 0x65, 0x74, 0x12, 0x14, 0x0a, 0x05, 0x6c, 0x69, 0x6d, 0x69,
-	0x74, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x05, 0x6c, 0x69, 0x6d, 0x69, 0x74, 0x22, 0x28,
-	0x0a, 0x0e, 0x4c, 0x52, 0x61, 0x6e, 0x67, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
-	0x12, 0x16, 0x0a, 0x06, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0c,
-	0x52, 0x06, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x73, 0x22, 0x39, 0x0a, 0x0d, 0x4c, 0x45, 0x78, 0x69,
-	0x73, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79,
-	0x18, 0x01, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x12, 0x16, 0x0a, 0x06, 0x76,
-	0x61, 0x6c, 0x75, 0x65, 0x73, 0x18, 0x02, 0x20, 0x03, 0x28, 0x0c, 0x52, 0x06, 0x76, 0x61, 0x6c,
-	0x75, 0x65, 0x73, 0x22, 0x28, 0x0a, 0x0e, 0x4c, 0x45, 0x78, 0x69, 0x73, 0x74, 0x52, 0x65, 0x73,
-	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x65, 0x78, 0x69, 0x73, 0x74, 0x73, 0x18,
-	0x01, 0x20, 0x03, 0x28, 0x08, 0x52, 0x06, 0x65, 0x78, 0x69, 0x73, 0x74, 0x73, 0x22, 0x1f, 0x0a,
-	0x0b, 0x4c, 0x44, 0x65, 0x6c, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x10, 0x0a, 0x03,
-	0x6b, 0x65, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x22, 0x28,
-	0x0a, 0x0c, 0x4c, 0x44, 0x65, 0x6c, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x18,
-	0x0a, 0x07, 0x73, 0x75, 0x63, 0x63, 0x65, 0x73, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x08, 0x52,
-	0x07, 0x73, 0x75, 0x63, 0x63, 0x65, 0x73, 0x73, 0x22, 0x21, 0x0a, 0x0d, 0x4c, 0x43, 0x6f, 0x75,
-	0x6e, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79,
-	0x18, 0x01, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x22, 0x26, 0x0a, 0x0e, 0x4c,
-	0x43, 0x6f, 0x75, 0x6e, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x14, 0x0a,
-	0x05, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x05, 0x63, 0x6f,
-	0x75, 0x6e, 0x74, 0x22, 0x23, 0x0a, 0x0f, 0x4c, 0x4d, 0x65, 0x6d, 0x62, 0x65, 0x72, 0x73, 0x52,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0x39, 0x0a, 0x0d, 0x4c, 0x52, 0x50, 0x75, 0x73, 0x68, 0x52,
 	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x01, 0x20,
-	0x01, 0x28, 0x0c, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x22, 0x2a, 0x0a, 0x10, 0x4c, 0x4d, 0x65, 0x6d,
-	0x62, 0x65, 0x72, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x16, 0x0a, 0x06,
-	0x76, 0x61, 0x6c, 0x75, 0x65, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0c, 0x52, 0x06, 0x76, 0x61,
-	0x6c, 0x75, 0x65, 0x73, 0x42, 0x08, 0x5a, 0x06, 0x70, 0x6b, 0x67, 0x2f, 0x70, 0x62, 0x62, 0x06,
-	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x01, 0x28, 0x0c, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x12, 0x16, 0x0a, 0x06, 0x76, 0x61, 0x6c, 0x75,
+	0x65, 0x73, 0x18, 0x02, 0x20, 0x03, 0x28, 0x0c, 0x52, 0x06, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x73,
+	0x22, 0x2a, 0x0a, 0x0e, 0x4c, 0x52, 0x50, 0x75, 0x73, 0x68, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
+	0x73, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x73, 0x75, 0x63, 0x63, 0x65, 0x73, 0x73, 0x18, 0x01, 0x20,
+	0x01, 0x28, 0x08, 0x52, 0x07, 0x73, 0x75, 0x63, 0x63, 0x65, 0x73, 0x73, 0x22, 0x39, 0x0a, 0x0d,
+	0x4c, 0x4c, 0x50, 0x75, 0x73, 0x68, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x10, 0x0a,
+	0x03, 0x6b, 0x65, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x12,
+	0x16, 0x0a, 0x06, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x73, 0x18, 0x02, 0x20, 0x03, 0x28, 0x0c, 0x52,
+	0x06, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x73, 0x22, 0x2a, 0x0a, 0x0e, 0x4c, 0x4c, 0x50, 0x75, 0x73,
+	0x68, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x73, 0x75, 0x63,
+	0x63, 0x65, 0x73, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x08, 0x52, 0x07, 0x73, 0x75, 0x63, 0x63,
+	0x65, 0x73, 0x73, 0x22, 0x37, 0x0a, 0x0b, 0x4c, 0x50, 0x6f, 0x70, 0x52, 0x65, 0x71, 0x75, 0x65,
+	0x73, 0x74, 0x12, 0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0c, 0x52,
+	0x03, 0x6b, 0x65, 0x79, 0x12, 0x16, 0x0a, 0x06, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x73, 0x18, 0x02,
+	0x20, 0x03, 0x28, 0x0c, 0x52, 0x06, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x73, 0x22, 0x28, 0x0a, 0x0c,
+	0x4c, 0x50, 0x6f, 0x70, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x18, 0x0a, 0x07,
+	0x73, 0x75, 0x63, 0x63, 0x65, 0x73, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x08, 0x52, 0x07, 0x73,
+	0x75, 0x63, 0x63, 0x65, 0x73, 0x73, 0x22, 0x4f, 0x0a, 0x0d, 0x4c, 0x52, 0x61, 0x6e, 0x67, 0x65,
+	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x0c, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x12, 0x16, 0x0a, 0x06, 0x6f, 0x66, 0x66,
+	0x73, 0x65, 0x74, 0x18, 0x02, 0x20, 0x01, 0x28, 0x05, 0x52, 0x06, 0x6f, 0x66, 0x66, 0x73, 0x65,
+	0x74, 0x12, 0x14, 0x0a, 0x05, 0x6c, 0x69, 0x6d, 0x69, 0x74, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0d,
+	0x52, 0x05, 0x6c, 0x69, 0x6d, 0x69, 0x74, 0x22, 0x28, 0x0a, 0x0e, 0x4c, 0x52, 0x61, 0x6e, 0x67,
+	0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x76, 0x61, 0x6c,
+	0x75, 0x65, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0c, 0x52, 0x06, 0x76, 0x61, 0x6c, 0x75, 0x65,
+	0x73, 0x22, 0x39, 0x0a, 0x0d, 0x4c, 0x45, 0x78, 0x69, 0x73, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65,
+	0x73, 0x74, 0x12, 0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0c, 0x52,
+	0x03, 0x6b, 0x65, 0x79, 0x12, 0x16, 0x0a, 0x06, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x73, 0x18, 0x02,
+	0x20, 0x03, 0x28, 0x0c, 0x52, 0x06, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x73, 0x22, 0x28, 0x0a, 0x0e,
+	0x4c, 0x45, 0x78, 0x69, 0x73, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x16,
+	0x0a, 0x06, 0x65, 0x78, 0x69, 0x73, 0x74, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x08, 0x52, 0x06,
+	0x65, 0x78, 0x69, 0x73, 0x74, 0x73, 0x22, 0x1f, 0x0a, 0x0b, 0x4c, 0x44, 0x65, 0x6c, 0x52, 0x65,
+	0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x01, 0x20, 0x01,
+	0x28, 0x0c, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x22, 0x28, 0x0a, 0x0c, 0x4c, 0x44, 0x65, 0x6c, 0x52,
+	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x73, 0x75, 0x63, 0x63, 0x65,
+	0x73, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x08, 0x52, 0x07, 0x73, 0x75, 0x63, 0x63, 0x65, 0x73,
+	0x73, 0x22, 0x21, 0x0a, 0x0d, 0x4c, 0x43, 0x6f, 0x75, 0x6e, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65,
+	0x73, 0x74, 0x12, 0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0c, 0x52,
+	0x03, 0x6b, 0x65, 0x79, 0x22, 0x26, 0x0a, 0x0e, 0x4c, 0x43, 0x6f, 0x75, 0x6e, 0x74, 0x52, 0x65,
+	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x05, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x22, 0x23, 0x0a, 0x0f,
+	0x4c, 0x4d, 0x65, 0x6d, 0x62, 0x65, 0x72, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12,
+	0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x03, 0x6b, 0x65,
+	0x79, 0x22, 0x2a, 0x0a, 0x10, 0x4c, 0x4d, 0x65, 0x6d, 0x62, 0x65, 0x72, 0x73, 0x52, 0x65, 0x73,
+	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x73, 0x18,
+	0x01, 0x20, 0x03, 0x28, 0x0c, 0x52, 0x06, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x73, 0x42, 0x08, 0x5a,
+	0x06, 0x70, 0x6b, 0x67, 0x2f, 0x70, 0x62, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -780,22 +888,24 @@ func file_api_protobuf_spec_list_proto_rawDescGZIP() []byte {
 	return file_api_protobuf_spec_list_proto_rawDescData
 }
 
-var file_api_protobuf_spec_list_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
+var file_api_protobuf_spec_list_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
 var file_api_protobuf_spec_list_proto_goTypes = []interface{}{
-	(*LPushRequest)(nil),     // 0: proto.LPushRequest
-	(*LPushResponse)(nil),    // 1: proto.LPushResponse
-	(*LPopRequest)(nil),      // 2: proto.LPopRequest
-	(*LPopResponse)(nil),     // 3: proto.LPopResponse
-	(*LRangeRequest)(nil),    // 4: proto.LRangeRequest
-	(*LRangeResponse)(nil),   // 5: proto.LRangeResponse
-	(*LExistRequest)(nil),    // 6: proto.LExistRequest
-	(*LExistResponse)(nil),   // 7: proto.LExistResponse
-	(*LDelRequest)(nil),      // 8: proto.LDelRequest
-	(*LDelResponse)(nil),     // 9: proto.LDelResponse
-	(*LCountRequest)(nil),    // 10: proto.LCountRequest
-	(*LCountResponse)(nil),   // 11: proto.LCountResponse
-	(*LMembersRequest)(nil),  // 12: proto.LMembersRequest
-	(*LMembersResponse)(nil), // 13: proto.LMembersResponse
+	(*LRPushRequest)(nil),    // 0: proto.LRPushRequest
+	(*LRPushResponse)(nil),   // 1: proto.LRPushResponse
+	(*LLPushRequest)(nil),    // 2: proto.LLPushRequest
+	(*LLPushResponse)(nil),   // 3: proto.LLPushResponse
+	(*LPopRequest)(nil),      // 4: proto.LPopRequest
+	(*LPopResponse)(nil),     // 5: proto.LPopResponse
+	(*LRangeRequest)(nil),    // 6: proto.LRangeRequest
+	(*LRangeResponse)(nil),   // 7: proto.LRangeResponse
+	(*LExistRequest)(nil),    // 8: proto.LExistRequest
+	(*LExistResponse)(nil),   // 9: proto.LExistResponse
+	(*LDelRequest)(nil),      // 10: proto.LDelRequest
+	(*LDelResponse)(nil),     // 11: proto.LDelResponse
+	(*LCountRequest)(nil),    // 12: proto.LCountRequest
+	(*LCountResponse)(nil),   // 13: proto.LCountResponse
+	(*LMembersRequest)(nil),  // 14: proto.LMembersRequest
+	(*LMembersResponse)(nil), // 15: proto.LMembersResponse
 }
 var file_api_protobuf_spec_list_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -812,7 +922,7 @@ func file_api_protobuf_spec_list_proto_init() {
 	}
 	if !protoimpl.UnsafeEnabled {
 		file_api_protobuf_spec_list_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*LPushRequest); i {
+			switch v := v.(*LRPushRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -824,7 +934,7 @@ func file_api_protobuf_spec_list_proto_init() {
 			}
 		}
 		file_api_protobuf_spec_list_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*LPushResponse); i {
+			switch v := v.(*LRPushResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -836,7 +946,7 @@ func file_api_protobuf_spec_list_proto_init() {
 			}
 		}
 		file_api_protobuf_spec_list_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*LPopRequest); i {
+			switch v := v.(*LLPushRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -848,7 +958,7 @@ func file_api_protobuf_spec_list_proto_init() {
 			}
 		}
 		file_api_protobuf_spec_list_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*LPopResponse); i {
+			switch v := v.(*LLPushResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -860,7 +970,7 @@ func file_api_protobuf_spec_list_proto_init() {
 			}
 		}
 		file_api_protobuf_spec_list_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*LRangeRequest); i {
+			switch v := v.(*LPopRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -872,7 +982,7 @@ func file_api_protobuf_spec_list_proto_init() {
 			}
 		}
 		file_api_protobuf_spec_list_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*LRangeResponse); i {
+			switch v := v.(*LPopResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -884,7 +994,7 @@ func file_api_protobuf_spec_list_proto_init() {
 			}
 		}
 		file_api_protobuf_spec_list_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*LExistRequest); i {
+			switch v := v.(*LRangeRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -896,7 +1006,7 @@ func file_api_protobuf_spec_list_proto_init() {
 			}
 		}
 		file_api_protobuf_spec_list_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*LExistResponse); i {
+			switch v := v.(*LRangeResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -908,7 +1018,7 @@ func file_api_protobuf_spec_list_proto_init() {
 			}
 		}
 		file_api_protobuf_spec_list_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*LDelRequest); i {
+			switch v := v.(*LExistRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -920,7 +1030,7 @@ func file_api_protobuf_spec_list_proto_init() {
 			}
 		}
 		file_api_protobuf_spec_list_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*LDelResponse); i {
+			switch v := v.(*LExistResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -932,7 +1042,7 @@ func file_api_protobuf_spec_list_proto_init() {
 			}
 		}
 		file_api_protobuf_spec_list_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*LCountRequest); i {
+			switch v := v.(*LDelRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -944,7 +1054,7 @@ func file_api_protobuf_spec_list_proto_init() {
 			}
 		}
 		file_api_protobuf_spec_list_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*LCountResponse); i {
+			switch v := v.(*LDelResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -956,7 +1066,7 @@ func file_api_protobuf_spec_list_proto_init() {
 			}
 		}
 		file_api_protobuf_spec_list_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*LMembersRequest); i {
+			switch v := v.(*LCountRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -968,6 +1078,30 @@ func file_api_protobuf_spec_list_proto_init() {
 			}
 		}
 		file_api_protobuf_spec_list_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*LCountResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_protobuf_spec_list_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*LMembersRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_protobuf_spec_list_proto_msgTypes[15].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*LMembersResponse); i {
 			case 0:
 				return &v.state
@@ -986,7 +1120,7 @@ func file_api_protobuf_spec_list_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_api_protobuf_spec_list_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   14,
+			NumMessages:   16,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

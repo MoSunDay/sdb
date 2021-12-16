@@ -23,9 +23,21 @@ func main() {
 	for i := 0; i < length; i++ {
 		values[i] = []byte("h" + fmt.Sprint(i))
 	}
-	lpushResponse, _ := c.LPush(context.Background(),
-		&pb.LPushRequest{Key: []byte("h"), Values: values})
+	lpushResponse, _ := c.LRPush(context.Background(),
+		&pb.LRPushRequest{Key: []byte("h"), Values: values})
 	log.Printf("lpushResponse: %+v, err: %+v", lpushResponse, err)
+
+	// 发起 llpush 请求
+	values = make([][]byte, length)
+	for i := 0; i < length; i++ {
+		values[i] = []byte("h" + fmt.Sprint((i+1)*100))
+	}
+	llpushResponse, _ := c.LLPush(context.Background(),
+		&pb.LLPushRequest{Key: []byte("h"), Values: values})
+	log.Printf("llpushResponse: %+v, err: %+v", llpushResponse, err)
+	llpushResponse, _ = c.LLPush(context.Background(),
+		&pb.LLPushRequest{Key: []byte("h"), Values: values})
+	log.Printf("llpushResponse: %+v, err: %+v", llpushResponse, err)
 
 	lmembersResponse, _ := c.LMembers(context.Background(),
 		&pb.LMembersRequest{Key: []byte("h")})

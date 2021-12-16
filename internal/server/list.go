@@ -10,9 +10,14 @@ type ListServer struct {
 	pb.UnimplementedSDBServer
 }
 
-func (server *ListServer) LPush(_ context.Context, request *pb.LPushRequest) (*pb.LPushResponse, error) {
-	res, err := service.LPush(request.Key, request.Values)
-	return &pb.LPushResponse{Success: res}, err
+func (server *ListServer) LRPush(_ context.Context, request *pb.LRPushRequest) (*pb.LRPushResponse, error) {
+	res, err := service.LRPush(request.Key, request.Values)
+	return &pb.LRPushResponse{Success: res}, err
+}
+
+func (server *ListServer) LLPush(_ context.Context, request *pb.LLPushRequest) (*pb.LLPushResponse, error) {
+	res, err := service.LLPush(request.Key, request.Values)
+	return &pb.LLPushResponse{Success: res}, err
 }
 
 func (server *ListServer) LPop(_ context.Context, request *pb.LPopRequest) (*pb.LPopResponse, error) {

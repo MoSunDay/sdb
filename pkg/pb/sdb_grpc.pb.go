@@ -28,7 +28,8 @@ type SDBClient interface {
 	Del(ctx context.Context, in *DelRequest, opts ...grpc.CallOption) (*DelResponse, error)
 	Incr(ctx context.Context, in *IncrRequest, opts ...grpc.CallOption) (*IncrResponse, error)
 	// list 类型的存储
-	LPush(ctx context.Context, in *LPushRequest, opts ...grpc.CallOption) (*LPushResponse, error)
+	LRPush(ctx context.Context, in *LRPushRequest, opts ...grpc.CallOption) (*LRPushResponse, error)
+	LLPush(ctx context.Context, in *LLPushRequest, opts ...grpc.CallOption) (*LLPushResponse, error)
 	LPop(ctx context.Context, in *LPopRequest, opts ...grpc.CallOption) (*LPopResponse, error)
 	LRange(ctx context.Context, in *LRangeRequest, opts ...grpc.CallOption) (*LRangeResponse, error)
 	LExist(ctx context.Context, in *LExistRequest, opts ...grpc.CallOption) (*LExistResponse, error)
@@ -154,9 +155,18 @@ func (c *sDBClient) Incr(ctx context.Context, in *IncrRequest, opts ...grpc.Call
 	return out, nil
 }
 
-func (c *sDBClient) LPush(ctx context.Context, in *LPushRequest, opts ...grpc.CallOption) (*LPushResponse, error) {
-	out := new(LPushResponse)
-	err := c.cc.Invoke(ctx, "/proto.SDB/LPush", in, out, opts...)
+func (c *sDBClient) LRPush(ctx context.Context, in *LRPushRequest, opts ...grpc.CallOption) (*LRPushResponse, error) {
+	out := new(LRPushResponse)
+	err := c.cc.Invoke(ctx, "/proto.SDB/LRPush", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *sDBClient) LLPush(ctx context.Context, in *LLPushRequest, opts ...grpc.CallOption) (*LLPushResponse, error) {
+	out := new(LLPushResponse)
+	err := c.cc.Invoke(ctx, "/proto.SDB/LLPush", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -533,7 +543,8 @@ type SDBServer interface {
 	Del(context.Context, *DelRequest) (*DelResponse, error)
 	Incr(context.Context, *IncrRequest) (*IncrResponse, error)
 	// list 类型的存储
-	LPush(context.Context, *LPushRequest) (*LPushResponse, error)
+	LRPush(context.Context, *LRPushRequest) (*LRPushResponse, error)
+	LLPush(context.Context, *LLPushRequest) (*LLPushResponse, error)
 	LPop(context.Context, *LPopRequest) (*LPopResponse, error)
 	LRange(context.Context, *LRangeRequest) (*LRangeResponse, error)
 	LExist(context.Context, *LExistRequest) (*LExistResponse, error)
@@ -607,8 +618,11 @@ func (UnimplementedSDBServer) Del(context.Context, *DelRequest) (*DelResponse, e
 func (UnimplementedSDBServer) Incr(context.Context, *IncrRequest) (*IncrResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Incr not implemented")
 }
-func (UnimplementedSDBServer) LPush(context.Context, *LPushRequest) (*LPushResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method LPush not implemented")
+func (UnimplementedSDBServer) LRPush(context.Context, *LRPushRequest) (*LRPushResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LRPush not implemented")
+}
+func (UnimplementedSDBServer) LLPush(context.Context, *LLPushRequest) (*LLPushResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LLPush not implemented")
 }
 func (UnimplementedSDBServer) LPop(context.Context, *LPopRequest) (*LPopResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LPop not implemented")
@@ -877,20 +891,38 @@ func _SDB_Incr_Handler(srv interface{}, ctx context.Context, dec func(interface{
 	return interceptor(ctx, in, info, handler)
 }
 
-func _SDB_LPush_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(LPushRequest)
+func _SDB_LRPush_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LRPushRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(SDBServer).LPush(ctx, in)
+		return srv.(SDBServer).LRPush(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/proto.SDB/LPush",
+		FullMethod: "/proto.SDB/LRPush",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SDBServer).LPush(ctx, req.(*LPushRequest))
+		return srv.(SDBServer).LRPush(ctx, req.(*LRPushRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SDB_LLPush_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LLPushRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SDBServer).LLPush(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.SDB/LLPush",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SDBServer).LLPush(ctx, req.(*LLPushRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1604,8 +1636,12 @@ var SDB_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _SDB_Incr_Handler,
 		},
 		{
-			MethodName: "LPush",
-			Handler:    _SDB_LPush_Handler,
+			MethodName: "LRPush",
+			Handler:    _SDB_LRPush_Handler,
+		},
+		{
+			MethodName: "LLPush",
+			Handler:    _SDB_LLPush_Handler,
 		},
 		{
 			MethodName: "LPop",

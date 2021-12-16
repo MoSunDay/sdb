@@ -3,12 +3,21 @@ syntax = "proto3";
 package proto;
 option go_package = "pkg/pb";
 
-message LPushRequest {
+message LRPushRequest {
   bytes key = 1;
   repeated bytes values = 2;
 }
 
-message LPushResponse {
+message LRPushResponse {
+  bool success = 1;
+}
+
+message LLPushRequest {
+  bytes key = 1;
+  repeated bytes values = 2;
+}
+
+message LLPushResponse {
   bool success = 1;
 }
 
