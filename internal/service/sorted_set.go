@@ -36,18 +36,23 @@ func ZPush(key []byte, tuples []*pb.Tuple) (bool, error) {
 		// remove key zs/{key}/{score}/{value}
 		if exist != nil && len(exist) > 0 {
 			existTuple := pb.Tuple{}
-			err := proto.Unmarshal(exist, &existTuple)
-			if err != nil {
+			if err := proto.Unmarshal(exist, &existTuple); err != nil {
 				return false, err
 			}
-			batch.Del(generateSortedSetTupleKey(key, existTuple.Score, tuple.Value))
+			if _, err := batch.Del(generateSortedSetTupleKey(key, existTuple.Score, tuple.Value)); err != nil {
+				return false, err
+			}
 		}
 
 		// add key z/{key}/{value} -> tuple
-		batch.Set(generateSortedSetScoreKey(key, tuple.Value), value)
+		if _, err = batch.Set(generateSortedSetScoreKey(key, tuple.Value), value); err != nil {
+			return false, err
+		}
 
 		// add key zs/{key}/{score}/{value} -> tuple
-		batch.Set(generateSortedSetTupleKey(key, tuple.Score, tuple.Value), value)
+		if _, err = batch.Set(generateSortedSetTupleKey(key, tuple.Score, tuple.Value), value); err != nil {
+			return false, err
+		}
 	}
 
 	return batch.Commit()
@@ -70,8 +75,12 @@ func ZPop(key []byte, values [][]byte) (bool, error) {
 			if err := proto.Unmarshal(exist, &existTuple); err != nil {
 				return false, err
 			}
-			batch.Del(generateSortedSetScoreKey(key, value))
-			batch.Del(generateSortedSetTupleKey(key, existTuple.Score, value))
+			if _, err := batch.Del(generateSortedSetScoreKey(key, value)); err != nil {
+				return false, err
+			}
+			if _, err := batch.Del(generateSortedSetTupleKey(key, existTuple.Score, value)); err != nil {
+				return false, err
+			}
 		}
 	}
 
@@ -81,14 +90,21 @@ func ZPop(key []byte, values [][]byte) (bool, error) {
 func ZRange(key []byte, offset int32, limit uint32) ([]*pb.Tuple, error) {
 	index := int32(0)
 	res := make([]*pb.Tuple, limit)
-	store.Iterate(&engine.PrefixIteratorOption{Prefix: generateSortedSetTupleKeyPrefix(key),
+	err := store.Iterate(&engine.PrefixIteratorOption{Prefix: generateSortedSetTupleKeyPrefix(key),
 		Offset: offset, Limit: limit},
-		func(key []byte, value []byte) {
+		func(key []byte, value []byte) error {
 			tuple := pb.Tuple{}
-			_ = proto.Unmarshal(value, &tuple)
+			err := proto.Unmarshal(value, &tuple)
+			if err != nil {
+				return err
+			}
 			res[index] = &tuple
 			index++
+			return nil
 		})
+	if err != nil {
+		return nil, err
+	}
 	return res[0:index], nil
 }
 
@@ -111,24 +127,31 @@ func ZDel(key []byte) (bool, error) {
 	batch := store.NewBatch()
 	defer batch.Close()
 
-	store.Iterate(&engine.PrefixIteratorOption{Prefix: generateSortedSetScoreKeyPrefix(key)},
-		func(key []byte, value []byte) {
-			batch.Del(key)
-		})
+	if err := store.Iterate(&engine.PrefixIteratorOption{Prefix: generateSortedSetScoreKeyPrefix(key)},
+		func(key []byte, value []byte) error {
+			_, err := batch.Del(key)
+			return err
+		}); err != nil {
+		return false, err
+	}
 
-	store.Iterate(&engine.PrefixIteratorOption{Prefix: generateSortedSetTupleKeyPrefix(key)},
-		func(key []byte, value []byte) {
-			batch.Del(key)
-		})
+	if err := store.Iterate(&engine.PrefixIteratorOption{Prefix: generateSortedSetTupleKeyPrefix(key)},
+		func(key []byte, value []byte) error {
+			_, err := batch.Del(key)
+			return err
+		}); err != nil {
+		return false, err
+	}
 
 	return batch.Commit()
 }
 
 func ZCount(key []byte) (uint32, error) {
 	count := uint32(0)
-	store.Iterate(&engine.PrefixIteratorOption{Prefix: generateSortedSetTupleKeyPrefix(key)},
-		func(_ []byte, _ []byte) {
+	_ = store.Iterate(&engine.PrefixIteratorOption{Prefix: generateSortedSetTupleKeyPrefix(key)},
+		func(_ []byte, _ []byte) error {
 			count++
+			return nil
 		})
 	return count, nil
 }
@@ -136,15 +159,21 @@ func ZCount(key []byte) (uint32, error) {
 func ZMembers(key []byte) ([]*pb.Tuple, error) {
 	index := int32(0)
 	res := make([]*pb.Tuple, 0)
-	store.Iterate(&engine.PrefixIteratorOption{Prefix: generateSortedSetTupleKeyPrefix(key),
+	if err := store.Iterate(&engine.PrefixIteratorOption{Prefix: generateSortedSetTupleKeyPrefix(key),
 		Offset: 0, Limit: math.MaxInt32},
-		func(key []byte, value []byte) {
+		func(key []byte, value []byte) error {
 			// zs/{key}/{score}/{value} -> {tuple}
 			tuple := pb.Tuple{}
-			_ = proto.Unmarshal(value, &tuple)
+			err := proto.Unmarshal(value, &tuple)
+			if err != nil {
+				return err
+			}
 			res = append(res, &tuple)
 			index++
-		})
+			return nil
+		}); err != nil {
+		return nil, err
+	}
 	return res[0:index], nil
 }
 

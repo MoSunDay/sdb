@@ -29,8 +29,7 @@ func Publish(request *pb.PublishRequest) (bool, error) {
 		message := &pb.Message{Topic: request.Topic, Payload: request.Payload}
 		for subscribeServer, topics := range subscribeServers {
 			if topics[string(request.Topic)] == true {
-				err := (*subscribeServer).Send(message)
-				if err != nil {
+				if err := (*subscribeServer).Send(message); err != nil {
 					log.Printf("Send: %+v to: %+v error, so stop", (*subscribeServer).Context(), message)
 					stopChannels[subscribeServer] <- true
 				}

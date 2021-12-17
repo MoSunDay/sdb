@@ -45,10 +45,11 @@ func NewBatch() engine.Batch {
 	return store.NewBatch()
 }
 
-func Iterate(opt *engine.PrefixIteratorOption, handle func([]byte, []byte)) {
-	store.Iterate(opt, handle)
+func Iterate(opt *engine.PrefixIteratorOption, handle func([]byte, []byte) error) error {
+	return store.Iterate(opt, handle)
 }
 
+// Close todo call
 func Close() error {
 	return store.Close()
 }

@@ -13,8 +13,6 @@ import (
 
 var c pb.SDBClient = nil
 
-var letterRunes = []rune("abcd")
-
 func init() {
 	conn, err := grpc.Dial(":9000", grpc.WithInsecure())
 	if err != nil {
@@ -48,7 +46,7 @@ func main() {
 		for j := 0; j < 100000; j++ {
 			wg.Add(1)
 			go func() {
-				s.Acquire(context.Background(), 1)
+				_ = s.Acquire(context.Background(), 1)
 				set(randBytes(), randBytes())
 				wg.Done()
 				s.Release(1)
@@ -56,7 +54,7 @@ func main() {
 
 			wg.Add(1)
 			go func() {
-				s.Acquire(context.Background(), 1)
+				_ = s.Acquire(context.Background(), 1)
 				get(randBytes())
 				wg.Done()
 				s.Release(1)

@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/devopsfaith/bloomfilter"
-	baseBloomfilter "github.com/devopsfaith/bloomfilter/bloomfilter"
+	bloomFilter2 "github.com/devopsfaith/bloomfilter/bloomfilter"
 	"github.com/yemingfeng/sdb/internal/store"
 )
 
@@ -25,7 +25,7 @@ func BFCreate(key []byte, n uint32, p float64) (bool, error) {
 	if value != nil && len(value) > 0 {
 		return false, BloomFilterExistError
 	}
-	bloomFilter := baseBloomfilter.New(
+	bloomFilter := bloomFilter2.New(
 		bloomfilter.Config{N: uint(n), P: p, HashName: bloomfilter.HASHER_DEFAULT})
 
 	value, err = bloomFilter.MarshalBinary()
@@ -53,7 +53,7 @@ func BFAdd(key []byte, values [][]byte) (bool, error) {
 		return false, NotFoundBloomFilterError
 	}
 
-	bloomFilter := &baseBloomfilter.Bloomfilter{}
+	bloomFilter := &bloomFilter2.Bloomfilter{}
 	if err = bloomFilter.UnmarshalBinary(value); err != nil {
 		return false, err
 	}
@@ -75,7 +75,7 @@ func BFExist(key []byte, values [][]byte) ([]bool, error) {
 	if len(value) == 0 {
 		return nil, NotFoundBloomFilterError
 	}
-	bloomFilter := &baseBloomfilter.Bloomfilter{}
+	bloomFilter := &bloomFilter2.Bloomfilter{}
 	err = bloomFilter.UnmarshalBinary(value)
 	if err != nil {
 		return nil, err

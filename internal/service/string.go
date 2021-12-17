@@ -20,7 +20,9 @@ func MSet(keys [][]byte, values [][]byte) (bool, error) {
 	defer batch.Close()
 
 	for i := range keys {
-		batch.Set(generateStringKey(keys[i]), values[i])
+		if _, err := batch.Set(generateStringKey(keys[i]), values[i]); err != nil {
+			return false, err
+		}
 	}
 	return batch.Commit()
 }

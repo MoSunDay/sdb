@@ -5,13 +5,13 @@ type Store interface {
 	Get(key []byte) ([]byte, error)
 	Del(key []byte) (bool, error)
 	NewBatch() Batch
-	Iterate(opt *PrefixIteratorOption, handle func([]byte, []byte))
+	Iterate(opt *PrefixIteratorOption, handle func([]byte, []byte) error) error
 	Close() error
 }
 
 type Batch interface {
-	Set(key []byte, value []byte)
-	Del(key []byte)
+	Set(key []byte, value []byte) (bool, error)
+	Del(key []byte) (bool, error)
 	Commit() (bool, error)
 	Close()
 }

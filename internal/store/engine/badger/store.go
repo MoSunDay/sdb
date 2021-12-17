@@ -56,8 +56,8 @@ func (store *BadgerStore) NewBatch() engine.Batch {
 	return &BadgerBatch{batch: store.db.NewWriteBatch()}
 }
 
-func (store *BadgerStore) Iterate(opt *engine.PrefixIteratorOption, handle func([]byte, []byte)) {
-	_ = store.db.View(func(txn *badger.Txn) error {
+func (store *BadgerStore) Iterate(opt *engine.PrefixIteratorOption, handle func([]byte, []byte) error) error {
+	return store.db.View(func(txn *badger.Txn) error {
 		it := txn.NewIterator(badger.IteratorOptions{
 			Reverse:        opt.Offset < 0,
 			PrefetchSize:   10,
@@ -77,10 +77,12 @@ func (store *BadgerStore) Iterate(opt *engine.PrefixIteratorOption, handle func(
 
 		i = 0
 		for ; it.ValidForPrefix(opt.Prefix); it.Next() {
-			_ = it.Item().Value(func(value []byte) error {
-				handle(it.Item().Key(), value)
-				return nil
+			err := it.Item().Value(func(value []byte) error {
+				return handle(it.Item().Key(), value)
 			})
+			if err != nil {
+				return err
+			}
 			i++
 			if opt.Limit > 0 && i == int(opt.Limit) {
 				break

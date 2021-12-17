@@ -56,7 +56,7 @@ func (store *PebbleStore) NewBatch() engine.Batch {
 	return &PebbleBatch{batch: store.db.NewBatch()}
 }
 
-func (store *PebbleStore) Iterate(opt *engine.PrefixIteratorOption, handle func([]byte, []byte)) {
+func (store *PebbleStore) Iterate(opt *engine.PrefixIteratorOption, handle func([]byte, []byte) error) error {
 	keyUpperBound := func(b []byte) []byte {
 		end := make([]byte, len(b))
 		copy(end, b)
@@ -85,7 +85,10 @@ func (store *PebbleStore) Iterate(opt *engine.PrefixIteratorOption, handle func(
 
 		i = 0
 		for ; it.Valid(); it.Next() {
-			handle(util.Copy2(it.Key()), util.Copy2(it.Value()))
+			err := handle(util.Copy2(it.Key()), util.Copy2(it.Value()))
+			if err != nil {
+				return err
+			}
 			i++
 			if opt.Limit > 0 && i == int(opt.Limit) {
 				break
@@ -99,13 +102,17 @@ func (store *PebbleStore) Iterate(opt *engine.PrefixIteratorOption, handle func(
 
 		i = 0
 		for ; it.Valid(); it.Prev() {
-			handle(util.Copy2(it.Key()), util.Copy2(it.Value()))
+			err := handle(util.Copy2(it.Key()), util.Copy2(it.Value()))
+			if err != nil {
+				return err
+			}
 			i++
 			if opt.Limit > 0 && i == int(opt.Limit) {
 				break
 			}
 		}
 	}
+	return nil
 }
 
 func (store *PebbleStore) Close() error {

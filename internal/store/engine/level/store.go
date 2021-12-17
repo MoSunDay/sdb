@@ -56,7 +56,7 @@ func (store *LevelStore) NewBatch() engine.Batch {
 	return &LevelBatch{db: store.db, batch: new(leveldb.Batch)}
 }
 
-func (store *LevelStore) Iterate(opt *engine.PrefixIteratorOption, handle func([]byte, []byte)) {
+func (store *LevelStore) Iterate(opt *engine.PrefixIteratorOption, handle func([]byte, []byte) error) error {
 	it := store.db.NewIterator(util.BytesPrefix(opt.Prefix), nil)
 	defer func() {
 		it.Release()
@@ -70,7 +70,10 @@ func (store *LevelStore) Iterate(opt *engine.PrefixIteratorOption, handle func([
 
 		i = 0
 		for ; it.Valid(); it.Next() {
-			handle(util2.Copy2(it.Key()), util2.Copy2(it.Value()))
+			err := handle(util2.Copy2(it.Key()), util2.Copy2(it.Value()))
+			if err != nil {
+				return err
+			}
 			i++
 			if opt.Limit > 0 && i == int(opt.Limit) {
 				break
@@ -84,13 +87,17 @@ func (store *LevelStore) Iterate(opt *engine.PrefixIteratorOption, handle func([
 
 		i = 0
 		for ; it.Valid(); it.Prev() {
-			handle(util2.Copy2(it.Key()), util2.Copy2(it.Value()))
+			err := handle(util2.Copy2(it.Key()), util2.Copy2(it.Value()))
+			if err != nil {
+				return err
+			}
 			i++
 			if opt.Limit > 0 && i == int(opt.Limit) {
 				break
 			}
 		}
 	}
+	return nil
 }
 
 func (store *LevelStore) Close() error {

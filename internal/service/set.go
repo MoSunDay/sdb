@@ -18,7 +18,9 @@ func SPush(key []byte, values [][]byte) (bool, error) {
 	defer batch.Close()
 
 	for _, value := range values {
-		batch.Set(generateSetKey(key, value), value)
+		if _, err := batch.Set(generateSetKey(key, value), value); err != nil {
+			return false, err
+		}
 	}
 
 	return batch.Commit()
@@ -32,7 +34,9 @@ func SPop(key []byte, values [][]byte) (bool, error) {
 	defer batch.Close()
 
 	for _, value := range values {
-		batch.Del(generateSetKey(key, value))
+		if _, err := batch.Del(generateSetKey(key, value)); err != nil {
+			return false, err
+		}
 	}
 
 	return batch.Commit()
@@ -57,19 +61,23 @@ func SDel(key []byte) (bool, error) {
 	batch := store.NewBatch()
 	defer batch.Close()
 
-	store.Iterate(&engine.PrefixIteratorOption{Prefix: generateSetPrefixKey(key)},
-		func(key []byte, value []byte) {
-			batch.Del(key)
-		})
+	if err := store.Iterate(&engine.PrefixIteratorOption{Prefix: generateSetPrefixKey(key)},
+		func(key []byte, value []byte) error {
+			_, err := batch.Del(key)
+			return err
+		}); err != nil {
+		return false, err
+	}
 
 	return batch.Commit()
 }
 
 func SCount(key []byte) (uint32, error) {
 	count := uint32(0)
-	store.Iterate(&engine.PrefixIteratorOption{Prefix: generateSetPrefixKey(key)},
-		func(key []byte, value []byte) {
+	_ = store.Iterate(&engine.PrefixIteratorOption{Prefix: generateSetPrefixKey(key)},
+		func(key []byte, value []byte) error {
 			count = count + 1
+			return nil
 		})
 	return count, nil
 }
@@ -77,11 +85,12 @@ func SCount(key []byte) (uint32, error) {
 func SMembers(key []byte) ([][]byte, error) {
 	index := int32(0)
 	res := make([][]byte, 0)
-	store.Iterate(&engine.PrefixIteratorOption{
+	_ = store.Iterate(&engine.PrefixIteratorOption{
 		Prefix: generateSetPrefixKey(key), Offset: 0, Limit: math.MaxInt32},
-		func(key []byte, value []byte) {
+		func(key []byte, value []byte) error {
 			res = append(res, value)
 			index++
+			return nil
 		})
 	return res[0:index], nil
 }

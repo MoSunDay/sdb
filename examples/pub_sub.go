@@ -14,7 +14,9 @@ func main() {
 	if err != nil {
 		log.Printf("faild to connect: %+v", err)
 	}
-	defer conn.Close()
+	defer func() {
+		_ = conn.Close()
+	}()
 
 	// 连接服务器
 	c := pb.NewSDBClient(conn)

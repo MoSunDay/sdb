@@ -24,7 +24,9 @@ func MPush(key []byte, pairs []*pb.Pair) (bool, error) {
 		if err != nil {
 			return false, nil
 		}
-		batch.Set(generateMapKey(key, pairs[i].Key), rawPair)
+		if _, err = batch.Set(generateMapKey(key, pairs[i].Key), rawPair); err != nil {
+			return false, err
+		}
 	}
 
 	return batch.Commit()
@@ -38,7 +40,9 @@ func MPop(key []byte, keys [][]byte) (bool, error) {
 	defer batch.Close()
 
 	for i := range keys {
-		batch.Del(generateMapKey(key, keys[i]))
+		if _, err := batch.Del(generateMapKey(key, keys[i])); err != nil {
+			return false, err
+		}
 	}
 
 	return batch.Commit()
@@ -63,19 +67,23 @@ func MDel(key []byte) (bool, error) {
 	batch := store.NewBatch()
 	defer batch.Close()
 
-	store.Iterate(&engine.PrefixIteratorOption{Prefix: generateMapPrefixKey(key)},
-		func(key []byte, value []byte) {
-			batch.Del(key)
-		})
+	if err := store.Iterate(&engine.PrefixIteratorOption{Prefix: generateMapPrefixKey(key)},
+		func(key []byte, value []byte) error {
+			_, err := batch.Del(key)
+			return err
+		}); err != nil {
+		return false, err
+	}
 
 	return batch.Commit()
 }
 
 func MCount(key []byte) (uint32, error) {
 	count := uint32(0)
-	store.Iterate(&engine.PrefixIteratorOption{Prefix: generateMapPrefixKey(key)},
-		func(key []byte, value []byte) {
+	_ = store.Iterate(&engine.PrefixIteratorOption{Prefix: generateMapPrefixKey(key)},
+		func(key []byte, value []byte) error {
 			count = count + 1
+			return nil
 		})
 	return count, nil
 }
@@ -83,14 +91,20 @@ func MCount(key []byte) (uint32, error) {
 func MMembers(key []byte) ([]*pb.Pair, error) {
 	index := int32(0)
 	res := make([]*pb.Pair, 0)
-	store.Iterate(&engine.PrefixIteratorOption{
+	if err := store.Iterate(&engine.PrefixIteratorOption{
 		Prefix: generateMapPrefixKey(key), Offset: 0, Limit: math.MaxInt32},
-		func(key []byte, value []byte) {
+		func(key []byte, value []byte) error {
 			var pair pb.Pair
-			_ = proto.Unmarshal(value, &pair)
+			err := proto.Unmarshal(value, &pair)
+			if err != nil {
+				return err
+			}
 			res = append(res, &pb.Pair{Key: pair.Key, Value: pair.Value})
 			index++
-		})
+			return nil
+		}); err != nil {
+		return nil, err
+	}
 	return res[0:index], nil
 }
 

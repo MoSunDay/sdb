@@ -2,10 +2,10 @@ package server
 
 import (
 	"context"
-	"github.com/yemingfeng/sdb/internal/conf"
-	"github.com/yemingfeng/sdb/pkg/pb"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"github.com/yemingfeng/sdb/internal/conf"
+	"github.com/yemingfeng/sdb/pkg/pb"
 	"google.golang.org/grpc"
 	"log"
 	"net/http"

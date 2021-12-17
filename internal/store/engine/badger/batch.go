@@ -8,12 +8,18 @@ type BadgerBatch struct {
 	batch *badger.WriteBatch
 }
 
-func (batch *BadgerBatch) Set(key []byte, value []byte) {
-	_ = batch.batch.Set(key, value)
+func (batch *BadgerBatch) Set(key []byte, value []byte) (bool, error) {
+	if err := batch.batch.Set(key, value); err != nil {
+		return false, err
+	}
+	return true, nil
 }
 
-func (batch *BadgerBatch) Del(key []byte) {
-	_ = batch.batch.Delete(key)
+func (batch *BadgerBatch) Del(key []byte) (bool, error) {
+	if err := batch.batch.Delete(key); err != nil {
+		return false, err
+	}
+	return true, nil
 }
 
 func (batch *BadgerBatch) Commit() (bool, error) {

@@ -6,12 +6,18 @@ type PebbleBatch struct {
 	batch *pebble.Batch
 }
 
-func (batch *PebbleBatch) Set(key []byte, value []byte) {
-	_ = batch.batch.Set(key, value, nil)
+func (batch *PebbleBatch) Set(key []byte, value []byte) (bool, error) {
+	if err := batch.batch.Set(key, value, nil); err != nil {
+		return false, err
+	}
+	return true, nil
 }
 
-func (batch *PebbleBatch) Del(key []byte) {
-	_ = batch.batch.Delete(key, nil)
+func (batch *PebbleBatch) Del(key []byte) (bool, error) {
+	if err := batch.batch.Delete(key, nil); err != nil {
+		return false, err
+	}
+	return true, nil
 }
 
 func (batch *PebbleBatch) Commit() (bool, error) {

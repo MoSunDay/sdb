@@ -10,12 +10,14 @@ type LevelBatch struct {
 	batch *leveldb.Batch
 }
 
-func (batch *LevelBatch) Set(key []byte, value []byte) {
+func (batch *LevelBatch) Set(key []byte, value []byte) (bool, error) {
 	batch.batch.Put(key, value)
+	return true, nil
 }
 
-func (batch *LevelBatch) Del(key []byte) {
+func (batch *LevelBatch) Del(key []byte) (bool, error) {
 	batch.batch.Delete(key)
+	return true, nil
 }
 
 func (batch *LevelBatch) Commit() (bool, error) {
