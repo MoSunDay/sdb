@@ -3,10 +3,8 @@ package service
 import (
 	"fmt"
 	"github.com/yemingfeng/sdb/internal/store"
-	"github.com/yemingfeng/sdb/internal/store/engine"
 	"github.com/yemingfeng/sdb/pkg/pb"
 	"google.golang.org/protobuf/proto"
-	"math"
 )
 
 const mapKeyPrefixTemplate = "mk/%s"
@@ -67,7 +65,7 @@ func MDel(key []byte) (bool, error) {
 	batch := store.NewBatch()
 	defer batch.Close()
 
-	if err := store.Iterate(&engine.PrefixIteratorOption{Prefix: generateMapPrefixKey(key)},
+	if err := store.Iterate0(generateMapPrefixKey(key),
 		func(key []byte, value []byte) error {
 			_, err := batch.Del(key)
 			return err
@@ -80,7 +78,7 @@ func MDel(key []byte) (bool, error) {
 
 func MCount(key []byte) (uint32, error) {
 	count := uint32(0)
-	_ = store.Iterate(&engine.PrefixIteratorOption{Prefix: generateMapPrefixKey(key)},
+	_ = store.Iterate0(generateMapPrefixKey(key),
 		func(key []byte, value []byte) error {
 			count = count + 1
 			return nil
@@ -91,8 +89,7 @@ func MCount(key []byte) (uint32, error) {
 func MMembers(key []byte) ([]*pb.Pair, error) {
 	index := int32(0)
 	res := make([]*pb.Pair, 0)
-	if err := store.Iterate(&engine.PrefixIteratorOption{
-		Prefix: generateMapPrefixKey(key), Offset: 0, Limit: math.MaxInt32},
+	if err := store.Iterate0(generateMapPrefixKey(key),
 		func(key []byte, value []byte) error {
 			var pair pb.Pair
 			err := proto.Unmarshal(value, &pair)

@@ -3,8 +3,6 @@ package service
 import (
 	"fmt"
 	"github.com/yemingfeng/sdb/internal/store"
-	"github.com/yemingfeng/sdb/internal/store/engine"
-	"math"
 )
 
 const setKeyPrefixTemplate = "sk/%s"
@@ -61,7 +59,7 @@ func SDel(key []byte) (bool, error) {
 	batch := store.NewBatch()
 	defer batch.Close()
 
-	if err := store.Iterate(&engine.PrefixIteratorOption{Prefix: generateSetPrefixKey(key)},
+	if err := store.Iterate0(generateSetPrefixKey(key),
 		func(key []byte, value []byte) error {
 			_, err := batch.Del(key)
 			return err
@@ -74,7 +72,7 @@ func SDel(key []byte) (bool, error) {
 
 func SCount(key []byte) (uint32, error) {
 	count := uint32(0)
-	_ = store.Iterate(&engine.PrefixIteratorOption{Prefix: generateSetPrefixKey(key)},
+	_ = store.Iterate0(generateSetPrefixKey(key),
 		func(key []byte, value []byte) error {
 			count = count + 1
 			return nil
@@ -85,8 +83,7 @@ func SCount(key []byte) (uint32, error) {
 func SMembers(key []byte) ([][]byte, error) {
 	index := int32(0)
 	res := make([][]byte, 0)
-	_ = store.Iterate(&engine.PrefixIteratorOption{
-		Prefix: generateSetPrefixKey(key), Offset: 0, Limit: math.MaxInt32},
+	_ = store.Iterate0(generateSetPrefixKey(key),
 		func(key []byte, value []byte) error {
 			res = append(res, value)
 			index++

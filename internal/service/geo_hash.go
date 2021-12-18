@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/gansidui/geohash"
 	"github.com/yemingfeng/sdb/internal/store"
-	"github.com/yemingfeng/sdb/internal/store/engine"
 	"github.com/yemingfeng/sdb/pkg/pb"
 	"google.golang.org/protobuf/proto"
 	"math"
@@ -66,7 +65,7 @@ func GHDel(key []byte) (bool, error) {
 	if _, err := batch.Del(metaKey); err != nil {
 		return false, err
 	}
-	if err := store.Iterate(&engine.PrefixIteratorOption{Prefix: generateGeoHashIdPrefixKey(key)},
+	if err := store.Iterate0(generateGeoHashIdPrefixKey(key),
 		func(key []byte, value []byte) error {
 			_, err := batch.Del(key)
 			if err != nil {
@@ -224,7 +223,7 @@ func GHGetBoxes(key []byte, latitude float64, longitude float64) ([]*pb.Point, e
 	_, box := geohash.Encode(latitude, longitude, int(precision))
 
 	res := make([]*pb.Point, 0)
-	if err := store.Iterate(&engine.PrefixIteratorOption{Prefix: generateGeoHashBoxPrefixKey(key, marshalBox(box))},
+	if err := store.Iterate0(generateGeoHashBoxPrefixKey(key, marshalBox(box)),
 		func(key []byte, value []byte) error {
 			var item pb.Point
 			if err := proto.Unmarshal(value, &item); err != nil {
@@ -263,7 +262,7 @@ func GHGetNeighbors(key []byte, latitude float64, longitude float64) ([]*pb.Poin
 	res := make([]*pb.Point, 0)
 
 	for i := range neighbors {
-		if err := store.Iterate(&engine.PrefixIteratorOption{Prefix: generateGeoHashPrefixKey(key, neighbors[i])},
+		if err := store.Iterate0(generateGeoHashPrefixKey(key, neighbors[i]),
 			func(key []byte, value []byte) error {
 				var item pb.Point
 				if err := proto.Unmarshal(value, &item); err != nil {
@@ -286,7 +285,7 @@ func GHGetNeighbors(key []byte, latitude float64, longitude float64) ([]*pb.Poin
 
 func GHCount(key []byte) (uint32, error) {
 	count := uint32(0)
-	if err := store.Iterate(&engine.PrefixIteratorOption{Prefix: generateGeoHashIdPrefixKey(key)},
+	if err := store.Iterate0(generateGeoHashIdPrefixKey(key),
 		func(key []byte, value []byte) error {
 			count++
 			return nil
@@ -298,7 +297,7 @@ func GHCount(key []byte) (uint32, error) {
 
 func GHMembers(key []byte) ([]*pb.Point, error) {
 	res := make([]*pb.Point, 0)
-	if err := store.Iterate(&engine.PrefixIteratorOption{Prefix: generateGeoHashIdPrefixKey(key)},
+	if err := store.Iterate0(generateGeoHashIdPrefixKey(key),
 		func(key []byte, value []byte) error {
 			var item pb.Point
 			if err := proto.Unmarshal(value, &item); err != nil {

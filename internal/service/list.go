@@ -4,9 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/yemingfeng/sdb/internal/store"
-	"github.com/yemingfeng/sdb/internal/store/engine"
 	"github.com/yemingfeng/sdb/internal/util"
-	"math"
 	"strconv"
 	"strings"
 )
@@ -64,7 +62,7 @@ func LPop(key []byte, values [][]byte) (bool, error) {
 	defer batch.Close()
 
 	for i := range values {
-		if err := store.Iterate(&engine.PrefixIteratorOption{Prefix: generateListIdPrefixKey(key, values[i])},
+		if err := store.Iterate0(generateListIdPrefixKey(key, values[i]),
 			func(storeKey []byte, storeValue []byte) error {
 				if bytes.Equal(storeValue, values[i]) {
 					if _, err := batch.Del(storeKey); err != nil {
@@ -92,8 +90,7 @@ func LPop(key []byte, values [][]byte) (bool, error) {
 func LRange(key []byte, offset int32, limit uint32) ([][]byte, error) {
 	index := int32(0)
 	res := make([][]byte, limit)
-	_ = store.Iterate(&engine.PrefixIteratorOption{
-		Prefix: generateListPrefixKey(key), Offset: offset, Limit: limit},
+	_ = store.Iterate1(generateListPrefixKey(key), offset, limit,
 		func(key []byte, value []byte) error {
 			res[index] = value
 			index++
@@ -106,7 +103,7 @@ func LExist(key []byte, values [][]byte) ([]bool, error) {
 	res := make([]bool, len(values))
 	existMap := make(map[string]bool)
 	for i := range values {
-		_ = store.Iterate(&engine.PrefixIteratorOption{Prefix: generateListIdPrefixKey(key, values[i])},
+		_ = store.Iterate0(generateListIdPrefixKey(key, values[i]),
 			func(key []byte, value []byte) error {
 				if bytes.Equal(value, values[i]) {
 					existMap[string(value)] = true
@@ -129,13 +126,13 @@ func LDel(key []byte) (bool, error) {
 	batch := store.NewBatch()
 	defer batch.Close()
 
-	if err := store.Iterate(&engine.PrefixIteratorOption{Prefix: generateListPrefixKey(key)},
+	if err := store.Iterate0(generateListPrefixKey(key),
 		func(key1 []byte, value1 []byte) error {
 			if _, err := batch.Del(key1); err != nil {
 				return err
 			}
 
-			return store.Iterate(&engine.PrefixIteratorOption{Prefix: generateListIdPrefixKey(key, value1)},
+			return store.Iterate0(generateListIdPrefixKey(key, value1),
 				func(key2 []byte, value2 []byte) error {
 					if bytes.Equal(value2, value1) {
 						_, err := batch.Del(key2)
@@ -152,7 +149,7 @@ func LDel(key []byte) (bool, error) {
 
 func LCount(key []byte) (uint32, error) {
 	count := uint32(0)
-	_ = store.Iterate(&engine.PrefixIteratorOption{Prefix: generateListPrefixKey(key)},
+	_ = store.Iterate0(generateListPrefixKey(key),
 		func(key []byte, value []byte) error {
 			count++
 			return nil
@@ -163,13 +160,11 @@ func LCount(key []byte) (uint32, error) {
 func LMembers(key []byte) ([][]byte, error) {
 	index := int32(0)
 	res := make([][]byte, 0)
-	_ = store.Iterate(&engine.PrefixIteratorOption{
-		Prefix: generateListPrefixKey(key), Offset: 0, Limit: math.MaxInt32},
-		func(key []byte, value []byte) error {
-			res = append(res, value)
-			index++
-			return nil
-		})
+	_ = store.Iterate0(generateListPrefixKey(key), func(key []byte, value []byte) error {
+		res = append(res, value)
+		index++
+		return nil
+	})
 	return res[0:index], nil
 }
 

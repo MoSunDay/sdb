@@ -3,10 +3,8 @@ package service
 import (
 	"fmt"
 	"github.com/yemingfeng/sdb/internal/store"
-	"github.com/yemingfeng/sdb/internal/store/engine"
 	"github.com/yemingfeng/sdb/pkg/pb"
 	"google.golang.org/protobuf/proto"
-	"math"
 )
 
 const sortedSetScoreKeyPrefixTemplate = "zs/%s"
@@ -90,8 +88,7 @@ func ZPop(key []byte, values [][]byte) (bool, error) {
 func ZRange(key []byte, offset int32, limit uint32) ([]*pb.Tuple, error) {
 	index := int32(0)
 	res := make([]*pb.Tuple, limit)
-	err := store.Iterate(&engine.PrefixIteratorOption{Prefix: generateSortedSetTupleKeyPrefix(key),
-		Offset: offset, Limit: limit},
+	err := store.Iterate1(generateSortedSetTupleKeyPrefix(key), offset, limit,
 		func(key []byte, value []byte) error {
 			tuple := pb.Tuple{}
 			err := proto.Unmarshal(value, &tuple)
@@ -127,7 +124,7 @@ func ZDel(key []byte) (bool, error) {
 	batch := store.NewBatch()
 	defer batch.Close()
 
-	if err := store.Iterate(&engine.PrefixIteratorOption{Prefix: generateSortedSetScoreKeyPrefix(key)},
+	if err := store.Iterate0(generateSortedSetScoreKeyPrefix(key),
 		func(key []byte, value []byte) error {
 			_, err := batch.Del(key)
 			return err
@@ -135,7 +132,7 @@ func ZDel(key []byte) (bool, error) {
 		return false, err
 	}
 
-	if err := store.Iterate(&engine.PrefixIteratorOption{Prefix: generateSortedSetTupleKeyPrefix(key)},
+	if err := store.Iterate0(generateSortedSetTupleKeyPrefix(key),
 		func(key []byte, value []byte) error {
 			_, err := batch.Del(key)
 			return err
@@ -148,7 +145,7 @@ func ZDel(key []byte) (bool, error) {
 
 func ZCount(key []byte) (uint32, error) {
 	count := uint32(0)
-	_ = store.Iterate(&engine.PrefixIteratorOption{Prefix: generateSortedSetTupleKeyPrefix(key)},
+	_ = store.Iterate0(generateSortedSetTupleKeyPrefix(key),
 		func(_ []byte, _ []byte) error {
 			count++
 			return nil
@@ -159,8 +156,7 @@ func ZCount(key []byte) (uint32, error) {
 func ZMembers(key []byte) ([]*pb.Tuple, error) {
 	index := int32(0)
 	res := make([]*pb.Tuple, 0)
-	if err := store.Iterate(&engine.PrefixIteratorOption{Prefix: generateSortedSetTupleKeyPrefix(key),
-		Offset: 0, Limit: math.MaxInt32},
+	if err := store.Iterate0(generateSortedSetTupleKeyPrefix(key),
 		func(key []byte, value []byte) error {
 			// zs/{key}/{score}/{value} -> {tuple}
 			tuple := pb.Tuple{}

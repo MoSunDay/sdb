@@ -7,6 +7,7 @@ import (
 	"github.com/yemingfeng/sdb/internal/store/engine/level"
 	"github.com/yemingfeng/sdb/internal/store/engine/pebble"
 	"log"
+	"math"
 )
 
 const (
@@ -45,8 +46,15 @@ func NewBatch() engine.Batch {
 	return store.NewBatch()
 }
 
-func Iterate(opt *engine.PrefixIteratorOption, handle func([]byte, []byte) error) error {
-	return store.Iterate(opt, handle)
+func Iterate0(prefix []byte, handle func([]byte, []byte) error) error {
+	return Iterate1(prefix, 0, math.MaxUint32, handle)
+}
+
+func Iterate1(prefix []byte, offset int32, limit uint32, handle func([]byte, []byte) error) error {
+	if limit == 0 {
+		limit = math.MaxUint32
+	}
+	return store.Iterate(&engine.PrefixIteratorOption{Prefix: prefix, Offset: offset, Limit: limit}, handle)
 }
 
 // Close todo call
