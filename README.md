@@ -33,6 +33,7 @@
     - [hyper log log](https://github.com/yemingfeng/sdb/blob/master/api/protobuf-spec/hyper_log_log.proto)
     - [bitset](https://github.com/yemingfeng/sdb/blob/master/api/protobuf-spec/bitset.proto)
     - [map](https://github.com/yemingfeng/sdb/blob/master/api/protobuf-spec/map.proto)
+    - [geo hash](https://github.com/yemingfeng/sdb/blob/master/api/protobuf-spec/geo_hash.proto)
     - [pub sub](https://github.com/yemingfeng/sdb/blob/master/api/protobuf-spec/pub_sub.proto)
 - 持久化
     - 兼容 [pebble](https://github.com/cockroachdb/pebble)
@@ -66,7 +67,7 @@
 - [ ] 支持更丰富的数据结构 (2021.01.20)
     - [x] bitset
     - [x] map
-    - [ ] geo hash
+    - [x] geo hash
     - [ ] reverted index
     - [ ] vector search
 - [ ] 集群方案设计 (2021.01.30)
@@ -126,6 +127,7 @@ func main() {
 - [hyper log log 操作](https://github.com/yemingfeng/sdb/blob/master/examples/hyper_log_log.go)
 - [bitset 操作](https://github.com/yemingfeng/sdb/blob/master/examples/bitset.go)
 - [map 操作](https://github.com/yemingfeng/sdb/blob/master/examples/map.go)
+- [geo hash 操作](https://github.com/yemingfeng/sdb/blob/master/examples/geo_hash.go)
 - [pub sub 操作](https://github.com/yemingfeng/sdb/blob/master/examples/pub_sub.go)
 
 ------
@@ -235,6 +237,19 @@ MExist | key, keys | 判断 keys 是否存在 key map 中
 MDel | key | 删除某个 key map
 MCount | key | 返回 key map 中的元素个数，时间复杂度较高，**不推荐使用**
 MMembers | key | 按 pair.key 大小遍历 pair。时间复杂度较高，**不推荐使用**
+
+#### geo hash
+
+接口 | 参数 | 描述
+---- | --- | ---
+GHCreate | key, precision | 创建 geo hash，precision 代表精度。
+GHDel | key | 删除某个 geo hash
+GHAdd | key, points | 将 points 加入到 geo hash 中，point 中的 id 作为唯一标识
+GHRem | key, points | 删除某 points
+GHGetBoxes | key, point | 返回和某 point 在 key geo hash 相同 box 的 point 列表，会按照距离从小到大排序
+GHBetNeighbors | key, point | 返回在 key geo hash 中距离 point 最近的 point 列表，会按照距离从小到大排序
+GHCount | key | 返回 key geo hash 中的元素个数，时间复杂度较高，**不推荐使用**
+GHMembers | key | 返回 key geo hash 中所有的 point 列表。时间复杂度较高，**不推荐使用**
 
 #### pub sub
 

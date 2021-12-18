@@ -466,6 +466,263 @@
         ]
       }
     },
+    "/v1/gh-add": {
+      "post": {
+        "operationId": "SDB_GHAdd",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoGHAddResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/protoGHAddRequest"
+            }
+          }
+        ],
+        "tags": [
+          "SDB"
+        ]
+      }
+    },
+    "/v1/gh-count": {
+      "post": {
+        "operationId": "SDB_GHCount",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoGHCountResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/protoGHCountRequest"
+            }
+          }
+        ],
+        "tags": [
+          "SDB"
+        ]
+      }
+    },
+    "/v1/gh-create": {
+      "post": {
+        "summary": "geo hash 类型的存储",
+        "operationId": "SDB_GHCreate",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoGHCreateResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/protoGHCreateRequest"
+            }
+          }
+        ],
+        "tags": [
+          "SDB"
+        ]
+      }
+    },
+    "/v1/gh-del": {
+      "post": {
+        "operationId": "SDB_GHDel",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoGHDelResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/protoGHDelRequest"
+            }
+          }
+        ],
+        "tags": [
+          "SDB"
+        ]
+      }
+    },
+    "/v1/gh-get-beighbors": {
+      "post": {
+        "operationId": "SDB_GHGetNeighbors",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoGHGetNeighborsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/protoGHGetNeighborsRequest"
+            }
+          }
+        ],
+        "tags": [
+          "SDB"
+        ]
+      }
+    },
+    "/v1/gh-get-boxes": {
+      "post": {
+        "operationId": "SDB_GHGetBoxes",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoGHGetBoxesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/protoGHGetBoxesRequest"
+            }
+          }
+        ],
+        "tags": [
+          "SDB"
+        ]
+      }
+    },
+    "/v1/gh-members": {
+      "post": {
+        "operationId": "SDB_GHMembers",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoGHMembersResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/protoGHMembersRequest"
+            }
+          }
+        ],
+        "tags": [
+          "SDB"
+        ]
+      }
+    },
+    "/v1/gh-rem": {
+      "post": {
+        "operationId": "SDB_GHRem",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoGHRemResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/protoGHRemRequest"
+            }
+          }
+        ],
+        "tags": [
+          "SDB"
+        ]
+      }
+    },
     "/v1/hll-add": {
       "post": {
         "operationId": "SDB_HLLAdd",
@@ -1960,6 +2217,184 @@
         }
       }
     },
+    "protoGHAddRequest": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "format": "byte"
+        },
+        "points": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protoPoint"
+          }
+        }
+      }
+    },
+    "protoGHAddResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "protoGHCountRequest": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "protoGHCountResponse": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "protoGHCreateRequest": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "format": "byte"
+        },
+        "precision": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "protoGHCreateResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "protoGHDelRequest": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "protoGHDelResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "protoGHGetBoxesRequest": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "format": "byte"
+        },
+        "latitude": {
+          "type": "number",
+          "format": "double"
+        },
+        "longitude": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "protoGHGetBoxesResponse": {
+      "type": "object",
+      "properties": {
+        "points": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protoPoint"
+          }
+        }
+      }
+    },
+    "protoGHGetNeighborsRequest": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "format": "byte"
+        },
+        "latitude": {
+          "type": "number",
+          "format": "double"
+        },
+        "longitude": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "protoGHGetNeighborsResponse": {
+      "type": "object",
+      "properties": {
+        "points": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protoPoint"
+          }
+        }
+      }
+    },
+    "protoGHMembersRequest": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "protoGHMembersResponse": {
+      "type": "object",
+      "properties": {
+        "points": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protoPoint"
+          }
+        }
+      }
+    },
+    "protoGHRemRequest": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "format": "byte"
+        },
+        "points": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protoPoint"
+          }
+        }
+      }
+    },
+    "protoGHRemResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
     "protoGetRequest": {
       "type": "object",
       "properties": {
@@ -2462,6 +2897,27 @@
         "value": {
           "type": "string",
           "format": "byte"
+        }
+      }
+    },
+    "protoPoint": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "byte"
+        },
+        "latitude": {
+          "type": "number",
+          "format": "double"
+        },
+        "longitude": {
+          "type": "number",
+          "format": "double"
+        },
+        "distance": {
+          "type": "string",
+          "format": "uint64"
         }
       }
     },

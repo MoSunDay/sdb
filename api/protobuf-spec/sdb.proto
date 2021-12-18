@@ -11,6 +11,7 @@ import "api/protobuf-spec/bloom_filter.proto";
 import "api/protobuf-spec/hyper_log_log.proto";
 import "api/protobuf-spec/bitset.proto";
 import "api/protobuf-spec/map.proto";
+import "api/protobuf-spec/geo_hash.proto";
 import "api/protobuf-spec/pub_sub.proto";
 
 service SDB {
@@ -80,6 +81,16 @@ service SDB {
   rpc MDel(MDelRequest) returns (MDelResponse) {}
   rpc MCount(MCountRequest) returns (MCountResponse) {}
   rpc MMembers(MMembersRequest) returns (MMembersResponse) {}
+
+  // geo hash 类型的存储
+  rpc GHCreate(GHCreateRequest) returns (GHCreateResponse) {}
+  rpc GHDel(GHDelRequest) returns (GHDelResponse) {}
+  rpc GHAdd(GHAddRequest) returns (GHAddResponse) {}
+  rpc GHRem(GHRemRequest) returns (GHRemResponse) {}
+  rpc GHGetBoxes(GHGetBoxesRequest) returns (GHGetBoxesResponse) {}
+  rpc GHGetNeighbors(GHGetNeighborsRequest) returns (GHGetNeighborsResponse) {}
+  rpc GHCount(GHCountRequest) returns (GHCountResponse) {}
+  rpc GHMembers(GHMembersRequest) returns (GHMembersResponse) {}
 
   // pub/sub
   rpc Subscribe(SubscribeRequest) returns (stream Message) {}

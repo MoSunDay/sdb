@@ -25,6 +25,7 @@ type SDBGrpcServer struct {
 	HyperLogLogServer
 	BitsetServer
 	MapServer
+	GeoHashServer
 	PubSubServer
 }
 
@@ -33,10 +34,24 @@ func NewSDBGrpcServer() *SDBGrpcServer {
 
 	grpcServer := grpc.NewServer(
 		grpc.StreamInterceptor(grpcmiddleware.ChainStreamServer(
+			func(srv interface{}, ss grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
+				err := handler(srv, ss)
+				if err != nil {
+					log.Printf("error: %+v", err)
+				}
+				return err
+			},
 			grpcrecovery.StreamServerInterceptor(),
 			grpcprometheus.StreamServerInterceptor,
 		)),
 		grpc.UnaryInterceptor(grpcmiddleware.ChainUnaryServer(
+			func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
+				resp, err = handler(ctx, req)
+				if err != nil {
+					log.Printf("error: %+v", err)
+				}
+				return resp, err
+			},
 			grpcmiddleware.ChainUnaryServer(
 				ratelimit.UnaryServerInterceptor(CreateRateLimit(conf.Conf.Server.Rate))),
 			grpcrecovery.UnaryServerInterceptor(),

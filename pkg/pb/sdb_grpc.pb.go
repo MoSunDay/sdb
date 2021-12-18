@@ -77,6 +77,15 @@ type SDBClient interface {
 	MDel(ctx context.Context, in *MDelRequest, opts ...grpc.CallOption) (*MDelResponse, error)
 	MCount(ctx context.Context, in *MCountRequest, opts ...grpc.CallOption) (*MCountResponse, error)
 	MMembers(ctx context.Context, in *MMembersRequest, opts ...grpc.CallOption) (*MMembersResponse, error)
+	// geo hash 类型的存储
+	GHCreate(ctx context.Context, in *GHCreateRequest, opts ...grpc.CallOption) (*GHCreateResponse, error)
+	GHDel(ctx context.Context, in *GHDelRequest, opts ...grpc.CallOption) (*GHDelResponse, error)
+	GHAdd(ctx context.Context, in *GHAddRequest, opts ...grpc.CallOption) (*GHAddResponse, error)
+	GHRem(ctx context.Context, in *GHRemRequest, opts ...grpc.CallOption) (*GHRemResponse, error)
+	GHGetBoxes(ctx context.Context, in *GHGetBoxesRequest, opts ...grpc.CallOption) (*GHGetBoxesResponse, error)
+	GHGetNeighbors(ctx context.Context, in *GHGetNeighborsRequest, opts ...grpc.CallOption) (*GHGetNeighborsResponse, error)
+	GHCount(ctx context.Context, in *GHCountRequest, opts ...grpc.CallOption) (*GHCountResponse, error)
+	GHMembers(ctx context.Context, in *GHMembersRequest, opts ...grpc.CallOption) (*GHMembersResponse, error)
 	// pub/sub
 	Subscribe(ctx context.Context, in *SubscribeRequest, opts ...grpc.CallOption) (SDB_SubscribeClient, error)
 	Publish(ctx context.Context, in *PublishRequest, opts ...grpc.CallOption) (*PublishResponse, error)
@@ -549,6 +558,78 @@ func (c *sDBClient) MMembers(ctx context.Context, in *MMembersRequest, opts ...g
 	return out, nil
 }
 
+func (c *sDBClient) GHCreate(ctx context.Context, in *GHCreateRequest, opts ...grpc.CallOption) (*GHCreateResponse, error) {
+	out := new(GHCreateResponse)
+	err := c.cc.Invoke(ctx, "/proto.SDB/GHCreate", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *sDBClient) GHDel(ctx context.Context, in *GHDelRequest, opts ...grpc.CallOption) (*GHDelResponse, error) {
+	out := new(GHDelResponse)
+	err := c.cc.Invoke(ctx, "/proto.SDB/GHDel", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *sDBClient) GHAdd(ctx context.Context, in *GHAddRequest, opts ...grpc.CallOption) (*GHAddResponse, error) {
+	out := new(GHAddResponse)
+	err := c.cc.Invoke(ctx, "/proto.SDB/GHAdd", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *sDBClient) GHRem(ctx context.Context, in *GHRemRequest, opts ...grpc.CallOption) (*GHRemResponse, error) {
+	out := new(GHRemResponse)
+	err := c.cc.Invoke(ctx, "/proto.SDB/GHRem", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *sDBClient) GHGetBoxes(ctx context.Context, in *GHGetBoxesRequest, opts ...grpc.CallOption) (*GHGetBoxesResponse, error) {
+	out := new(GHGetBoxesResponse)
+	err := c.cc.Invoke(ctx, "/proto.SDB/GHGetBoxes", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *sDBClient) GHGetNeighbors(ctx context.Context, in *GHGetNeighborsRequest, opts ...grpc.CallOption) (*GHGetNeighborsResponse, error) {
+	out := new(GHGetNeighborsResponse)
+	err := c.cc.Invoke(ctx, "/proto.SDB/GHGetNeighbors", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *sDBClient) GHCount(ctx context.Context, in *GHCountRequest, opts ...grpc.CallOption) (*GHCountResponse, error) {
+	out := new(GHCountResponse)
+	err := c.cc.Invoke(ctx, "/proto.SDB/GHCount", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *sDBClient) GHMembers(ctx context.Context, in *GHMembersRequest, opts ...grpc.CallOption) (*GHMembersResponse, error) {
+	out := new(GHMembersResponse)
+	err := c.cc.Invoke(ctx, "/proto.SDB/GHMembers", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *sDBClient) Subscribe(ctx context.Context, in *SubscribeRequest, opts ...grpc.CallOption) (SDB_SubscribeClient, error) {
 	stream, err := c.cc.NewStream(ctx, &SDB_ServiceDesc.Streams[0], "/proto.SDB/Subscribe", opts...)
 	if err != nil {
@@ -653,6 +734,15 @@ type SDBServer interface {
 	MDel(context.Context, *MDelRequest) (*MDelResponse, error)
 	MCount(context.Context, *MCountRequest) (*MCountResponse, error)
 	MMembers(context.Context, *MMembersRequest) (*MMembersResponse, error)
+	// geo hash 类型的存储
+	GHCreate(context.Context, *GHCreateRequest) (*GHCreateResponse, error)
+	GHDel(context.Context, *GHDelRequest) (*GHDelResponse, error)
+	GHAdd(context.Context, *GHAddRequest) (*GHAddResponse, error)
+	GHRem(context.Context, *GHRemRequest) (*GHRemResponse, error)
+	GHGetBoxes(context.Context, *GHGetBoxesRequest) (*GHGetBoxesResponse, error)
+	GHGetNeighbors(context.Context, *GHGetNeighborsRequest) (*GHGetNeighborsResponse, error)
+	GHCount(context.Context, *GHCountRequest) (*GHCountResponse, error)
+	GHMembers(context.Context, *GHMembersRequest) (*GHMembersResponse, error)
 	// pub/sub
 	Subscribe(*SubscribeRequest, SDB_SubscribeServer) error
 	Publish(context.Context, *PublishRequest) (*PublishResponse, error)
@@ -814,6 +904,30 @@ func (UnimplementedSDBServer) MCount(context.Context, *MCountRequest) (*MCountRe
 }
 func (UnimplementedSDBServer) MMembers(context.Context, *MMembersRequest) (*MMembersResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method MMembers not implemented")
+}
+func (UnimplementedSDBServer) GHCreate(context.Context, *GHCreateRequest) (*GHCreateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GHCreate not implemented")
+}
+func (UnimplementedSDBServer) GHDel(context.Context, *GHDelRequest) (*GHDelResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GHDel not implemented")
+}
+func (UnimplementedSDBServer) GHAdd(context.Context, *GHAddRequest) (*GHAddResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GHAdd not implemented")
+}
+func (UnimplementedSDBServer) GHRem(context.Context, *GHRemRequest) (*GHRemResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GHRem not implemented")
+}
+func (UnimplementedSDBServer) GHGetBoxes(context.Context, *GHGetBoxesRequest) (*GHGetBoxesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GHGetBoxes not implemented")
+}
+func (UnimplementedSDBServer) GHGetNeighbors(context.Context, *GHGetNeighborsRequest) (*GHGetNeighborsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GHGetNeighbors not implemented")
+}
+func (UnimplementedSDBServer) GHCount(context.Context, *GHCountRequest) (*GHCountResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GHCount not implemented")
+}
+func (UnimplementedSDBServer) GHMembers(context.Context, *GHMembersRequest) (*GHMembersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GHMembers not implemented")
 }
 func (UnimplementedSDBServer) Subscribe(*SubscribeRequest, SDB_SubscribeServer) error {
 	return status.Errorf(codes.Unimplemented, "method Subscribe not implemented")
@@ -1751,6 +1865,150 @@ func _SDB_MMembers_Handler(srv interface{}, ctx context.Context, dec func(interf
 	return interceptor(ctx, in, info, handler)
 }
 
+func _SDB_GHCreate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GHCreateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SDBServer).GHCreate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.SDB/GHCreate",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SDBServer).GHCreate(ctx, req.(*GHCreateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SDB_GHDel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GHDelRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SDBServer).GHDel(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.SDB/GHDel",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SDBServer).GHDel(ctx, req.(*GHDelRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SDB_GHAdd_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GHAddRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SDBServer).GHAdd(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.SDB/GHAdd",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SDBServer).GHAdd(ctx, req.(*GHAddRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SDB_GHRem_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GHRemRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SDBServer).GHRem(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.SDB/GHRem",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SDBServer).GHRem(ctx, req.(*GHRemRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SDB_GHGetBoxes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GHGetBoxesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SDBServer).GHGetBoxes(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.SDB/GHGetBoxes",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SDBServer).GHGetBoxes(ctx, req.(*GHGetBoxesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SDB_GHGetNeighbors_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GHGetNeighborsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SDBServer).GHGetNeighbors(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.SDB/GHGetNeighbors",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SDBServer).GHGetNeighbors(ctx, req.(*GHGetNeighborsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SDB_GHCount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GHCountRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SDBServer).GHCount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.SDB/GHCount",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SDBServer).GHCount(ctx, req.(*GHCountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SDB_GHMembers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GHMembersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SDBServer).GHMembers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.SDB/GHMembers",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SDBServer).GHMembers(ctx, req.(*GHMembersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _SDB_Subscribe_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(SubscribeRequest)
 	if err := stream.RecvMsg(m); err != nil {
@@ -2000,6 +2258,38 @@ var SDB_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "MMembers",
 			Handler:    _SDB_MMembers_Handler,
+		},
+		{
+			MethodName: "GHCreate",
+			Handler:    _SDB_GHCreate_Handler,
+		},
+		{
+			MethodName: "GHDel",
+			Handler:    _SDB_GHDel_Handler,
+		},
+		{
+			MethodName: "GHAdd",
+			Handler:    _SDB_GHAdd_Handler,
+		},
+		{
+			MethodName: "GHRem",
+			Handler:    _SDB_GHRem_Handler,
+		},
+		{
+			MethodName: "GHGetBoxes",
+			Handler:    _SDB_GHGetBoxes_Handler,
+		},
+		{
+			MethodName: "GHGetNeighbors",
+			Handler:    _SDB_GHGetNeighbors_Handler,
+		},
+		{
+			MethodName: "GHCount",
+			Handler:    _SDB_GHCount_Handler,
+		},
+		{
+			MethodName: "GHMembers",
+			Handler:    _SDB_GHMembers_Handler,
 		},
 		{
 			MethodName: "Publish",

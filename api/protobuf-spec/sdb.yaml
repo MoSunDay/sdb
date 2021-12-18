@@ -163,3 +163,28 @@ http:
     - selector: proto.SDB.MMembers
       post: /v1/m-members
       body: "*"
+
+    - selector: proto.SDB.GHCreate
+      post: /v1/gh-create
+      body: "*"
+    - selector: proto.SDB.GHDel
+      post: /v1/gh-del
+      body: "*"
+    - selector: proto.SDB.GHAdd
+      post: /v1/gh-add
+      body: "*"
+    - selector: proto.SDB.GHRem
+      post: /v1/gh-rem
+      body: "*"
+    - selector: proto.SDB.GHGetBoxes
+      post: /v1/gh-get-boxes
+      body: "*"
+    - selector: proto.SDB.GHGetNeighbors
+      post: /v1/gh-get-beighbors
+      body: "*"
+    - selector: proto.SDB.GHCount
+      post: /v1/gh-count
+      body: "*"
+    - selector: proto.SDB.GHMembers
+      post: /v1/gh-members
+      body: "*"
