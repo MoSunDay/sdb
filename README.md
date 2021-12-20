@@ -91,7 +91,7 @@ sh ./scripts/quick_start.sh
 package main
 
 import (
-	"github.com/yemingfeng/sdb/pkg/pb"
+	"github.com/yemingfeng/sdb/internal/pb"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"log"

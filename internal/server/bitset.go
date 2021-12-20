@@ -1,51 +1,51 @@
 package server
 
 import (
+	pb2 "github.com/yemingfeng/sdb/internal/pb"
 	"github.com/yemingfeng/sdb/internal/service"
-	"github.com/yemingfeng/sdb/pkg/pb"
 	"golang.org/x/net/context"
 )
 
 type BitsetServer struct {
-	pb.UnimplementedSDBServer
+	pb2.UnimplementedSDBServer
 }
 
-func (server *BitsetServer) BSCreate(_ context.Context, request *pb.BSCreateRequest) (*pb.BSCreateResponse, error) {
+func (server *BitsetServer) BSCreate(_ context.Context, request *pb2.BSCreateRequest) (*pb2.BSCreateResponse, error) {
 	res, err := service.BSCreate(request.Key, request.Size)
-	return &pb.BSCreateResponse{Success: res}, err
+	return &pb2.BSCreateResponse{Success: res}, err
 }
 
-func (server *BitsetServer) BSDel(_ context.Context, request *pb.BSDelRequest) (*pb.BSDelResponse, error) {
+func (server *BitsetServer) BSDel(_ context.Context, request *pb2.BSDelRequest) (*pb2.BSDelResponse, error) {
 	res, err := service.BSDel(request.Key)
-	return &pb.BSDelResponse{Success: res}, err
+	return &pb2.BSDelResponse{Success: res}, err
 }
 
-func (server *BitsetServer) BSSetRange(_ context.Context, request *pb.BSSetRangeRequest) (*pb.BSSetRangeResponse, error) {
+func (server *BitsetServer) BSSetRange(_ context.Context, request *pb2.BSSetRangeRequest) (*pb2.BSSetRangeResponse, error) {
 	res, err := service.BSSetRange(request.Key, request.Start, request.End, request.Value)
-	return &pb.BSSetRangeResponse{Success: res}, err
+	return &pb2.BSSetRangeResponse{Success: res}, err
 }
 
-func (server *BitsetServer) BSMSet(_ context.Context, request *pb.BSMSetRequest) (*pb.BSMSetResponse, error) {
+func (server *BitsetServer) BSMSet(_ context.Context, request *pb2.BSMSetRequest) (*pb2.BSMSetResponse, error) {
 	res, err := service.BSMSet(request.Key, request.Bits, request.Value)
-	return &pb.BSMSetResponse{Success: res}, err
+	return &pb2.BSMSetResponse{Success: res}, err
 }
 
-func (server *BitsetServer) BSGetRange(_ context.Context, request *pb.BSGetRangeRequest) (*pb.BSGetRangeResponse, error) {
+func (server *BitsetServer) BSGetRange(_ context.Context, request *pb2.BSGetRangeRequest) (*pb2.BSGetRangeResponse, error) {
 	res, err := service.BSGetRange(request.Key, request.Start, request.End)
-	return &pb.BSGetRangeResponse{Values: res}, err
+	return &pb2.BSGetRangeResponse{Values: res}, err
 }
 
-func (server *BitsetServer) BSMGet(_ context.Context, request *pb.BSMGetRequest) (*pb.BSMGetResponse, error) {
+func (server *BitsetServer) BSMGet(_ context.Context, request *pb2.BSMGetRequest) (*pb2.BSMGetResponse, error) {
 	res, err := service.BSMGet(request.Key, request.Bits)
-	return &pb.BSMGetResponse{Values: res}, err
+	return &pb2.BSMGetResponse{Values: res}, err
 }
 
-func (server *BitsetServer) BSCount(_ context.Context, request *pb.BSCountRequest) (*pb.BSCountResponse, error) {
+func (server *BitsetServer) BSCount(_ context.Context, request *pb2.BSCountRequest) (*pb2.BSCountResponse, error) {
 	res, err := service.BSCount(request.Key)
-	return &pb.BSCountResponse{Count: res}, err
+	return &pb2.BSCountResponse{Count: res}, err
 }
 
-func (server *BitsetServer) BSCountRange(_ context.Context, request *pb.BSCountRangeRequest) (*pb.BSCountRangeResponse, error) {
+func (server *BitsetServer) BSCountRange(_ context.Context, request *pb2.BSCountRangeRequest) (*pb2.BSCountRangeResponse, error) {
 	res, err := service.BSCountRange(request.Key, request.Start, request.End)
-	return &pb.BSCountRangeResponse{Count: res}, err
+	return &pb2.BSCountRangeResponse{Count: res}, err
 }

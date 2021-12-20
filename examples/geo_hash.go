@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/yemingfeng/sdb/pkg/pb"
+	pb2 "github.com/yemingfeng/sdb/internal/pb"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"log"
@@ -17,13 +17,13 @@ func main() {
 	}()
 
 	// 连接服务器
-	c := pb.NewSDBClient(conn)
+	c := pb2.NewSDBClient(conn)
 
-	ghCreateResponse, err := c.GHCreate(context.Background(), &pb.GHCreateRequest{Key: []byte("gh1"), Precision: 2})
+	ghCreateResponse, err := c.GHCreate(context.Background(), &pb2.GHCreateRequest{Key: []byte("gh1"), Precision: 2})
 	log.Printf("ghCreateResponse: %+v, err: %+v", ghCreateResponse, err)
 
-	ghAddResponse, err := c.GHAdd(context.Background(), &pb.GHAddRequest{Key: []byte("gh1"),
-		Points: []*pb.Point{
+	ghAddResponse, err := c.GHAdd(context.Background(), &pb2.GHAddRequest{Key: []byte("gh1"),
+		Points: []*pb2.Point{
 			{Latitude: 11.11, Longitude: 22.11, Id: []byte("p1")},
 			{Latitude: 11.22, Longitude: 22.22, Id: []byte("p2")},
 			{Latitude: 11.33, Longitude: 22.33, Id: []byte("p3")},
@@ -40,31 +40,31 @@ func main() {
 	})
 	log.Printf("ghAddResponse: %+v, err: %+v", ghAddResponse, err)
 
-	ghMembersResponse, err := c.GHMembers(context.Background(), &pb.GHMembersRequest{Key: []byte("gh1")})
+	ghMembersResponse, err := c.GHMembers(context.Background(), &pb2.GHMembersRequest{Key: []byte("gh1")})
 	log.Printf("ghMembersResponse: %+v, err: %+v", ghMembersResponse, err)
-	ghCountResponse, err := c.GHCount(context.Background(), &pb.GHCountRequest{Key: []byte("gh1")})
+	ghCountResponse, err := c.GHCount(context.Background(), &pb2.GHCountRequest{Key: []byte("gh1")})
 	log.Printf("ghCountResponse: %+v, err: %+v", ghCountResponse, err)
 
-	ghRemResponse, err := c.GHRem(context.Background(), &pb.GHRemRequest{Key: []byte("gh1"),
-		Points: []*pb.Point{
+	ghRemResponse, err := c.GHRem(context.Background(), &pb2.GHRemRequest{Key: []byte("gh1"),
+		Points: []*pb2.Point{
 			{Latitude: 11.11, Longitude: 22.11, Id: []byte("p1")},
 			{Latitude: 11.10, Longitude: 22.15, Id: []byte("p9")},
 		},
 	})
 	log.Printf("ghRemResponse: %+v, err: %+v", ghRemResponse, err)
-	ghMembersResponse, err = c.GHMembers(context.Background(), &pb.GHMembersRequest{Key: []byte("gh1")})
+	ghMembersResponse, err = c.GHMembers(context.Background(), &pb2.GHMembersRequest{Key: []byte("gh1")})
 	log.Printf("ghMembersResponse: %+v, err: %+v", ghMembersResponse, err)
-	ghCountResponse, err = c.GHCount(context.Background(), &pb.GHCountRequest{Key: []byte("gh1")})
+	ghCountResponse, err = c.GHCount(context.Background(), &pb2.GHCountRequest{Key: []byte("gh1")})
 	log.Printf("ghCountResponse: %+v, err: %+v", ghCountResponse, err)
 
-	getBoxesResponse, err := c.GHGetBoxes(context.Background(), &pb.GHGetBoxesRequest{Key: []byte("gh1"),
+	getBoxesResponse, err := c.GHGetBoxes(context.Background(), &pb2.GHGetBoxesRequest{Key: []byte("gh1"),
 		Latitude: 11.10, Longitude: 22.11})
 	log.Printf("getBoxesResponse: %+v, err: %+v", getBoxesResponse, err)
 
-	getNeighborsResponse, err := c.GHGetNeighbors(context.Background(), &pb.GHGetNeighborsRequest{Key: []byte("gh1"),
+	getNeighborsResponse, err := c.GHGetNeighbors(context.Background(), &pb2.GHGetNeighborsRequest{Key: []byte("gh1"),
 		Latitude: 11.10, Longitude: 11.12})
 	log.Printf("getNeighborsResponse: %+v, err: %+v", getNeighborsResponse, err)
 
-	ghDelResponse, err := c.GHDel(context.Background(), &pb.GHDelRequest{Key: []byte("gh1")})
+	ghDelResponse, err := c.GHDel(context.Background(), &pb2.GHDelRequest{Key: []byte("gh1")})
 	log.Printf("ghDelResponse: %+v, err: %+v", ghDelResponse, err)
 }

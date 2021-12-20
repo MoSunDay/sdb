@@ -1,16 +1,16 @@
 package service
 
 import (
-	"github.com/yemingfeng/sdb/pkg/pb"
+	pb2 "github.com/yemingfeng/sdb/internal/pb"
 	"log"
 	"sync"
 )
 
 var pubsubLocker sync.Mutex
-var stopChannels = make(map[*pb.SDB_SubscribeServer]chan bool)
-var subscribeServers = make(map[*pb.SDB_SubscribeServer]map[string]bool)
+var stopChannels = make(map[*pb2.SDB_SubscribeServer]chan bool)
+var subscribeServers = make(map[*pb2.SDB_SubscribeServer]map[string]bool)
 
-func Subscribe(topic []byte, subscribeServer *pb.SDB_SubscribeServer) (bool, error) {
+func Subscribe(topic []byte, subscribeServer *pb2.SDB_SubscribeServer) (bool, error) {
 	pubsubLocker.Lock()
 	defer pubsubLocker.Unlock()
 
@@ -24,9 +24,9 @@ func Subscribe(topic []byte, subscribeServer *pb.SDB_SubscribeServer) (bool, err
 	return true, nil
 }
 
-func Publish(request *pb.PublishRequest) (bool, error) {
+func Publish(request *pb2.PublishRequest) (bool, error) {
 	go func() {
-		message := &pb.Message{Topic: request.Topic, Payload: request.Payload}
+		message := &pb2.Message{Topic: request.Topic, Payload: request.Payload}
 		for subscribeServer, topics := range subscribeServers {
 			if topics[string(request.Topic)] == true {
 				if err := (*subscribeServer).Send(message); err != nil {
@@ -39,12 +39,12 @@ func Publish(request *pb.PublishRequest) (bool, error) {
 	return true, nil
 }
 
-func CleanSubscribeServer(subscribeServer *pb.SDB_SubscribeServer) {
+func CleanSubscribeServer(subscribeServer *pb2.SDB_SubscribeServer) {
 	close(stopChannels[subscribeServer])
 	delete(stopChannels, subscribeServer)
 	delete(subscribeServers, subscribeServer)
 }
 
-func GetStopChannel(subscribeServer *pb.SDB_SubscribeServer) chan bool {
+func GetStopChannel(subscribeServer *pb2.SDB_SubscribeServer) chan bool {
 	return stopChannels[subscribeServer]
 }

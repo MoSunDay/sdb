@@ -2,8 +2,8 @@ package service
 
 import (
 	"fmt"
+	"github.com/yemingfeng/sdb/internal/pb"
 	"github.com/yemingfeng/sdb/internal/store"
-	"github.com/yemingfeng/sdb/pkg/pb"
 	"google.golang.org/protobuf/proto"
 )
 

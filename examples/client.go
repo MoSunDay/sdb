@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/yemingfeng/sdb/pkg/pb"
+	pb2 "github.com/yemingfeng/sdb/internal/pb"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"log"
@@ -17,11 +17,11 @@ func main() {
 	}()
 
 	// 连接服务器
-	c := pb.NewSDBClient(conn)
+	c := pb2.NewSDBClient(conn)
 	setResponse, err := c.Set(context.Background(),
-		&pb.SetRequest{Key: []byte("hello"), Value: []byte("world")})
+		&pb2.SetRequest{Key: []byte("hello"), Value: []byte("world")})
 	log.Printf("setResponse: %+v, err: %+v", setResponse, err)
 	getResponse, err := c.Get(context.Background(),
-		&pb.GetRequest{Key: []byte("hello")})
+		&pb2.GetRequest{Key: []byte("hello")})
 	log.Printf("getResponse: %+v, err: %+v", getResponse, err)
 }
