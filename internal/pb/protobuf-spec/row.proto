@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package proto;
+option go_package = "internal/pb";
+
+message Index {
+  bytes name = 1;
+  bytes value = 2;
+}
+
+enum DataType {
+  STRING = 0;
+  LIST = 1;
+  SET = 2;
+  SORTED_SET = 3;
+  BLOOM_FILTER = 4;
+  HYPER_LOG_LOG = 5;
+  BITSET = 6;
+  MAP = 7;
+  GEO_HASH = 8;
+}
+
+message Row {
+  DataType dataType = 1;
+  bytes key = 2;
+  bytes id = 3;
+  repeated Index indexes = 4;
+  bytes value = 5;
+}

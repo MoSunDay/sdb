@@ -22,15 +22,6 @@ func NewBadgerStore() *BadgerStore {
 	return &BadgerStore{db: db}
 }
 
-func (store *BadgerStore) Set(key []byte, value []byte) (bool, error) {
-	if err := store.db.Update(func(txn *badger.Txn) error {
-		return txn.Set(key, value)
-	}); err != nil {
-		return false, err
-	}
-	return true, nil
-}
-
 func (store *BadgerStore) Get(key []byte) ([]byte, error) {
 	txn := store.db.NewTransaction(true)
 	item, err := txn.Get(key)
@@ -43,17 +34,8 @@ func (store *BadgerStore) Get(key []byte) ([]byte, error) {
 	return item.ValueCopy(nil)
 }
 
-func (store *BadgerStore) Del(key []byte) (bool, error) {
-	if err := store.db.Update(func(txn *badger.Txn) error {
-		return txn.Delete(key)
-	}); err != nil {
-		return false, err
-	}
-	return true, nil
-}
-
 func (store *BadgerStore) NewBatch() engine.Batch {
-	return &BadgerBatch{batch: store.db.NewWriteBatch()}
+	return &BadgerBatch{transaction: store.db.NewTransaction(true)}
 }
 
 func (store *BadgerStore) Iterate(opt *engine.PrefixIteratorOption, handle func([]byte, []byte) error) error {

@@ -2,50 +2,52 @@ package service
 
 import (
 	"errors"
-	"fmt"
 	"github.com/tmthrgd/go-bitset"
-	"github.com/yemingfeng/sdb/internal/store"
+	"github.com/yemingfeng/sdb/internal/pb"
+	"github.com/yemingfeng/sdb/internal/store/collection"
 )
 
 var NotFoundBitsetError = errors.New("not found bitset, please create it")
 var BitsetExistError = errors.New("bitset exist, please delete it or change other")
 var BitsetRangeError = errors.New("bitset out of range, please check it")
 
-const bitsetKeyTemplate = "bs/%s"
+var bitsetCollection = collection.NewCollection(pb.DataType_BITSET)
 
 func BSCreate(key []byte, size uint32) (bool, error) {
 	lock(LBitset, key)
 	defer unlock(LBitset, key)
 
-	bitsetKey := generateBitsetKey(key)
-	bitsetValue, err := store.Get(bitsetKey)
+	exist, err := bitsetCollection.ExistRowById(key, key)
 	if err != nil {
 		return false, err
 	}
-	if bitsetValue != nil && len(bitsetValue) > 0 {
+	if exist {
 		return false, BitsetExistError
 	}
 
-	return store.Set(bitsetKey, bitset.New(uint(size)))
+	return bitsetCollection.UpsertRowAutoCommit(&collection.Row{
+		Key:   key,
+		Id:    key,
+		Value: bitset.New(uint(size)),
+	})
 }
 
 func BSDel(key []byte) (bool, error) {
-	return store.Del(generateBitsetKey(key))
+	return bitsetCollection.DelRowByIdAutoCommit(key, key)
 }
 
 func BSSetRange(key []byte, start uint32, end uint32, value bool) (bool, error) {
 	lock(LBitset, key)
 	defer unlock(LBitset, key)
 
-	bitsetKey := generateBitsetKey(key)
-	bitsetValue, err := store.Get(bitsetKey)
+	row, err := bitsetCollection.GetRowById(key, key)
 	if err != nil {
 		return false, err
 	}
-	if bitsetValue == nil {
+	if row == nil {
 		return false, NotFoundBitsetError
 	}
-	b := bitset.Bitset(bitsetValue)
+	b := bitset.Bitset(row.Value)
 	if start > end {
 		return false, BitsetRangeError
 	}
@@ -53,22 +55,25 @@ func BSSetRange(key []byte, start uint32, end uint32, value bool) (bool, error) 
 		return false, BitsetRangeError
 	}
 	b.SetRangeTo(uint(start), uint(end), value)
-	return store.Set(bitsetKey, b)
+	return bitsetCollection.UpsertRowAutoCommit(&collection.Row{
+		Key:   key,
+		Id:    key,
+		Value: b,
+	})
 }
 
 func BSMSet(key []byte, bits []uint32, value bool) (bool, error) {
 	lock(LBitset, key)
 	defer unlock(LBitset, key)
 
-	bitsetKey := generateBitsetKey(key)
-	bitsetValue, err := store.Get(bitsetKey)
+	row, err := bitsetCollection.GetRowById(key, key)
 	if err != nil {
 		return false, err
 	}
-	if bitsetValue == nil {
+	if row == nil {
 		return false, NotFoundBitsetError
 	}
-	b := bitset.Bitset(bitsetValue)
+	b := bitset.Bitset(row.Value)
 	for i := range bits {
 		bit := uint(bits[i])
 		if bit > b.Len() {
@@ -76,19 +81,22 @@ func BSMSet(key []byte, bits []uint32, value bool) (bool, error) {
 		}
 		b.SetTo(bit, value)
 	}
-	return store.Set(bitsetKey, b)
+	return bitsetCollection.UpsertRowAutoCommit(&collection.Row{
+		Key:   key,
+		Id:    key,
+		Value: b,
+	})
 }
 
 func BSGetRange(key []byte, start uint32, end uint32) ([]bool, error) {
-	bitsetKey := generateBitsetKey(key)
-	bitsetValue, err := store.Get(bitsetKey)
+	row, err := bitsetCollection.GetRowById(key, key)
 	if err != nil {
 		return nil, err
 	}
-	if bitsetValue == nil {
+	if row == nil {
 		return nil, NotFoundBitsetError
 	}
-	b := bitset.Bitset(bitsetValue)
+	b := bitset.Bitset(row.Value)
 	if start > end {
 		return nil, BitsetRangeError
 	}
@@ -103,15 +111,14 @@ func BSGetRange(key []byte, start uint32, end uint32) ([]bool, error) {
 }
 
 func BSMGet(key []byte, bits []uint32) ([]bool, error) {
-	bitsetKey := generateBitsetKey(key)
-	bitsetValue, err := store.Get(bitsetKey)
+	row, err := bitsetCollection.GetRowById(key, key)
 	if err != nil {
 		return nil, err
 	}
-	if bitsetValue == nil {
+	if row == nil {
 		return nil, NotFoundBitsetError
 	}
-	b := bitset.Bitset(bitsetValue)
+	b := bitset.Bitset(row.Value)
 	res := make([]bool, len(bits))
 	for i := range bits {
 		bit := uint(bits[i])
@@ -124,28 +131,26 @@ func BSMGet(key []byte, bits []uint32) ([]bool, error) {
 }
 
 func BSCount(key []byte) (uint32, error) {
-	bitsetKey := generateBitsetKey(key)
-	bitsetValue, err := store.Get(bitsetKey)
+	row, err := bitsetCollection.GetRowById(key, key)
 	if err != nil {
 		return 0, err
 	}
-	if bitsetValue == nil {
+	if row == nil {
 		return 0, NotFoundBitsetError
 	}
-	b := bitset.Bitset(bitsetValue)
+	b := bitset.Bitset(row.Value)
 	return uint32(b.Count()), nil
 }
 
 func BSCountRange(key []byte, start uint32, end uint32) (uint32, error) {
-	bitsetKey := generateBitsetKey(key)
-	bitsetValue, err := store.Get(bitsetKey)
+	row, err := bitsetCollection.GetRowById(key, key)
 	if err != nil {
 		return 0, err
 	}
-	if bitsetValue == nil {
+	if row == nil {
 		return 0, NotFoundBitsetError
 	}
-	b := bitset.Bitset(bitsetValue)
+	b := bitset.Bitset(row.Value)
 	if start > end {
 		return 0, BitsetRangeError
 	}
@@ -153,8 +158,4 @@ func BSCountRange(key []byte, start uint32, end uint32) (uint32, error) {
 		return 0, BitsetRangeError
 	}
 	return uint32(b.CountRange(uint(start), uint(end))), nil
-}
-
-func generateBitsetKey(key []byte) []byte {
-	return []byte(fmt.Sprintf(bitsetKeyTemplate, key))
 }

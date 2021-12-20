@@ -1,41 +1,41 @@
 package server
 
 import (
-	pb2 "github.com/yemingfeng/sdb/internal/pb"
+	"github.com/yemingfeng/sdb/internal/pb"
 	"github.com/yemingfeng/sdb/internal/service"
 	"golang.org/x/net/context"
 )
 
 type MapServer struct {
-	pb2.UnimplementedSDBServer
+	pb.UnimplementedSDBServer
 }
 
-func (server *MapServer) MPush(_ context.Context, request *pb2.MPushRequest) (*pb2.MPushResponse, error) {
+func (server *MapServer) MPush(_ context.Context, request *pb.MPushRequest) (*pb.MPushResponse, error) {
 	res, err := service.MPush(request.Key, request.Pairs)
-	return &pb2.MPushResponse{Success: res}, err
+	return &pb.MPushResponse{Success: res}, err
 }
 
-func (server *MapServer) MPop(_ context.Context, request *pb2.MPopRequest) (*pb2.MPopResponse, error) {
+func (server *MapServer) MPop(_ context.Context, request *pb.MPopRequest) (*pb.MPopResponse, error) {
 	res, err := service.MPop(request.Key, request.Keys)
-	return &pb2.MPopResponse{Success: res}, err
+	return &pb.MPopResponse{Success: res}, err
 }
 
-func (server *MapServer) MExist(_ context.Context, request *pb2.MExistRequest) (*pb2.MExistResponse, error) {
+func (server *MapServer) MExist(_ context.Context, request *pb.MExistRequest) (*pb.MExistResponse, error) {
 	res, err := service.MExist(request.Key, request.Keys)
-	return &pb2.MExistResponse{Exists: res}, err
+	return &pb.MExistResponse{Exists: res}, err
 }
 
-func (server *MapServer) MDel(_ context.Context, request *pb2.MDelRequest) (*pb2.MDelResponse, error) {
+func (server *MapServer) MDel(_ context.Context, request *pb.MDelRequest) (*pb.MDelResponse, error) {
 	res, err := service.MDel(request.Key)
-	return &pb2.MDelResponse{Success: res}, err
+	return &pb.MDelResponse{Success: res}, err
 }
 
-func (server *MapServer) MCount(_ context.Context, request *pb2.MCountRequest) (*pb2.MCountResponse, error) {
+func (server *MapServer) MCount(_ context.Context, request *pb.MCountRequest) (*pb.MCountResponse, error) {
 	res, err := service.MCount(request.Key)
-	return &pb2.MCountResponse{Count: res}, err
+	return &pb.MCountResponse{Count: res}, err
 }
 
-func (server *MapServer) MMembers(_ context.Context, request *pb2.MMembersRequest) (*pb2.MMembersResponse, error) {
+func (server *MapServer) MMembers(_ context.Context, request *pb.MMembersRequest) (*pb.MMembersResponse, error) {
 	res, err := service.MMembers(request.Key)
-	return &pb2.MMembersResponse{Pairs: res}, err
+	return &pb.MMembersResponse{Pairs: res}, err
 }

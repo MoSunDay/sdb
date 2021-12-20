@@ -1,23 +1,27 @@
 package service
 
 import (
-	"fmt"
-	"github.com/yemingfeng/sdb/internal/store"
+	"github.com/yemingfeng/sdb/internal/pb"
+	"github.com/yemingfeng/sdb/internal/store/collection"
+	"github.com/yemingfeng/sdb/internal/store/outer"
+	"math"
 )
 
-func generateSetPrefix(key []byte) []byte {
-	return []byte(fmt.Sprintf("sk/%s/", key))
-}
+var setCollection = collection.NewCollection(pb.DataType_SET)
 
 func SPush(key []byte, values [][]byte) (bool, error) {
 	lock(LSet, key)
 	defer unlock(LSet, key)
 
-	batch := store.NewBatch()
+	batch := outer.NewBatch()
 	defer batch.Close()
 
 	for _, value := range values {
-		if _, err := store.NewRow1(generateSetPrefix(key), value, value).Set(batch); err != nil {
+		if _, err := setCollection.UpsertRow(&collection.Row{
+			Key:   key,
+			Id:    value,
+			Value: value,
+		}, batch); err != nil {
 			return false, err
 		}
 	}
@@ -29,11 +33,11 @@ func SPop(key []byte, values [][]byte) (bool, error) {
 	lock(LSet, key)
 	defer unlock(LSet, key)
 
-	batch := store.NewBatch()
+	batch := outer.NewBatch()
 	defer batch.Close()
 
 	for _, value := range values {
-		if _, err := store.NewRow0(generateSetPrefix(key), value).Del(batch); err != nil {
+		if _, err := setCollection.DelRowById(key, value, batch); err != nil {
 			return false, err
 		}
 	}
@@ -44,7 +48,7 @@ func SPop(key []byte, values [][]byte) (bool, error) {
 func SExist(key []byte, values [][]byte) ([]bool, error) {
 	res := make([]bool, len(values))
 	for i, value := range values {
-		exist, err := store.NewRow0(generateSetPrefix(key), value).Exist()
+		exist, err := setCollection.ExistRowById(key, value)
 		if err != nil {
 			return nil, err
 		}
@@ -57,22 +61,15 @@ func SDel(key []byte) (bool, error) {
 	lock(LSet, key)
 	defer unlock(LSet, key)
 
-	batch := store.NewBatch()
-	defer batch.Close()
-
-	if _, err := store.Del0(generateSetPrefix(key), batch); err != nil {
-		return false, err
-	}
-
-	return batch.Commit()
+	return setCollection.DelAutoCommit(key)
 }
 
 func SCount(key []byte) (uint32, error) {
-	return store.Count(generateSetPrefix(key))
+	return setCollection.Count(key)
 }
 
 func SMembers(key []byte) ([][]byte, error) {
-	rows, err := store.Page0(generateSetPrefix(key))
+	rows, err := setCollection.Page(key, 0, math.MaxUint32)
 	if err != nil {
 		return nil, err
 	}

@@ -520,6 +520,42 @@ func LPop(key []byte, values [][]byte) (bool, error) {
 }
 ```
 
+##### 关系模型到 KV 模型的映射
+
+有了上面的方案，大概知道了 KV 型存储引擎如何支持数据结构。但这种方式很粗暴，无法通用化。
+
+参考了 [TiKV 的设计](https://pingcap.com/zh/blog/tidb-internal-2) ，SDB 做了一层关系模型到 KV 结构的设计。
+
+在 SBD 中，数据由 Collection 和 Row 构造。 其中：
+
+- Collection 类似数据库的一张表，是逻辑概念。一个 Collection 包含 dataType，比如：List。一个 Collection 包含多个 Row。
+- 一个 Row 包含唯一键：key、id、value、indexes，**是真正存储于 KV 存储的数据**。每行 row 以 rowKey 作为唯一值，rowKey
+  = `{dataType} + {key} + {id}`
+- 每个 row 包含 N 个索引，每个索引以 indexKey 作为唯一值，indexKey
+  = `{dataType} + {key} + idx_{indexName} + {indexValue} + {id}`
+
+以 ListCollection 为例子，该 List 的 key 为 [l1]，假设该 Collection 有 4 行 Row，每行 Row 都有 value 和 score 的索引
+
+那么每行 Row 结构如下：
+
+```json
+ { {key: l1}, {id: 1.1}, {value: aaa}, {score: 1.1}, indexes: [ {name: "value", value: aaa}, {name: "score", value: 1.1} ] }
+ { {key: l1}, {id: 2.2}, {value: bbb}, {score: 2.2}, indexes: [ {name: "value", value: bbb}, {name: "score", value: 2.2} ] }
+ { {key: l1}, {id: 3.3}, {value: ccc}, {score: 3.3}, indexes: [ {name: "value", value: ccc}, {name: "score", value: 3.3} ] } 
+ { {key: l1}, {id: 4.4}, {value: aaa}, {score: 4.4}, indexes: [ {name: "value", value: aaa}, {name: "score", value: 4.4} ] }
+```
+
+以 id = 1.1 的 Row 为例子，dataType = 1，rowKey = `1/l1/1.1`，valueIndexKey =
+`1/l1/idx_value/aaa/1.1`, scoreIndexKey = `1/l1/idx_score/1.1/1.1` 写入的数据为：
+
+```yaml
+    rowKey: 1/l1/1.1 -> { {key: l1}, {id: 1.1}, {value: aaa}, {score: 1.1}, indexes: [ {name: "value", value: aaa}, {name: "score", value: 1.1} ] }
+    valueIndexKey: 1/l1/idx_value/aaa/1.1, -> 1/l1/1.1
+    scoreIndexKey: 1/l1/idx_score/1.1/1.1 -> 1/l1/1.1
+```
+
+如此，便将数据结构、关系模型、KV 存储打通。
+
 #### SDB 通讯协议方案
 
 解决完了存储和数据结构的问题后，SDB 面临了【最后一公里】的问题是通讯协议的选择。

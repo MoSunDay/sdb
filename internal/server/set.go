@@ -1,41 +1,41 @@
 package server
 
 import (
-	pb2 "github.com/yemingfeng/sdb/internal/pb"
+	"github.com/yemingfeng/sdb/internal/pb"
 	"github.com/yemingfeng/sdb/internal/service"
 	"golang.org/x/net/context"
 )
 
 type SetServer struct {
-	pb2.UnimplementedSDBServer
+	pb.UnimplementedSDBServer
 }
 
-func (server *SetServer) SPush(_ context.Context, request *pb2.SPushRequest) (*pb2.SPushResponse, error) {
+func (server *SetServer) SPush(_ context.Context, request *pb.SPushRequest) (*pb.SPushResponse, error) {
 	res, err := service.SPush(request.Key, request.Values)
-	return &pb2.SPushResponse{Success: res}, err
+	return &pb.SPushResponse{Success: res}, err
 }
 
-func (server *SetServer) SPop(_ context.Context, request *pb2.SPopRequest) (*pb2.SPopResponse, error) {
+func (server *SetServer) SPop(_ context.Context, request *pb.SPopRequest) (*pb.SPopResponse, error) {
 	res, err := service.SPop(request.Key, request.Values)
-	return &pb2.SPopResponse{Success: res}, err
+	return &pb.SPopResponse{Success: res}, err
 }
 
-func (server *SetServer) SExist(_ context.Context, request *pb2.SExistRequest) (*pb2.SExistResponse, error) {
+func (server *SetServer) SExist(_ context.Context, request *pb.SExistRequest) (*pb.SExistResponse, error) {
 	res, err := service.SExist(request.Key, request.Values)
-	return &pb2.SExistResponse{Exists: res}, err
+	return &pb.SExistResponse{Exists: res}, err
 }
 
-func (server *SetServer) SDel(_ context.Context, request *pb2.SDelRequest) (*pb2.SDelResponse, error) {
+func (server *SetServer) SDel(_ context.Context, request *pb.SDelRequest) (*pb.SDelResponse, error) {
 	res, err := service.SDel(request.Key)
-	return &pb2.SDelResponse{Success: res}, err
+	return &pb.SDelResponse{Success: res}, err
 }
 
-func (server *SetServer) SCount(_ context.Context, request *pb2.SCountRequest) (*pb2.SCountResponse, error) {
+func (server *SetServer) SCount(_ context.Context, request *pb.SCountRequest) (*pb.SCountResponse, error) {
 	res, err := service.SCount(request.Key)
-	return &pb2.SCountResponse{Count: res}, err
+	return &pb.SCountResponse{Count: res}, err
 }
 
-func (server *SetServer) SMembers(_ context.Context, request *pb2.SMembersRequest) (*pb2.SMembersResponse, error) {
+func (server *SetServer) SMembers(_ context.Context, request *pb.SMembersRequest) (*pb.SMembersResponse, error) {
 	res, err := service.SMembers(request.Key)
-	return &pb2.SMembersResponse{Values: res}, err
+	return &pb.SMembersResponse{Values: res}, err
 }

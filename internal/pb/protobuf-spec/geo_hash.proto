@@ -38,7 +38,7 @@ message GHAddResponse {
 
 message GHRemRequest {
   bytes key = 1;
-  repeated Point points = 2;
+  repeated bytes ids = 2;
 }
 
 message GHRemResponse {

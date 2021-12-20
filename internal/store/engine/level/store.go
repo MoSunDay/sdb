@@ -26,14 +26,6 @@ func NewLevelStore() *LevelStore {
 	return &LevelStore{db: db}
 }
 
-func (store *LevelStore) Set(key []byte, value []byte) (bool, error) {
-	err := store.db.Put(key, value, &opt.WriteOptions{Sync: true})
-	if err != nil {
-		return false, err
-	}
-	return true, nil
-}
-
 func (store *LevelStore) Get(key []byte) ([]byte, error) {
 	value, err := store.db.Get(key, nil)
 	if err == leveldb.ErrNotFound {
@@ -45,15 +37,9 @@ func (store *LevelStore) Get(key []byte) ([]byte, error) {
 	return value, err
 }
 
-func (store *LevelStore) Del(key []byte) (bool, error) {
-	if err := store.db.Delete(key, &opt.WriteOptions{Sync: true}); err != nil {
-		return false, nil
-	}
-	return true, nil
-}
-
 func (store *LevelStore) NewBatch() engine.Batch {
-	return &LevelBatch{db: store.db, batch: new(leveldb.Batch)}
+	transaction, _ := store.db.OpenTransaction()
+	return &LevelBatch{transaction: transaction}
 }
 
 func (store *LevelStore) Iterate(opt *engine.PrefixIteratorOption, handle func([]byte, []byte) error) error {

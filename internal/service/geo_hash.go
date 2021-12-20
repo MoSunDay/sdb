@@ -1,11 +1,13 @@
 package service
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"github.com/gansidui/geohash"
 	"github.com/yemingfeng/sdb/internal/pb"
-	"github.com/yemingfeng/sdb/internal/store"
+	"github.com/yemingfeng/sdb/internal/store/collection"
+	"github.com/yemingfeng/sdb/internal/store/outer"
 	"google.golang.org/protobuf/proto"
 	"math"
 	"sort"
@@ -14,80 +16,51 @@ import (
 
 var NotFoundGeoHashError = errors.New("not found geo hash, please create it")
 var GeoHashExistError = errors.New("geo hash exist, please delete it or change other")
+var GeoHashInvalidIdError = errors.New("id can not be equals to key, please change other id")
 
-const geoHashMetaKeyTemplate = "gh/%s"
+var geoHashCollection = collection.NewCollection(pb.DataType_GEO_HASH)
 
-// id key
-const geoHashIdPrefixKeyTemplate = "ghi/%s"
-const geoHashIdKeyTemplate = geoHashIdPrefixKeyTemplate + "/%s"
-
-// hash key
-const geoHashPrefixKeyTemplate = "ghh/%s/%s"
-const geoHashKeyTemplate = geoHashPrefixKeyTemplate + "/%s"
-
-// box key
-const geoHashBoxPrefixKeyTemplate = "ghb/%s/%s"
-const geoHashBoxKeyTemplate = geoHashBoxPrefixKeyTemplate + "/%s"
+func newGeoHashIndexes(hash []byte, box []byte) []collection.Index {
+	return []collection.Index{
+		{Name: []byte("hash"), Value: hash},
+		{Name: []byte("box"), Value: box},
+	}
+}
 
 func GHCreate(key []byte, precision int32) (bool, error) {
 	lock(LGeoHash, key)
 	defer unlock(LGeoHash, key)
 
-	metaKey := generateGeoHashMetaKey(key)
-	exist, err := store.Get(metaKey)
+	exist, err := geoHashCollection.ExistRowById(key, key)
 	if err != nil {
 		return false, err
 	}
-	if exist != nil || len(exist) > 0 {
+	if exist {
 		return false, GeoHashExistError
 	}
 
-	return store.Set(metaKey, []byte(strconv.Itoa(int(precision))))
+	return geoHashCollection.UpsertRowAutoCommit(&collection.Row{
+		Key:   key,
+		Id:    key,
+		Value: []byte(strconv.Itoa(int(precision))),
+	})
 }
 
 func GHDel(key []byte) (bool, error) {
-	batch := store.NewBatch()
+	lock(LGeoHash, key)
+	defer unlock(LGeoHash, key)
+
+	batch := outer.NewBatch()
 	defer batch.Close()
 
-	metaKey := generateGeoHashMetaKey(key)
-	precisionStr, err := store.Get(metaKey)
+	rows, err := geoHashCollection.Page(key, 0, math.MaxUint32)
 	if err != nil {
 		return false, err
 	}
-	if precisionStr == nil || len(precisionStr) == 0 {
-		return false, NotFoundGeoHashError
-	}
-	precision, err := strconv.ParseInt(string(precisionStr), 10, 32)
-	if err != nil {
-		return false, err
-	}
-
-	if _, err := batch.Del(metaKey); err != nil {
-		return false, err
-	}
-	if err := store.Iterate0(generateGeoHashIdPrefixKey(key),
-		func(key []byte, value []byte) error {
-			_, err := batch.Del(key)
-			if err != nil {
-				return err
-			}
-
-			var existPoint pb.Point
-			if err := proto.Unmarshal(value, &existPoint); err != nil {
-				return err
-			}
-			hash, box := geohash.Encode(existPoint.Latitude, existPoint.Longitude, int(precision))
-
-			if _, err := batch.Del(generateGeoHashKey(key, hash, existPoint.Id)); err != nil {
-				return err
-			}
-			if _, err := batch.Del(generateGeoHashBoxKey(key, marshalBox(box), existPoint.Id)); err != nil {
-				return err
-			}
-
-			return nil
-		}); err != nil {
-		return false, err
+	for i := range rows {
+		if _, err := geoHashCollection.DelRowById(key, rows[i].Id, batch); err != nil {
+			return false, err
+		}
 	}
 
 	return batch.Commit()
@@ -97,20 +70,19 @@ func GHAdd(key []byte, points []*pb.Point) (bool, error) {
 	lock(LGeoHash, key)
 	defer unlock(LGeoHash, key)
 
-	metaKey := generateGeoHashMetaKey(key)
-	precisionStr, err := store.Get(metaKey)
+	row, err := geoHashCollection.GetRowById(key, key)
 	if err != nil {
 		return false, err
 	}
-	if precisionStr == nil || len(precisionStr) == 0 {
+	if row.Value == nil || len(row.Value) == 0 {
 		return false, NotFoundGeoHashError
 	}
-	precision, err := strconv.ParseInt(string(precisionStr), 10, 32)
+	precision, err := strconv.ParseInt(string(row.Value), 10, 32)
 	if err != nil {
 		return false, err
 	}
 
-	batch := store.NewBatch()
+	batch := outer.NewBatch()
 	defer batch.Close()
 
 	for i := range points {
@@ -119,37 +91,16 @@ func GHAdd(key []byte, points []*pb.Point) (bool, error) {
 		if err != nil {
 			return false, err
 		}
-		// find exist point
-		existPointRaw, err := store.Get(generateGeoHashIdKey(key, point.Id))
-		if err != nil {
-			return false, err
+		if bytes.Equal(point.Id, key) {
+			return false, GeoHashInvalidIdError
 		}
-		if existPointRaw != nil && len(existPointRaw) > 0 {
-			var existPoint pb.Point
-			if err := proto.Unmarshal(existPointRaw, &existPoint); err != nil {
-				return false, nil
-			}
-			hash, box := geohash.Encode(existPoint.Latitude, existPoint.Longitude, int(precision))
-
-			if _, err := batch.Del(generateGeoHashIdKey(key, point.Id)); err != nil {
-				return false, nil
-			}
-			if _, err := batch.Del(generateGeoHashKey(key, hash, point.Id)); err != nil {
-				return false, err
-			}
-			if _, err := batch.Del(generateGeoHashBoxKey(key, marshalBox(box), point.Id)); err != nil {
-				return false, err
-			}
-		}
-
 		hash, box := geohash.Encode(point.Latitude, point.Longitude, int(precision))
-		if _, err := batch.Set(generateGeoHashIdKey(key, point.Id), value); err != nil {
-			return false, err
-		}
-		if _, err := batch.Set(generateGeoHashKey(key, hash, point.Id), value); err != nil {
-			return false, err
-		}
-		if _, err := batch.Set(generateGeoHashBoxKey(key, marshalBox(box), point.Id), value); err != nil {
+		if _, err := geoHashCollection.UpsertRow(&collection.Row{
+			Key:     key,
+			Id:      point.Id,
+			Value:   value,
+			Indexes: newGeoHashIndexes([]byte(hash), []byte(marshalBox(box))),
+		}, batch); err != nil {
 			return false, err
 		}
 	}
@@ -157,49 +108,24 @@ func GHAdd(key []byte, points []*pb.Point) (bool, error) {
 	return batch.Commit()
 }
 
-func GHRem(key []byte, points []*pb.Point) (bool, error) {
+func GHRem(key []byte, ids [][]byte) (bool, error) {
 	lock(LGeoHash, key)
 	defer unlock(LGeoHash, key)
 
-	metaKey := generateGeoHashMetaKey(key)
-	precisionStr, err := store.Get(metaKey)
+	exist, err := geoHashCollection.ExistRowById(key, key)
 	if err != nil {
 		return false, err
 	}
-	if precisionStr == nil || len(precisionStr) == 0 {
+	if !exist {
 		return false, NotFoundGeoHashError
 	}
-	precision, err := strconv.ParseInt(string(precisionStr), 10, 32)
-	if err != nil {
-		return false, err
-	}
 
-	batch := store.NewBatch()
+	batch := outer.NewBatch()
 	defer batch.Close()
 
-	for i := range points {
-		point := points[i]
-		// find exist point
-		existPointRaw, err := store.Get(generateGeoHashIdKey(key, point.Id))
-		if err != nil {
+	for i := range ids {
+		if _, err := geoHashCollection.DelRowById(key, ids[i], batch); err != nil {
 			return false, err
-		}
-		if existPointRaw != nil && len(existPointRaw) > 0 {
-			var existPoint pb.Point
-			if err := proto.Unmarshal(existPointRaw, &existPoint); err != nil {
-				return false, nil
-			}
-			hash, box := geohash.Encode(existPoint.Latitude, existPoint.Longitude, int(precision))
-
-			if _, err := batch.Del(generateGeoHashIdKey(key, point.Id)); err != nil {
-				return false, nil
-			}
-			if _, err := batch.Del(generateGeoHashKey(key, hash, point.Id)); err != nil {
-				return false, err
-			}
-			if _, err := batch.Del(generateGeoHashBoxKey(key, marshalBox(box), point.Id)); err != nil {
-				return false, err
-			}
 		}
 	}
 
@@ -207,33 +133,33 @@ func GHRem(key []byte, points []*pb.Point) (bool, error) {
 }
 
 func GHGetBoxes(key []byte, latitude float64, longitude float64) ([]*pb.Point, error) {
-	metaKey := generateGeoHashMetaKey(key)
-	precisionStr, err := store.Get(metaKey)
+	row, err := geoHashCollection.GetRowById(key, key)
 	if err != nil {
 		return nil, err
 	}
-	if precisionStr == nil || len(precisionStr) == 0 {
+	if row == nil {
 		return nil, NotFoundGeoHashError
 	}
-	precision, err := strconv.ParseInt(string(precisionStr), 10, 32)
+	precision, err := strconv.ParseInt(string(row.Value), 10, 32)
 	if err != nil {
 		return nil, err
 	}
 
 	_, box := geohash.Encode(latitude, longitude, int(precision))
 
-	res := make([]*pb.Point, 0)
-	if err := store.Iterate0(generateGeoHashBoxPrefixKey(key, marshalBox(box)),
-		func(key []byte, value []byte) error {
-			var item pb.Point
-			if err := proto.Unmarshal(value, &item); err != nil {
-				return err
-			}
-			item.Distance = distance(&pb.Point{Latitude: latitude, Longitude: longitude}, &item)
-			res = append(res, &item)
-			return nil
-		}); err != nil {
+	rows, err := geoHashCollection.IndexValuePage(key, []byte("box"), []byte(marshalBox(box)), 0, math.MaxUint32)
+	if err != nil {
 		return nil, err
+	}
+
+	res := make([]*pb.Point, len(rows))
+	for i := range rows {
+		var point pb.Point
+		if err := proto.Unmarshal(rows[i].Value, &point); err != nil {
+			return nil, err
+		}
+		point.Distance = distance(&point, &pb.Point{Latitude: latitude, Longitude: longitude})
+		res[i] = &point
 	}
 
 	sort.SliceStable(res, func(i, j int) bool {
@@ -244,35 +170,32 @@ func GHGetBoxes(key []byte, latitude float64, longitude float64) ([]*pb.Point, e
 }
 
 func GHGetNeighbors(key []byte, latitude float64, longitude float64) ([]*pb.Point, error) {
-	metaKey := generateGeoHashMetaKey(key)
-	precisionStr, err := store.Get(metaKey)
+	row, err := geoHashCollection.GetRowById(key, key)
 	if err != nil {
 		return nil, err
 	}
-	if precisionStr == nil || len(precisionStr) == 0 {
+	if row == nil {
 		return nil, NotFoundGeoHashError
 	}
-	precision, err := strconv.ParseInt(string(precisionStr), 10, 32)
+	precision, err := strconv.ParseInt(string(row.Value), 10, 32)
 	if err != nil {
 		return nil, err
 	}
 
-	neighbors := geohash.GetNeighbors(latitude, longitude, int(precision))
-
 	res := make([]*pb.Point, 0)
-
+	neighbors := geohash.GetNeighbors(latitude, longitude, int(precision))
 	for i := range neighbors {
-		if err := store.Iterate0(generateGeoHashPrefixKey(key, neighbors[i]),
-			func(key []byte, value []byte) error {
-				var item pb.Point
-				if err := proto.Unmarshal(value, &item); err != nil {
-					return err
-				}
-				item.Distance = distance(&pb.Point{Latitude: latitude, Longitude: longitude}, &item)
-				res = append(res, &item)
-				return nil
-			}); err != nil {
+		rows, err := geoHashCollection.IndexValuePage(key, []byte("hash"), []byte(neighbors[i]), 0, math.MaxUint32)
+		if err != nil {
 			return nil, err
+		}
+		for i := range rows {
+			var point pb.Point
+			if err := proto.Unmarshal(rows[i].Value, &point); err != nil {
+				return nil, err
+			}
+			point.Distance = distance(&point, &pb.Point{Latitude: latitude, Longitude: longitude})
+			res = append(res, &point)
 		}
 	}
 
@@ -284,29 +207,26 @@ func GHGetNeighbors(key []byte, latitude float64, longitude float64) ([]*pb.Poin
 }
 
 func GHCount(key []byte) (uint32, error) {
-	count := uint32(0)
-	if err := store.Iterate0(generateGeoHashIdPrefixKey(key),
-		func(key []byte, value []byte) error {
-			count++
-			return nil
-		}); err != nil {
+	// delete for meta
+	count, err := geoHashCollection.Count(key)
+	if err != nil {
 		return 0, err
 	}
-	return count, nil
+	return count - 1, err
 }
 
 func GHMembers(key []byte) ([]*pb.Point, error) {
-	res := make([]*pb.Point, 0)
-	if err := store.Iterate0(generateGeoHashIdPrefixKey(key),
-		func(key []byte, value []byte) error {
-			var item pb.Point
-			if err := proto.Unmarshal(value, &item); err != nil {
-				return err
-			}
-			res = append(res, &item)
-			return nil
-		}); err != nil {
+	rows, err := geoHashCollection.IndexPage(key, []byte("hash"), 0, math.MaxUint32)
+	if err != nil {
 		return nil, err
+	}
+	res := make([]*pb.Point, len(rows))
+	for i := range rows {
+		var point pb.Point
+		if err := proto.Unmarshal(rows[i].Value, &point); err != nil {
+			return nil, err
+		}
+		res[i] = &point
 	}
 	return res, nil
 }
@@ -325,35 +245,4 @@ func distance(one *pb.Point, two *pb.Point) (meter uint64) {
 	d := earthRadius * c
 	meter = uint64(d * 1000)
 	return meter
-}
-
-func generateGeoHashMetaKey(key []byte) []byte {
-	return []byte(fmt.Sprintf(geoHashMetaKeyTemplate, key))
-}
-
-// id key
-func generateGeoHashIdPrefixKey(key []byte) []byte {
-	return []byte(fmt.Sprintf(geoHashIdPrefixKeyTemplate, key))
-}
-
-func generateGeoHashIdKey(key []byte, id []byte) []byte {
-	return []byte(fmt.Sprintf(geoHashIdKeyTemplate, key, id))
-}
-
-// hash key
-func generateGeoHashPrefixKey(key []byte, hash string) []byte {
-	return []byte(fmt.Sprintf(geoHashPrefixKeyTemplate, key, hash))
-}
-
-func generateGeoHashKey(key []byte, hash string, id []byte) []byte {
-	return []byte(fmt.Sprintf(geoHashKeyTemplate, key, hash, id))
-}
-
-// box key
-func generateGeoHashBoxPrefixKey(key []byte, box string) []byte {
-	return []byte(fmt.Sprintf(geoHashBoxPrefixKeyTemplate, key, box))
-}
-
-func generateGeoHashBoxKey(key []byte, box string, id []byte) []byte {
-	return []byte(fmt.Sprintf(geoHashBoxKeyTemplate, key, box, id))
 }

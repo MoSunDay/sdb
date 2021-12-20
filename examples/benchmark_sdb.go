@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	pb2 "github.com/yemingfeng/sdb/internal/pb"
+	"github.com/yemingfeng/sdb/internal/pb"
 	"golang.org/x/sync/semaphore"
 	"google.golang.org/grpc"
 	"log"
@@ -11,25 +11,25 @@ import (
 	"sync"
 )
 
-var c pb2.SDBClient = nil
+var c pb.SDBClient = nil
 
 func init() {
 	conn, err := grpc.Dial(":9000", grpc.WithInsecure())
 	if err != nil {
 		log.Printf("faild to connect: %+v", err)
 	}
-	c = pb2.NewSDBClient(conn)
+	c = pb.NewSDBClient(conn)
 }
 
 func set(key, value []byte) {
-	_, err := c.Set(context.Background(), &pb2.SetRequest{Key: key, Value: value})
+	_, err := c.Set(context.Background(), &pb.SetRequest{Key: key, Value: value})
 	if err != nil {
 		log.Fatalf("%+v, key = %s, value = %s", err, key, value)
 	}
 }
 
 func get(key []byte) {
-	_, err := c.Get(context.Background(), &pb2.GetRequest{Key: key})
+	_, err := c.Get(context.Background(), &pb.GetRequest{Key: key})
 	if err != nil {
 		log.Fatalf("%+v, key = %s", err, key)
 	}

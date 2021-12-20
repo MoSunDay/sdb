@@ -1,7 +1,7 @@
 package main
 
 import (
-	pb2 "github.com/yemingfeng/sdb/internal/pb"
+	"github.com/yemingfeng/sdb/internal/pb"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"log"
@@ -19,9 +19,9 @@ func main() {
 	}()
 
 	// 连接服务器
-	c := pb2.NewSDBClient(conn)
+	c := pb.NewSDBClient(conn)
 	subscribeClient1, err := c.Subscribe(context.Background(),
-		&pb2.SubscribeRequest{Topic: []byte("hhh")})
+		&pb.SubscribeRequest{Topic: []byte("hhh")})
 	go func() {
 		for {
 			message, err := subscribeClient1.Recv()
@@ -29,7 +29,7 @@ func main() {
 		}
 	}()
 	subscribeClient2, err := c.Subscribe(context.Background(),
-		&pb2.SubscribeRequest{Topic: []byte("hhhaaa")})
+		&pb.SubscribeRequest{Topic: []byte("hhhaaa")})
 	go func() {
 		for {
 			message, err := subscribeClient2.Recv()
@@ -39,10 +39,10 @@ func main() {
 
 	for i := 0; i < 2; i++ {
 		publishResponse, err := c.Publish(context.Background(),
-			&pb2.PublishRequest{Topic: []byte("hhh"), Payload: []byte("payload" + strconv.Itoa(i))})
+			&pb.PublishRequest{Topic: []byte("hhh"), Payload: []byte("payload" + strconv.Itoa(i))})
 		log.Printf("publishResponse: %+v, err: %+v", publishResponse, err)
 		publishResponse, err = c.Publish(context.Background(),
-			&pb2.PublishRequest{Topic: []byte("hhhaaa"),
+			&pb.PublishRequest{Topic: []byte("hhhaaa"),
 				Payload: []byte("payloadaaa" + strconv.Itoa(i))})
 		log.Printf("publishResponse: %+v, err: %+v", publishResponse, err)
 		time.Sleep(1 * time.Second)

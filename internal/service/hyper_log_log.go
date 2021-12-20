@@ -2,55 +2,58 @@ package service
 
 import (
 	"errors"
-	"fmt"
 	"github.com/axiomhq/hyperloglog"
-	"github.com/yemingfeng/sdb/internal/store"
+	"github.com/yemingfeng/sdb/internal/pb"
+	"github.com/yemingfeng/sdb/internal/store/collection"
 )
 
 var NotFoundHyperLogLogError = errors.New("not found hyper log log, please create it")
 var HyperLogLogExistError = errors.New("hyper log log exist, please delete it or change other")
 
-const hyperLogLogKeyTemplate = "hl/%s"
+var hyperLogLogCollection = collection.NewCollection(pb.DataType_HYPER_LOG_LOG)
 
 func HLLCreate(key []byte) (bool, error) {
 	lock(LHyperLogLog, key)
 	defer unlock(LHyperLogLog, key)
 
-	hyperLogLogKey := generateHyperLogLogKey(key)
-	value, e := store.Get(hyperLogLogKey)
-	if e != nil {
-		return false, e
+	exist, err := hyperLogLogCollection.ExistRowById(key, key)
+	if err != nil {
+		return false, err
 	}
-	if value != nil && len(value) > 0 {
+	if exist {
 		return false, HyperLogLogExistError
 	}
 
 	h := hyperloglog.New16()
-	value, e = h.MarshalBinary()
-	if e != nil {
-		return false, e
+	value, err := h.MarshalBinary()
+	if err != nil {
+		return false, err
 	}
 
-	return store.Set(hyperLogLogKey, value)
+	return hyperLogLogCollection.UpsertRowAutoCommit(&collection.Row{
+		Key:   key,
+		Id:    key,
+		Value: value,
+	})
 }
 
 func HLLDel(key []byte) (bool, error) {
-	return store.Del(generateHyperLogLogKey(key))
+	return hyperLogLogCollection.DelRowByIdAutoCommit(key, key)
 }
 
 func HLLAdd(key []byte, values [][]byte) (bool, error) {
 	lock(LHyperLogLog, key)
 	defer unlock(LHyperLogLog, key)
 
-	value, err := store.Get(generateHyperLogLogKey(key))
+	row, err := hyperLogLogCollection.GetRowById(key, key)
 	if err != nil {
 		return false, err
 	}
-	if len(value) == 0 {
+	if row == nil {
 		return false, NotFoundHyperLogLogError
 	}
 	var hll hyperloglog.Sketch
-	err = hll.UnmarshalBinary(value)
+	err = hll.UnmarshalBinary(row.Value)
 	if err != nil {
 		return false, err
 	}
@@ -59,29 +62,29 @@ func HLLAdd(key []byte, values [][]byte) (bool, error) {
 		hll.Insert(value)
 	}
 
-	value, e := hll.MarshalBinary()
-	if e != nil {
-		return false, e
+	value, err := hll.MarshalBinary()
+	if err != nil {
+		return false, err
 	}
-	return store.Set(generateHyperLogLogKey(key), value)
+	return hyperLogLogCollection.UpsertRowAutoCommit(&collection.Row{
+		Key:   key,
+		Id:    key,
+		Value: value,
+	})
 }
 
 func HLLCount(key []byte) (uint32, error) {
-	value, err := store.Get(generateHyperLogLogKey(key))
+	row, err := hyperLogLogCollection.GetRowById(key, key)
 	if err != nil {
 		return 0, err
 	}
-	if len(value) == 0 {
+	if row == nil {
 		return 0, NotFoundHyperLogLogError
 	}
 	var hll hyperloglog.Sketch
-	err = hll.UnmarshalBinary(value)
+	err = hll.UnmarshalBinary(row.Value)
 	if err != nil {
 		return 0, err
 	}
 	return uint32(hll.Estimate()), nil
-}
-
-func generateHyperLogLogKey(key []byte) []byte {
-	return []byte(fmt.Sprintf(hyperLogLogKeyTemplate, key))
 }

@@ -23,14 +23,6 @@ func NewPebbleStore() *PebbleStore {
 	return &PebbleStore{db: db}
 }
 
-func (store *PebbleStore) Set(key []byte, value []byte) (bool, error) {
-	err := store.db.Set(key, value, pebble.Sync)
-	if err != nil {
-		return false, err
-	}
-	return true, nil
-}
-
 func (store *PebbleStore) Get(key []byte) ([]byte, error) {
 	value, closer, err := store.db.Get(key)
 	if err == pebble.ErrNotFound {
@@ -45,15 +37,8 @@ func (store *PebbleStore) Get(key []byte) ([]byte, error) {
 	return value, err
 }
 
-func (store *PebbleStore) Del(key []byte) (bool, error) {
-	if err := store.db.Delete(key, pebble.Sync); err != nil {
-		return false, nil
-	}
-	return true, nil
-}
-
 func (store *PebbleStore) NewBatch() engine.Batch {
-	return &PebbleBatch{batch: store.db.NewBatch()}
+	return &PebbleBatch{batch: store.db.NewIndexedBatch()}
 }
 
 func (store *PebbleStore) Iterate(opt *engine.PrefixIteratorOption, handle func([]byte, []byte) error) error {
