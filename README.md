@@ -25,16 +25,16 @@
 
 - 纯 golang 开发，核心代码不超过 1k，代码易读
 - 数据结构丰富
-    - [string](https://github.com/yemingfeng/sdb/blob/master/api/protobuf-spec/string.proto)
-    - [list](https://github.com/yemingfeng/sdb/blob/master/api/protobuf-spec/list.proto)
-    - [set](https://github.com/yemingfeng/sdb/blob/master/api/protobuf-spec/set.proto)
-    - [sorted set](https://github.com/yemingfeng/sdb/blob/master/api/protobuf-spec/sorted_set.proto)
-    - [bloom filter](https://github.com/yemingfeng/sdb/blob/master/api/protobuf-spec/bloom_filter.proto)
-    - [hyper log log](https://github.com/yemingfeng/sdb/blob/master/api/protobuf-spec/hyper_log_log.proto)
-    - [bitset](https://github.com/yemingfeng/sdb/blob/master/api/protobuf-spec/bitset.proto)
-    - [map](https://github.com/yemingfeng/sdb/blob/master/api/protobuf-spec/map.proto)
-    - [geo hash](https://github.com/yemingfeng/sdb/blob/master/api/protobuf-spec/geo_hash.proto)
-    - [pub sub](https://github.com/yemingfeng/sdb/blob/master/api/protobuf-spec/pub_sub.proto)
+    - [string](https://github.com/yemingfeng/sdb/blob/master/internal/pb/protobuf-spec/string.proto)
+    - [list](https://github.com/yemingfeng/sdb/blob/master/internal/pb/protobuf-spec/list.proto)
+    - [set](https://github.com/yemingfeng/sdb/blob/master/internal/pb/protobuf-spec/set.proto)
+    - [sorted set](https://github.com/yemingfeng/sdb/blob/master/internal/pb/protobuf-spec/sorted_set.proto)
+    - [bloom filter](https://github.com/yemingfeng/sdb/blob/master/internal/pb/protobuf-spec/bloom_filter.proto)
+    - [hyper log log](https://github.com/yemingfeng/sdb/blob/master/internal/pb/protobuf-spec/hyper_log_log.proto)
+    - [bitset](https://github.com/yemingfeng/sdb/blob/master/internal/pb/protobuf-spec/bitset.proto)
+    - [map](https://github.com/yemingfeng/sdb/blob/master/internal/pb/protobuf-spec/map.proto)
+    - [geo hash](https://github.com/yemingfeng/sdb/blob/master/internal/pb/protobuf-spec/geo_hash.proto)
+    - [pub sub](https://github.com/yemingfeng/sdb/blob/master/internal/pb/protobuf-spec/pub_sub.proto)
 - 持久化
     - 兼容 [pebble](https://github.com/cockroachdb/pebble)
       、[leveldb](https://github.com/syndtr/goleveldb)
@@ -520,7 +520,7 @@ func LPop(key []byte, values [][]byte) (bool, error) {
 }
 ```
 
-##### 关系模型到 KV 模型的映射
+#### 关系模型到 KV 模型的映射
 
 有了上面的方案，大概知道了 KV 型存储引擎如何支持数据结构。但这种方式很粗暴，无法通用化。
 
@@ -528,7 +528,7 @@ func LPop(key []byte, values [][]byte) (bool, error) {
 
 在 SBD 中，数据由 Collection 和 Row 构造。 其中：
 
-- Collection 类似数据库的一张表，是逻辑概念。一个 Collection 包含 dataType，比如：List。一个 Collection 包含多个 Row。
+- [Collection](https://github.com/yemingfeng/sdb/blob/master/internal/store/collection/collection.go#L30) 类似数据库的一张表，是逻辑概念。一个 Collection 包含 dataType，比如：List。一个 Collection 包含多个 Row。
 - 一个 Row 包含唯一键：key、id、value、indexes，**是真正存储于 KV 存储的数据**。每行 row 以 rowKey 作为唯一值，rowKey
   = `{dataType} + {key} + {id}`
 - 每个 row 包含 N 个索引，每个索引以 indexKey 作为唯一值，indexKey
@@ -538,7 +538,7 @@ func LPop(key []byte, values [][]byte) (bool, error) {
 
 那么每行 Row 结构如下：
 
-```json
+```yaml
  { {key: l1}, {id: 1.1}, {value: aaa}, {score: 1.1}, indexes: [ {name: "value", value: aaa}, {name: "score", value: 1.1} ] }
  { {key: l1}, {id: 2.2}, {value: bbb}, {score: 2.2}, indexes: [ {name: "value", value: bbb}, {name: "score", value: 2.2} ] }
  { {key: l1}, {id: 3.3}, {value: ccc}, {score: 3.3}, indexes: [ {name: "value", value: ccc}, {name: "score", value: 3.3} ] } 
