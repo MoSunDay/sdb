@@ -111,6 +111,6 @@ func main() {
 
 ### 最后的最后
 
-#### [关于 SDB 的一切细节](https://github.com/yemingfeng/sdb/wiki/%E9%A6%96%E9%A1%B5)
+#### [关于 SDB 的一切细节](https://github.com/yemingfeng/sdb/wiki)
 
 #### **感谢开源的力量，这里就不一一列举了，请大家移步 [go.mod](https://github.com/yemingfeng/sdb/blob/master/go.mod)**
