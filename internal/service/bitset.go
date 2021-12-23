@@ -3,8 +3,8 @@ package service
 import (
 	"errors"
 	"github.com/tmthrgd/go-bitset"
+	"github.com/yemingfeng/sdb/internal/collection"
 	"github.com/yemingfeng/sdb/internal/pb"
-	"github.com/yemingfeng/sdb/internal/store/collection"
 )
 
 var NotFoundBitsetError = errors.New("not found bitset, please create it")

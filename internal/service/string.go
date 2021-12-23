@@ -1,9 +1,9 @@
 package service
 
 import (
+	"github.com/yemingfeng/sdb/internal/collection"
 	"github.com/yemingfeng/sdb/internal/engine"
 	"github.com/yemingfeng/sdb/internal/pb"
-	"github.com/yemingfeng/sdb/internal/store/collection"
 	"strconv"
 )
 

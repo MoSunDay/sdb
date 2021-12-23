@@ -3,8 +3,8 @@ package service
 import (
 	"errors"
 	"github.com/axiomhq/hyperloglog"
+	"github.com/yemingfeng/sdb/internal/collection"
 	"github.com/yemingfeng/sdb/internal/pb"
-	"github.com/yemingfeng/sdb/internal/store/collection"
 )
 
 var NotFoundHyperLogLogError = errors.New("not found hyper log log, please create it")

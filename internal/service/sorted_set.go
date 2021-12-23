@@ -2,9 +2,9 @@ package service
 
 import (
 	"fmt"
+	"github.com/yemingfeng/sdb/internal/collection"
 	"github.com/yemingfeng/sdb/internal/engine"
 	"github.com/yemingfeng/sdb/internal/pb"
-	"github.com/yemingfeng/sdb/internal/store/collection"
 	"google.golang.org/protobuf/proto"
 	"math"
 )
