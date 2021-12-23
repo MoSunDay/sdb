@@ -2,9 +2,8 @@ package collection
 
 import (
 	"errors"
+	"github.com/yemingfeng/sdb/internal/engine"
 	"github.com/yemingfeng/sdb/internal/pb"
-	"github.com/yemingfeng/sdb/internal/store/engine"
-	"github.com/yemingfeng/sdb/internal/store/outer"
 	"math"
 )
 
@@ -48,6 +47,18 @@ func NewCollection(dataType pb.DataType) *Collection {
 	return &Collection{dataType: dataType}
 }
 
+func (collection *Collection) Batch(fun func(engine.Batch) error) (bool, error) {
+	batch := NewBatch()
+	defer batch.Close()
+
+	err := fun(batch)
+	if err != nil {
+		return false, err
+	}
+
+	return batch.Commit()
+}
+
 func (collection *Collection) DelRowByIdAutoCommit(key []byte, id []byte) (bool, error) {
 	return collection.DelRowById(key, id, nil)
 }
@@ -56,7 +67,7 @@ func (collection *Collection) DelRowByIdAutoCommit(key []byte, id []byte) (bool,
 func (collection *Collection) DelRowById(key []byte, id []byte, batch engine.Batch) (bool, error) {
 	selfBatch := batch == nil
 	if selfBatch {
-		batch = outer.NewBatch()
+		batch = NewBatch()
 		defer batch.Close()
 	}
 
@@ -95,7 +106,7 @@ func (collection *Collection) UpsertRowAutoCommit(row *Row) (bool, error) {
 func (collection *Collection) UpsertRow(row *Row, batch engine.Batch) (bool, error) {
 	selfBatch := batch == nil
 	if selfBatch {
-		batch = outer.NewBatch()
+		batch = NewBatch()
 		defer batch.Close()
 	}
 
@@ -152,11 +163,11 @@ func (collection *Collection) DelAutoCommit(key []byte) (bool, error) {
 func (collection *Collection) Del(key []byte, batch engine.Batch) (bool, error) {
 	selfBatch := batch == nil
 	if selfBatch {
-		batch = outer.NewBatch()
+		batch = NewBatch()
 		defer batch.Close()
 	}
 
-	if err := outer.Iterate(rowKeyPrefix(collection.dataType, key),
+	if err := Iterate(rowKeyPrefix(collection.dataType, key),
 		0, math.MaxUint32, func(rowKey []byte, rawRow []byte) error {
 			row, err := unmarshal(rawRow)
 			if err != nil {
@@ -198,7 +209,7 @@ func (collection *Collection) GetRowByIdWithBatch(key []byte, id []byte, batch e
 
 // GetRowById get row by id
 func (collection *Collection) GetRowById(key []byte, id []byte) (*Row, error) {
-	value, err := outer.Get(rowKey(collection.dataType, key, id))
+	value, err := Get(rowKey(collection.dataType, key, id))
 	if err != nil {
 		return nil, err
 	}
@@ -217,7 +228,7 @@ func (collection *Collection) ExistRowById(key []byte, id []byte) (bool, error) 
 // Count dataType + key
 func (collection *Collection) Count(key []byte) (uint32, error) {
 	count := uint32(0)
-	if err := outer.Iterate(rowKeyPrefix(collection.dataType, key),
+	if err := Iterate(rowKeyPrefix(collection.dataType, key),
 		0, math.MaxUint32, func(_ []byte, _ []byte) error {
 			count++
 			return nil
@@ -230,7 +241,7 @@ func (collection *Collection) Count(key []byte) (uint32, error) {
 // Page dataType + key
 func (collection *Collection) Page(key []byte, offset int32, limit uint32) ([]*Row, error) {
 	rows := make([]*Row, 0)
-	if err := outer.Iterate(rowKeyPrefix(collection.dataType, key),
+	if err := Iterate(rowKeyPrefix(collection.dataType, key),
 		offset, limit, func(_ []byte, rawRow []byte) error {
 			row, err := unmarshal(rawRow)
 			if err != nil {
@@ -247,9 +258,9 @@ func (collection *Collection) Page(key []byte, offset int32, limit uint32) ([]*R
 // IndexPage page by index name
 func (collection *Collection) IndexPage(key []byte, indexName []byte, offset int32, limit uint32) ([]*Row, error) {
 	rows := make([]*Row, 0)
-	if err := outer.Iterate(indexKeyPrefix(collection.dataType, key, indexName),
+	if err := Iterate(indexKeyPrefix(collection.dataType, key, indexName),
 		offset, limit, func(indexKey []byte, rowKey []byte) error {
-			rowRaw, err := outer.Get(rowKey)
+			rowRaw, err := Get(rowKey)
 			if err != nil {
 				return err
 			}
@@ -268,9 +279,9 @@ func (collection *Collection) IndexPage(key []byte, indexName []byte, offset int
 // IndexValuePage page by index value
 func (collection *Collection) IndexValuePage(key []byte, indexName []byte, indexValue []byte, offset int32, limit uint32) ([]*Row, error) {
 	rows := make([]*Row, 0)
-	if err := outer.Iterate(indexKeyValuePrefix(collection.dataType, key, indexName, indexValue),
+	if err := Iterate(indexKeyValuePrefix(collection.dataType, key, indexName, indexValue),
 		offset, limit, func(indexKey []byte, rowKey []byte) error {
-			rowRaw, err := outer.Get(rowKey)
+			rowRaw, err := Get(rowKey)
 			if err != nil {
 				return err
 			}
@@ -289,9 +300,9 @@ func (collection *Collection) IndexValuePage(key []byte, indexName []byte, index
 // Filter filter
 func (collection *Collection) Filter(key []byte, filter func(*Row) bool) ([]*Row, error) {
 	rows := make([]*Row, 0)
-	if err := outer.Iterate(rowKeyPrefix(collection.dataType, key),
+	if err := Iterate(rowKeyPrefix(collection.dataType, key),
 		0, math.MaxUint32, func(indexKey []byte, rowKey []byte) error {
-			rowRaw, err := outer.Get(rowKey)
+			rowRaw, err := Get(rowKey)
 			if err != nil {
 				return err
 			}

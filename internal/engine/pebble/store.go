@@ -3,7 +3,7 @@ package pebble
 import (
 	"github.com/cockroachdb/pebble"
 	"github.com/yemingfeng/sdb/internal/conf"
-	"github.com/yemingfeng/sdb/internal/store/engine"
+	"github.com/yemingfeng/sdb/internal/engine"
 	"github.com/yemingfeng/sdb/internal/util"
 	"log"
 )

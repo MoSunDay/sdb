@@ -2,9 +2,9 @@ package service
 
 import (
 	"fmt"
+	"github.com/yemingfeng/sdb/internal/engine"
 	"github.com/yemingfeng/sdb/internal/pb"
 	"github.com/yemingfeng/sdb/internal/store/collection"
-	"github.com/yemingfeng/sdb/internal/store/outer"
 	"google.golang.org/protobuf/proto"
 	"math"
 )
@@ -23,48 +23,44 @@ func ZPush(key []byte, tuples []*pb.Tuple) (bool, error) {
 	defer unlock(LSortedSet, key)
 
 	// tuples -> [ {value: a, score: 1.0}, {value:b, score:1.1}, {value: c, score: 0.9} ]
-	batch := outer.NewBatch()
-	defer batch.Close()
-
-	for _, tuple := range tuples {
-		score := []byte(fmt.Sprintf("%32.32f", tuple.Score))
-		value, err := proto.Marshal(tuple)
-		if err != nil {
-			return false, err
+	return sortedSetCollection.Batch(func(batch engine.Batch) error {
+		for _, tuple := range tuples {
+			score := []byte(fmt.Sprintf("%32.32f", tuple.Score))
+			value, err := proto.Marshal(tuple)
+			if err != nil {
+				return err
+			}
+			if _, err := sortedSetCollection.UpsertRow(&collection.Row{
+				Key:     key,
+				Id:      tuple.Value,
+				Indexes: newSortedSetIndexes(score, tuple.Value),
+				Value:   value,
+			}, batch); err != nil {
+				return err
+			}
 		}
-		if _, err := sortedSetCollection.UpsertRow(&collection.Row{
-			Key:     key,
-			Id:      tuple.Value,
-			Indexes: newSortedSetIndexes(score, tuple.Value),
-			Value:   value,
-		}, batch); err != nil {
-			return false, err
-		}
-	}
-
-	return batch.Commit()
+		return nil
+	})
 }
 
 func ZPop(key []byte, values [][]byte) (bool, error) {
 	lock(LSortedSet, key)
 	defer unlock(LSortedSet, key)
 
-	batch := outer.NewBatch()
-	defer batch.Close()
-
-	for _, value := range values {
-		rows, err := sortedSetCollection.IndexValuePage(key, []byte("value"), value, 0, math.MaxUint32)
-		if err != nil {
-			return false, err
-		}
-		for _, row := range rows {
-			if _, err := sortedSetCollection.DelRowById(key, row.Id, batch); err != nil {
-				return false, err
+	return sortedSetCollection.Batch(func(batch engine.Batch) error {
+		for _, value := range values {
+			rows, err := sortedSetCollection.IndexValuePage(key, []byte("value"), value, 0, math.MaxUint32)
+			if err != nil {
+				return err
+			}
+			for _, row := range rows {
+				if _, err := sortedSetCollection.DelRowById(key, row.Id, batch); err != nil {
+					return err
+				}
 			}
 		}
-	}
-
-	return batch.Commit()
+		return nil
+	})
 }
 
 func ZRange(key []byte, offset int32, limit uint32) ([]*pb.Tuple, error) {

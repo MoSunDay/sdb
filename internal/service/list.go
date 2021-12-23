@@ -2,9 +2,9 @@ package service
 
 import (
 	"fmt"
+	"github.com/yemingfeng/sdb/internal/engine"
 	"github.com/yemingfeng/sdb/internal/pb"
 	"github.com/yemingfeng/sdb/internal/store/collection"
-	"github.com/yemingfeng/sdb/internal/store/outer"
 	"github.com/yemingfeng/sdb/internal/util"
 	"math"
 )
@@ -22,68 +22,62 @@ func LRPush(key []byte, values [][]byte) (bool, error) {
 	lock(LList, key)
 	defer unlock(LList, key)
 
-	batch := outer.NewBatch()
-	defer batch.Close()
-
-	for _, value := range values {
-		score := []byte(fmt.Sprintf("%d", util.GetOrderingKey()))
-		id := []byte(string(value) + ":" + string(score))
-		if _, err := listCollection.UpsertRow(&collection.Row{
-			Key:     key,
-			Id:      id,
-			Indexes: newListIndexes(score, value),
-			Value:   value,
-		}, batch); err != nil {
-			return false, err
+	return listCollection.Batch(func(batch engine.Batch) error {
+		for _, value := range values {
+			score := []byte(fmt.Sprintf("%d", util.GetOrderingKey()))
+			id := []byte(string(value) + ":" + string(score))
+			if _, err := listCollection.UpsertRow(&collection.Row{
+				Key:     key,
+				Id:      id,
+				Indexes: newListIndexes(score, value),
+				Value:   value,
+			}, batch); err != nil {
+				return err
+			}
 		}
-	}
-
-	return batch.Commit()
+		return nil
+	})
 }
 
 func LLPush(key []byte, values [][]byte) (bool, error) {
 	lock(LList, key)
 	defer unlock(LList, key)
 
-	batch := outer.NewBatch()
-	defer batch.Close()
-
-	for i, value := range values {
-		score := []byte(fmt.Sprintf("%d", -util.GetOrderingKey()-int64(i)))
-		id := []byte(string(value) + ":" + string(score))
-		if _, err := listCollection.UpsertRow(&collection.Row{
-			Key:     key,
-			Id:      id,
-			Indexes: newListIndexes(score, value),
-			Value:   value,
-		}, batch); err != nil {
-			return false, err
+	return listCollection.Batch(func(batch engine.Batch) error {
+		for i, value := range values {
+			score := []byte(fmt.Sprintf("%d", -util.GetOrderingKey()-int64(i)))
+			id := []byte(string(value) + ":" + string(score))
+			if _, err := listCollection.UpsertRow(&collection.Row{
+				Key:     key,
+				Id:      id,
+				Indexes: newListIndexes(score, value),
+				Value:   value,
+			}, batch); err != nil {
+				return err
+			}
 		}
-	}
-
-	return batch.Commit()
+		return nil
+	})
 }
 
 func LPop(key []byte, values [][]byte) (bool, error) {
 	lock(LList, key)
 	defer unlock(LList, key)
 
-	batch := outer.NewBatch()
-	defer batch.Close()
-
-	for i := range values {
-		rows, err := listCollection.IndexValuePage(key, []byte("value"), values[i], 0, math.MaxUint32)
-		if err != nil {
-			return false, err
-		}
-		for _, row := range rows {
-			if _, err := listCollection.DelRowById(key, row.Id, batch); err != nil {
-				return false, err
+	return listCollection.Batch(func(batch engine.Batch) error {
+		for i := range values {
+			rows, err := listCollection.IndexValuePage(key, []byte("value"), values[i], 0, math.MaxUint32)
+			if err != nil {
+				return err
+			}
+			for _, row := range rows {
+				if _, err := listCollection.DelRowById(key, row.Id, batch); err != nil {
+					return err
+				}
 			}
 		}
-	}
-
-	return batch.Commit()
+		return nil
+	})
 }
 
 func LRange(key []byte, offset int32, limit uint32) ([][]byte, error) {

@@ -1,9 +1,9 @@
 package service
 
 import (
+	"github.com/yemingfeng/sdb/internal/engine"
 	"github.com/yemingfeng/sdb/internal/pb"
 	"github.com/yemingfeng/sdb/internal/store/collection"
-	"github.com/yemingfeng/sdb/internal/store/outer"
 	"math"
 )
 
@@ -13,36 +13,32 @@ func MPush(key []byte, pairs []*pb.Pair) (bool, error) {
 	lock(LMap, key)
 	defer unlock(LMap, key)
 
-	batch := outer.NewBatch()
-	defer batch.Close()
-
-	for i := range pairs {
-		if _, err := mapCollection.UpsertRow(&collection.Row{
-			Key:   key,
-			Id:    pairs[i].Key,
-			Value: pairs[i].Value,
-		}, batch); err != nil {
-			return false, err
+	return mapCollection.Batch(func(batch engine.Batch) error {
+		for i := range pairs {
+			if _, err := mapCollection.UpsertRow(&collection.Row{
+				Key:   key,
+				Id:    pairs[i].Key,
+				Value: pairs[i].Value,
+			}, batch); err != nil {
+				return err
+			}
 		}
-	}
-
-	return batch.Commit()
+		return nil
+	})
 }
 
 func MPop(key []byte, keys [][]byte) (bool, error) {
 	lock(LMap, key)
 	defer unlock(LMap, key)
 
-	batch := outer.NewBatch()
-	defer batch.Close()
-
-	for i := range keys {
-		if _, err := mapCollection.DelRowById(key, keys[i], batch); err != nil {
-			return false, err
+	return mapCollection.Batch(func(batch engine.Batch) error {
+		for i := range keys {
+			if _, err := mapCollection.DelRowById(key, keys[i], batch); err != nil {
+				return err
+			}
 		}
-	}
-
-	return batch.Commit()
+		return nil
+	})
 }
 
 func MExist(key []byte, keys [][]byte) ([]bool, error) {

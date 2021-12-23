@@ -1,9 +1,9 @@
 package service
 
 import (
+	"github.com/yemingfeng/sdb/internal/engine"
 	"github.com/yemingfeng/sdb/internal/pb"
 	"github.com/yemingfeng/sdb/internal/store/collection"
-	"github.com/yemingfeng/sdb/internal/store/outer"
 	"strconv"
 )
 
@@ -17,19 +17,18 @@ func Set(key []byte, value []byte) (bool, error) {
 }
 
 func MSet(keys [][]byte, values [][]byte) (bool, error) {
-	batch := outer.NewBatch()
-	defer batch.Close()
-
-	for i := range keys {
-		if _, err := stringCollection.UpsertRow(&collection.Row{
-			Key:   keys[i],
-			Id:    keys[i],
-			Value: values[i],
-		}, batch); err != nil {
-			return false, err
+	return stringCollection.Batch(func(batch engine.Batch) error {
+		for i := range keys {
+			if _, err := stringCollection.UpsertRow(&collection.Row{
+				Key:   keys[i],
+				Id:    keys[i],
+				Value: values[i],
+			}, batch); err != nil {
+				return err
+			}
 		}
-	}
-	return batch.Commit()
+		return nil
+	})
 }
 
 func SetNX(key []byte, value []byte) (bool, error) {

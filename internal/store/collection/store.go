@@ -1,11 +1,11 @@
-package outer
+package collection
 
 import (
 	"github.com/yemingfeng/sdb/internal/conf"
-	"github.com/yemingfeng/sdb/internal/store/engine"
-	"github.com/yemingfeng/sdb/internal/store/engine/badger"
-	"github.com/yemingfeng/sdb/internal/store/engine/level"
-	"github.com/yemingfeng/sdb/internal/store/engine/pebble"
+	"github.com/yemingfeng/sdb/internal/engine"
+	"github.com/yemingfeng/sdb/internal/engine/badger"
+	"github.com/yemingfeng/sdb/internal/engine/level"
+	"github.com/yemingfeng/sdb/internal/engine/pebble"
 	"log"
 )
 

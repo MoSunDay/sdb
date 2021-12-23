@@ -3,7 +3,7 @@ package badger
 import (
 	"github.com/dgraph-io/badger/v3"
 	"github.com/yemingfeng/sdb/internal/conf"
-	"github.com/yemingfeng/sdb/internal/store/engine"
+	"github.com/yemingfeng/sdb/internal/engine"
 	"log"
 )
 

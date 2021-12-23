@@ -1,9 +1,9 @@
 package service
 
 import (
+	"github.com/yemingfeng/sdb/internal/engine"
 	"github.com/yemingfeng/sdb/internal/pb"
 	"github.com/yemingfeng/sdb/internal/store/collection"
-	"github.com/yemingfeng/sdb/internal/store/outer"
 	"math"
 )
 
@@ -13,36 +13,32 @@ func SPush(key []byte, values [][]byte) (bool, error) {
 	lock(LSet, key)
 	defer unlock(LSet, key)
 
-	batch := outer.NewBatch()
-	defer batch.Close()
-
-	for _, value := range values {
-		if _, err := setCollection.UpsertRow(&collection.Row{
-			Key:   key,
-			Id:    value,
-			Value: value,
-		}, batch); err != nil {
-			return false, err
+	return setCollection.Batch(func(batch engine.Batch) error {
+		for _, value := range values {
+			if _, err := setCollection.UpsertRow(&collection.Row{
+				Key:   key,
+				Id:    value,
+				Value: value,
+			}, batch); err != nil {
+				return err
+			}
 		}
-	}
-
-	return batch.Commit()
+		return nil
+	})
 }
 
 func SPop(key []byte, values [][]byte) (bool, error) {
 	lock(LSet, key)
 	defer unlock(LSet, key)
 
-	batch := outer.NewBatch()
-	defer batch.Close()
-
-	for _, value := range values {
-		if _, err := setCollection.DelRowById(key, value, batch); err != nil {
-			return false, err
+	return setCollection.Batch(func(batch engine.Batch) error {
+		for _, value := range values {
+			if _, err := setCollection.DelRowById(key, value, batch); err != nil {
+				return err
+			}
 		}
-	}
-
-	return batch.Commit()
+		return nil
+	})
 }
 
 func SExist(key []byte, values [][]byte) ([]bool, error) {

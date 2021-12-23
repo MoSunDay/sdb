@@ -6,7 +6,7 @@ import (
 	"github.com/syndtr/goleveldb/leveldb/opt"
 	"github.com/syndtr/goleveldb/leveldb/util"
 	"github.com/yemingfeng/sdb/internal/conf"
-	"github.com/yemingfeng/sdb/internal/store/engine"
+	"github.com/yemingfeng/sdb/internal/engine"
 	util2 "github.com/yemingfeng/sdb/internal/util"
 	"log"
 )
