@@ -514,7 +514,7 @@ func LPop(key []byte, values [][]byte) (bool, error) {
 
 在 SBD 中，数据由 Collection 和 Row 构造。 其中：
 
-- [Collection](https://github.com/yemingfeng/sdb/blob/master/internal/store/collection/collection.go#L30)
+- [Collection](https://github.com/yemingfeng/sdb/blob/master/internal/collection/collection.go#L30)
   类似数据库的一张表，是逻辑概念。一个 Collection 包含 dataType，比如：List。一个 Collection 包含多个 Row。
 - 一个 Row 包含唯一键：key、id、value、indexes，**是真正存储于 KV 存储的数据**。每行 row 以 rowKey 作为唯一值，rowKey
   = `{dataType} + {key} + {id}`
