@@ -125,14 +125,12 @@ func main() {
         - [x] SMembers
     - [x] Sorted Set
         - [x] ZMembers
-- [ ] 支持更丰富的数据结构 (2021.01.20)
+- [x] 支持更丰富的数据结构 (2021.01.20)
     - [x] bitset
     - [x] map
     - [x] geo hash
-    - [ ] reverted index
-    - [ ] vector search
-- [ ] 生成主流语言的客户端 (2021.01.25)
 - [ ] 集群方案设计 (2021.01.30)
+- [ ] 生成主流语言的客户端 (2021.02.15)
 - [ ] 搭建 admin web ui
 
 ------
