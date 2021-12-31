@@ -237,7 +237,7 @@ GHDel | key | 删除某个 geo hash
 GHAdd | key, points | 将 points 加入到 geo hash 中，point 中的 id 作为唯一标识
 GHRem | key, points | 删除某 points
 GHGetBoxes | key, point | 返回和某 point 在 key geo hash 相同 box 的 point 列表，会按照距离从小到大排序
-GHBetNeighbors | key, point | 返回在 key geo hash 中距离 point 最近的 point 列表，会按照距离从小到大排序
+GHGetNeighbors | key, point | 返回在 key geo hash 中距离 point 最近的 point 列表，会按照距离从小到大排序
 GHCount | key | 返回 key geo hash 中的元素个数，时间复杂度较高，**不推荐使用**
 GHMembers | key | 返回 key geo hash 中所有的 point 列表。时间复杂度较高，**不推荐使用**
 
