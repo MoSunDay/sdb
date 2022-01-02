@@ -50,6 +50,12 @@ MySQL 在这个场景中充当了持久化的能力，Redis 提供了在线服�
 
 ------
 
+### 架构
+
+<img alt="benchmark" src="https://github.com/yemingfeng/sdb/raw/master/docs/architecture.png" width=80% />
+
+------
+
 ### 快速使用
 
 #### 服务器启动
