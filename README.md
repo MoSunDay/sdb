@@ -1,4 +1,4 @@
-## [SDB](https://github.com/yemingfeng/sdb) ：纯 golang 开发、数据结构丰富、持久化、高可用的 NoSQL 数据库
+## [SDB](https://github.com/yemingfeng/sdb) ：纯 golang 开发、数据结构丰富、持久化、分布式的 NoSQL 数据库
 ------
 
 ### 为什么需要 SDB？
@@ -39,7 +39,7 @@ MySQL 在这个场景中充当了持久化的能力，Redis 提供了在线服�
     - 兼容 [pebble](https://github.com/cockroachdb/pebble)
       、[leveldb](https://github.com/syndtr/goleveldb)
       、[badger](https://github.com/dgraph-io/badger) 存储引擎
-- 高可用
+- 分布式
     - 采用 [raft](https://github.com/hashicorp/raft) 实现了集群方案。集群方案采用主从架构。
 - 监控
     - 支持 prometheus + grafana 监控方案
@@ -557,6 +557,28 @@ func LPop(key []byte, values [][]byte) (bool, error) {
 SDB 的定位是支持多语言的，所以需要选择支持多语言的通讯框架。
 
 grpc 是一个非常不错的选择，只需要使用 SDB proto 文件，就能通过 protoc 命令行工具自动生成各种语言的客户端，解决了需要开发不同客户端的问题。
+
+------
+
+### SDB 原理之——分布式方案
+
+首先，我们看下分布式方案的历史进程。
+
+从主从复制的角度看分布式的阶段：
+
+- 阶段一：单机存储。只有一个存储节点。该节点负责读写。不需要特殊处理，就实现了。
+- 阶段二：主从架构。一个主节点，多个从节点。较好实现
+- 阶段三：多主多从架构。多个主节点，多个从节点。非常难实现
+
+从数据的角度看分布式的阶段：
+
+- 阶段一：单机存储，该节点存储所有数据。
+- 阶段二：数据分片存储，类似 Redis hash 槽的实现，TiKV range 数据分片实现。
+
+可以看出，最进阶的方案是：多主多从 + 数据分片存储。 但多主多从的实现过于复杂，大多数存储引擎都实现了主从架构 + 数据分片（如：Redis、TiDB、elasticsearch、mongoDB
+等）
+
+说回 SDB，目前 SDB 只实现了主从架构，并没有实现数据分片。是因为数据分片的逻辑多余复杂，目前只实现了主从架构。
 
 ------
 
