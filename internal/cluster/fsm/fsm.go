@@ -7,7 +7,6 @@ import (
 	"github.com/yemingfeng/sdb/internal/pb"
 	"google.golang.org/protobuf/proto"
 	"io"
-	log2 "log"
 	"strconv"
 	"sync"
 )
@@ -45,7 +44,6 @@ func (fsm *FSM) Apply(log *raft.Log) interface{} {
 	fsm.committed = append(fsm.committed, strconv.Itoa(int(log.Term))+":"+strconv.Itoa(int(log.Index)))
 	defer fsm.Unlock()
 
-	log2.Printf("apply: logEntry: [%+v], log: [%+v]", logEntry, log.Index)
 	handler := handlers[logEntry.MethodName]
 	if handler == nil {
 		return &ApplyResponse{Err: errors.New("not support method name")}

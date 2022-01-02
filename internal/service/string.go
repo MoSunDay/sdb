@@ -60,12 +60,15 @@ func SetGet(key []byte, value []byte) (bool, []byte, error) {
 		Key:   key,
 		Id:    key,
 		Value: value})
+	if oldRow == nil {
+		return res, nil, err
+	}
 	return res, oldRow.Value, err
 }
 
 func Get(key []byte) ([]byte, error) {
 	row, err := stringCollection.GetRowById(key, key)
-	if err != nil {
+	if err != nil || row == nil {
 		return nil, err
 	}
 	return row.Value, nil

@@ -26,6 +26,7 @@ func Start() {
 	raftConfig.LocalID = raft.ServerID(conf.Conf.Cluster.NodeId)
 	raftConfig.SnapshotThreshold = 1
 	raftConfig.SnapshotInterval = 1 * time.Second
+	raftConfig.LogLevel = "Error"
 	log.Printf("raft config: %+v", raftConfig)
 
 	path := filepath.Join(conf.Conf.Cluster.Path, string(raftConfig.LocalID))
@@ -111,11 +112,14 @@ func Apply(methodName string, request proto.Message) (proto.Message, error) {
 		return nil, err
 	}
 	applyResponse := future.Response().(*fsm.ApplyResponse)
-	return applyResponse.Response, applyResponse.Err
+	if applyResponse.Err != nil {
+		return nil, applyResponse.Err
+	}
+	return applyResponse.Response, nil
 }
 
-func Join(nodeID, addr string) error {
-	log.Printf("received join request for remote node %s at %s", nodeID, addr)
+func Join(nodeId, addr string) error {
+	log.Printf("received join request for remote node %s at %s", nodeId, addr)
 
 	configFuture := node.GetConfiguration()
 	if err := configFuture.Error(); err != nil {
@@ -124,24 +128,24 @@ func Join(nodeID, addr string) error {
 	}
 
 	for _, srv := range configFuture.Configuration().Servers {
-		if srv.ID == raft.ServerID(nodeID) || srv.Address == raft.ServerAddress(addr) {
-			if srv.Address == raft.ServerAddress(addr) && srv.ID == raft.ServerID(nodeID) {
-				log.Printf("node %s at %s already member of cluster, ignoring join request", nodeID, addr)
+		if srv.ID == raft.ServerID(nodeId) || srv.Address == raft.ServerAddress(addr) {
+			if srv.Address == raft.ServerAddress(addr) && srv.ID == raft.ServerID(nodeId) {
+				log.Printf("node %s at %s already member of cluster, ignoring join request", nodeId, addr)
 				return nil
 			}
 
 			future := node.RemoveServer(srv.ID, 0, 0)
 			if err := future.Error(); err != nil {
-				return fmt.Errorf("error removing existing node %s at %s: %s", nodeID, addr, err)
+				return fmt.Errorf("error removing existing node %s at %s: %s", nodeId, addr, err)
 			}
 		}
 	}
 	log.Println("Coming to add voter")
-	f := node.AddVoter(raft.ServerID(nodeID), raft.ServerAddress(addr), 0, 0)
+	f := node.AddVoter(raft.ServerID(nodeId), raft.ServerAddress(addr), 0, 0)
 	if f.Error() != nil {
 		log.Println(f.Error())
 		return f.Error()
 	}
-	log.Printf("node %s at %s joined successfully", nodeID, addr)
+	log.Printf("node %s at %s joined successfully", nodeId, addr)
 	return nil
 }

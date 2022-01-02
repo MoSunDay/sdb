@@ -72,7 +72,7 @@ func GHAdd(key []byte, points []*pb.Point) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	if row.Value == nil || len(row.Value) == 0 {
+	if row == nil || len(row.Value) == 0 {
 		return false, NotFoundGeoHashError
 	}
 	precision, err := strconv.ParseInt(string(row.Value), 10, 32)

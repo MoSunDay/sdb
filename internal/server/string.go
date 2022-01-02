@@ -22,7 +22,7 @@ func (server *StringServer) MSet(_ context.Context, request *pb.MSetRequest) (*p
 }
 
 func (server *StringServer) SetNX(_ context.Context, request *pb.SetNXRequest) (*pb.SetNXResponse, error) {
-	res, err := cluster.Apply("Set", request)
+	res, err := cluster.Apply("SetNX", request)
 	return res.(*pb.SetNXResponse), err
 }
 

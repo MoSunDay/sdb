@@ -10,7 +10,7 @@ server:
   # http 配置
   http_port: 11002
   # 限流容量，每秒的 qps 限制
-  rate: 1000
+  rate: 30000
   # 慢请求的阈值，单位为 ms
   slow_query_threshold: 100
 
