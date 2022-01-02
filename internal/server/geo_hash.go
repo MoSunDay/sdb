@@ -1,6 +1,7 @@
 package server
 
 import (
+	"github.com/yemingfeng/sdb/internal/cluster"
 	"github.com/yemingfeng/sdb/internal/pb"
 	"github.com/yemingfeng/sdb/internal/service"
 	"golang.org/x/net/context"
@@ -11,23 +12,23 @@ type GeoHashServer struct {
 }
 
 func (server *GeoHashServer) GHCreate(_ context.Context, request *pb.GHCreateRequest) (*pb.GHCreateResponse, error) {
-	res, err := service.GHCreate(request.Key, request.Precision)
-	return &pb.GHCreateResponse{Success: res}, err
+	res, err := cluster.Apply("GHCreate", request)
+	return res.(*pb.GHCreateResponse), err
 }
 
 func (server *GeoHashServer) GHDel(_ context.Context, request *pb.GHDelRequest) (*pb.GHDelResponse, error) {
-	res, err := service.GHDel(request.Key)
-	return &pb.GHDelResponse{Success: res}, err
+	res, err := cluster.Apply("GHDel", request)
+	return res.(*pb.GHDelResponse), err
 }
 
 func (server *GeoHashServer) GHAdd(_ context.Context, request *pb.GHAddRequest) (*pb.GHAddResponse, error) {
-	res, err := service.GHAdd(request.Key, request.Points)
-	return &pb.GHAddResponse{Success: res}, err
+	res, err := cluster.Apply("GHAdd", request)
+	return res.(*pb.GHAddResponse), err
 }
 
 func (server *GeoHashServer) GHRem(_ context.Context, request *pb.GHRemRequest) (*pb.GHRemResponse, error) {
-	res, err := service.GHRem(request.Key, request.Ids)
-	return &pb.GHRemResponse{Success: res}, err
+	res, err := cluster.Apply("GHRem", request)
+	return res.(*pb.GHRemResponse), err
 }
 
 func (server *GeoHashServer) GHGetBoxes(_ context.Context, request *pb.GHGetBoxesRequest) (*pb.GHGetBoxesResponse, error) {

@@ -1,6 +1,7 @@
 package server
 
 import (
+	"github.com/yemingfeng/sdb/internal/cluster"
 	"github.com/yemingfeng/sdb/internal/pb"
 	"github.com/yemingfeng/sdb/internal/service"
 	"golang.org/x/net/context"
@@ -11,13 +12,13 @@ type SortedSetServer struct {
 }
 
 func (server *SortedSetServer) ZPush(_ context.Context, request *pb.ZPushRequest) (*pb.ZPushResponse, error) {
-	res, err := service.ZPush(request.Key, request.Tuples)
-	return &pb.ZPushResponse{Success: res}, err
+	res, err := cluster.Apply("ZPush", request)
+	return res.(*pb.ZPushResponse), err
 }
 
 func (server *SortedSetServer) ZPop(_ context.Context, request *pb.ZPopRequest) (*pb.ZPopResponse, error) {
-	res, err := service.ZPop(request.Key, request.Values)
-	return &pb.ZPopResponse{Success: res}, err
+	res, err := cluster.Apply("ZPop", request)
+	return res.(*pb.ZPopResponse), err
 }
 
 func (server *SortedSetServer) ZRange(_ context.Context, request *pb.ZRangeRequest) (*pb.ZRangeResponse, error) {
@@ -31,8 +32,8 @@ func (server *SortedSetServer) ZExist(_ context.Context, request *pb.ZExistReque
 }
 
 func (server *SortedSetServer) ZDel(_ context.Context, request *pb.ZDelRequest) (*pb.ZDelResponse, error) {
-	res, err := service.ZDel(request.Key)
-	return &pb.ZDelResponse{Success: res}, err
+	res, err := cluster.Apply("ZDel", request)
+	return res.(*pb.ZDelResponse), err
 }
 
 func (server *SetServer) ZCount(_ context.Context, request *pb.ZCountRequest) (*pb.ZCountResponse, error) {

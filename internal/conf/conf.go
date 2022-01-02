@@ -8,8 +8,9 @@ import (
 )
 
 type Config struct {
-	Store  Store  `yaml:"store"`
-	Server Server `yaml:"server"`
+	Store   Store   `yaml:"store"`
+	Server  Server  `yaml:"server"`
+	Cluster Cluster `yaml:"cluster"`
 }
 
 type Store struct {
@@ -24,10 +25,18 @@ type Server struct {
 	SlowQueryThreshold int64 `yaml:"slow_query_threshold"`
 }
 
+type Cluster struct {
+	NodeId  string `yaml:"node_id"`
+	Path    string `yaml:"path"`
+	Port    int    `yaml:"port"`
+	Master  string `yaml:"master"`
+	Timeout int    `yaml:"timeout"`
+}
+
 var Conf Config
 
 func init() {
-	file := flag.String("config", "configs/config.yml", "config")
+	file := flag.String("config", "configs/master.yml", "config")
 
 	flag.Parse()
 

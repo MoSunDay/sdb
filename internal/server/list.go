@@ -1,6 +1,7 @@
 package server
 
 import (
+	"github.com/yemingfeng/sdb/internal/cluster"
 	"github.com/yemingfeng/sdb/internal/pb"
 	"github.com/yemingfeng/sdb/internal/service"
 	"golang.org/x/net/context"
@@ -11,18 +12,18 @@ type ListServer struct {
 }
 
 func (server *ListServer) LRPush(_ context.Context, request *pb.LRPushRequest) (*pb.LRPushResponse, error) {
-	res, err := service.LRPush(request.Key, request.Values)
-	return &pb.LRPushResponse{Success: res}, err
+	res, err := cluster.Apply("LRPush", request)
+	return res.(*pb.LRPushResponse), err
 }
 
 func (server *ListServer) LLPush(_ context.Context, request *pb.LLPushRequest) (*pb.LLPushResponse, error) {
-	res, err := service.LLPush(request.Key, request.Values)
-	return &pb.LLPushResponse{Success: res}, err
+	res, err := cluster.Apply("LLPush", request)
+	return res.(*pb.LLPushResponse), err
 }
 
 func (server *ListServer) LPop(_ context.Context, request *pb.LPopRequest) (*pb.LPopResponse, error) {
-	res, err := service.LPop(request.Key, request.Values)
-	return &pb.LPopResponse{Success: res}, err
+	res, err := cluster.Apply("LPop", request)
+	return res.(*pb.LPopResponse), err
 }
 
 func (server *ListServer) LRange(_ context.Context, request *pb.LRangeRequest) (*pb.LRangeResponse, error) {
@@ -36,8 +37,8 @@ func (server *ListServer) LExist(_ context.Context, request *pb.LExistRequest) (
 }
 
 func (server *ListServer) LDel(_ context.Context, request *pb.LDelRequest) (*pb.LDelResponse, error) {
-	res, err := service.LDel(request.Key)
-	return &pb.LDelResponse{Success: res}, err
+	res, err := cluster.Apply("LDel", request)
+	return res.(*pb.LDelResponse), err
 }
 
 func (server *ListServer) LCount(_ context.Context, request *pb.LCountRequest) (*pb.LCountResponse, error) {

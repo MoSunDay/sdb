@@ -1,6 +1,7 @@
 .idea
 *.iml
-db/
+db*/
 scripts/prometheus.yml
-nohup.out
 main
+logs/
+cluster/

@@ -1,6 +1,7 @@
 package server
 
 import (
+	"github.com/yemingfeng/sdb/internal/cluster"
 	"github.com/yemingfeng/sdb/internal/pb"
 	"github.com/yemingfeng/sdb/internal/service"
 	"golang.org/x/net/context"
@@ -11,13 +12,13 @@ type SetServer struct {
 }
 
 func (server *SetServer) SPush(_ context.Context, request *pb.SPushRequest) (*pb.SPushResponse, error) {
-	res, err := service.SPush(request.Key, request.Values)
-	return &pb.SPushResponse{Success: res}, err
+	res, err := cluster.Apply("SPush", request)
+	return res.(*pb.SPushResponse), err
 }
 
 func (server *SetServer) SPop(_ context.Context, request *pb.SPopRequest) (*pb.SPopResponse, error) {
-	res, err := service.SPop(request.Key, request.Values)
-	return &pb.SPopResponse{Success: res}, err
+	res, err := cluster.Apply("SPop", request)
+	return res.(*pb.SPopResponse), err
 }
 
 func (server *SetServer) SExist(_ context.Context, request *pb.SExistRequest) (*pb.SExistResponse, error) {
@@ -26,8 +27,8 @@ func (server *SetServer) SExist(_ context.Context, request *pb.SExistRequest) (*
 }
 
 func (server *SetServer) SDel(_ context.Context, request *pb.SDelRequest) (*pb.SDelResponse, error) {
-	res, err := service.SDel(request.Key)
-	return &pb.SDelResponse{Success: res}, err
+	res, err := cluster.Apply("SDel", request)
+	return res.(*pb.SDelResponse), err
 }
 
 func (server *SetServer) SCount(_ context.Context, request *pb.SCountRequest) (*pb.SCountResponse, error) {

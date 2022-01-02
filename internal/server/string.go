@@ -1,6 +1,7 @@
 package server
 
 import (
+	"github.com/yemingfeng/sdb/internal/cluster"
 	"github.com/yemingfeng/sdb/internal/pb"
 	"github.com/yemingfeng/sdb/internal/service"
 	"golang.org/x/net/context"
@@ -11,23 +12,23 @@ type StringServer struct {
 }
 
 func (server *StringServer) Set(_ context.Context, request *pb.SetRequest) (*pb.SetResponse, error) {
-	res, err := service.Set(request.Key, request.Value)
-	return &pb.SetResponse{Success: res}, err
+	res, err := cluster.Apply("Set", request)
+	return res.(*pb.SetResponse), err
 }
 
 func (server *StringServer) MSet(_ context.Context, request *pb.MSetRequest) (*pb.MSetResponse, error) {
-	res, err := service.MSet(request.Keys, request.Values)
-	return &pb.MSetResponse{Success: res}, err
+	res, err := cluster.Apply("MSet", request)
+	return res.(*pb.MSetResponse), err
 }
 
 func (server *StringServer) SetNX(_ context.Context, request *pb.SetNXRequest) (*pb.SetNXResponse, error) {
-	res, err := service.SetNX(request.Key, request.Value)
-	return &pb.SetNXResponse{Success: res}, err
+	res, err := cluster.Apply("Set", request)
+	return res.(*pb.SetNXResponse), err
 }
 
 func (server *StringServer) SetGet(_ context.Context, request *pb.SetGetRequest) (*pb.SetGetResponse, error) {
-	res, old, err := service.SetGet(request.Key, request.Value)
-	return &pb.SetGetResponse{Success: res, OldValue: old}, err
+	res, err := cluster.Apply("SetGet", request)
+	return res.(*pb.SetGetResponse), err
 }
 
 func (server *StringServer) Get(_ context.Context, request *pb.GetRequest) (*pb.GetResponse, error) {
@@ -41,11 +42,11 @@ func (server *StringServer) MGet(_ context.Context, request *pb.MGetRequest) (*p
 }
 
 func (server *StringServer) Del(_ context.Context, request *pb.DelRequest) (*pb.DelResponse, error) {
-	res, err := service.Del(request.Key)
-	return &pb.DelResponse{Success: res}, err
+	res, err := cluster.Apply("Del", request)
+	return res.(*pb.DelResponse), err
 }
 
 func (server *StringServer) Incr(_ context.Context, request *pb.IncrRequest) (*pb.IncrResponse, error) {
-	res, err := service.Incr(request.Key, request.Delta)
-	return &pb.IncrResponse{Success: res}, err
+	res, err := cluster.Apply("Incr", request)
+	return res.(*pb.IncrResponse), err
 }

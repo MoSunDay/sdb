@@ -1,6 +1,7 @@
 package server
 
 import (
+	"github.com/yemingfeng/sdb/internal/cluster"
 	"github.com/yemingfeng/sdb/internal/pb"
 	"github.com/yemingfeng/sdb/internal/service"
 	"golang.org/x/net/context"
@@ -11,23 +12,23 @@ type BitsetServer struct {
 }
 
 func (server *BitsetServer) BSCreate(_ context.Context, request *pb.BSCreateRequest) (*pb.BSCreateResponse, error) {
-	res, err := service.BSCreate(request.Key, request.Size)
-	return &pb.BSCreateResponse{Success: res}, err
+	res, err := cluster.Apply("BSCreate", request)
+	return res.(*pb.BSCreateResponse), err
 }
 
 func (server *BitsetServer) BSDel(_ context.Context, request *pb.BSDelRequest) (*pb.BSDelResponse, error) {
-	res, err := service.BSDel(request.Key)
-	return &pb.BSDelResponse{Success: res}, err
+	res, err := cluster.Apply("BSDel", request)
+	return res.(*pb.BSDelResponse), err
 }
 
 func (server *BitsetServer) BSSetRange(_ context.Context, request *pb.BSSetRangeRequest) (*pb.BSSetRangeResponse, error) {
-	res, err := service.BSSetRange(request.Key, request.Start, request.End, request.Value)
-	return &pb.BSSetRangeResponse{Success: res}, err
+	res, err := cluster.Apply("BSSetRange", request)
+	return res.(*pb.BSSetRangeResponse), err
 }
 
 func (server *BitsetServer) BSMSet(_ context.Context, request *pb.BSMSetRequest) (*pb.BSMSetResponse, error) {
-	res, err := service.BSMSet(request.Key, request.Bits, request.Value)
-	return &pb.BSMSetResponse{Success: res}, err
+	res, err := cluster.Apply("BSMSet", request)
+	return res.(*pb.BSMSetResponse), err
 }
 
 func (server *BitsetServer) BSGetRange(_ context.Context, request *pb.BSGetRangeRequest) (*pb.BSGetRangeResponse, error) {
