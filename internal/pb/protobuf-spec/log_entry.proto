@@ -8,7 +8,3 @@ message LogEntry {
     string methodName = 1;
     bytes requestBytes = 2;
 }
-
-message LogEntryList {
-    repeated LogEntry logEntries = 1;
-}
