@@ -1,14 +1,14 @@
 # 存储配置
 store:
   engine: pebble
-  path: ./db/2/
+  path: ./db/1/
 
 # server 相关
 server:
   # grpc 配置
-  grpc_port: 9001
+  grpc_port: 10001
   # http 配置
-  http_port: 8082
+  http_port: 11001
   # 限流容量，每秒的 qps 限制
   rate: 1000
   # 慢请求的阈值，单位为 ms
@@ -21,8 +21,8 @@ cluster:
   # raft 协议提交的日志存储位置
   path: ./cluster/
   # 通信的端口
-  port: 9091
+  port: 12001
   # 提交超时时间，单位为 ms
   time_out: 1000
   # 集群 master 地址
-  master: 127.0.0.1:8081
+  master: 127.0.0.1:11000

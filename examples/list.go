@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	conn, err := grpc.Dial(":9000", grpc.WithInsecure())
+	conn, err := grpc.Dial(":10000", grpc.WithInsecure())
 	if err != nil {
 		log.Printf("faild to connect: %+v", err)
 	}

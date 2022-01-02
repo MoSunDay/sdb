@@ -73,7 +73,7 @@ import (
 )
 
 func main() {
-	conn, err := grpc.Dial(":9000", grpc.WithInsecure())
+	conn, err := grpc.Dial(":10000", grpc.WithInsecure())
 	if err != nil {
 		log.Printf("faild to connect: %+v", err)
 	}
@@ -278,15 +278,15 @@ Publish | topic, payload | 向某个 topic 发布 payload
 ---- | --- | ---
 store.engine | 存储引擎，可选 pebble、level、badger | pebble
 store.path | 存储目录 | ./db
-server.grpc_port | grpc 监听的端口 | 9000
-server.http_port | http 监控的端口，供 prometheus 使用 | 8081
+server.grpc_port | grpc 监听的端口 | 10000
+server.http_port | http 监控的端口，供 prometheus 和集群注册使用 | 11000
 server.rate | 每秒 qps 的限制 | 1000
 server.slow_query_threshold | 慢查询记录的阈值，单位为 ms | 100
 cluster.node_id | 集群中唯一标识 | 1
 cluster.path | raft 日志存储目录 | ./cluster/
-cluster.port | raft 日志复制的通讯地址 | 9090
+cluster.port | raft 通讯地址 | 12000
 cluster.time_out | raft 日志提交的超时时间 | 1s
-cluster.master | 集群中的 master 节点地址。这里和 raft [注册实现](https://github.com/yemingfeng/sdb/blob/master/internal/cluster/node.go#L94) 有关，从节点启动后会将通过 http(主节点默认端口为 server.http_port) 注册从节点信息 | 127.0.0.1:8081
+cluster.master | 集群中的 master 节点地址。这里和 raft [注册实现](https://github.com/yemingfeng/sdb/blob/master/internal/cluster/node.go#L94) 有关，从节点启动后会将通过 http(主节点默认端口为 server.http_port) 注册从节点信息 | 127.0.0.1:11000
 
 ------
 
