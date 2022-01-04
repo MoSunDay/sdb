@@ -40,19 +40,17 @@ MySQL 在这个场景中充当了持久化的能力，Redis 提供了在线服�
       、[leveldb](https://github.com/syndtr/goleveldb)
       、[badger](https://github.com/dgraph-io/badger) 存储引擎
 - 分布式
-    - 采用 [raft](https://github.com/hashicorp/raft) 实现了集群方案。集群方案采用主从架构。
+    - 采用 [raft](https://github.com/hashicorp/raft) 实现了主从架构。
 - 监控
     - 支持 prometheus + grafana 监控方案
 - 限流
     - 支持每秒 qps 的限流策略
-- 慢查询查看
-    - 可查看慢查询的请求，进行分析
 
 ------
 
 ### 架构
 
-<img alt="benchmark" src="https://github.com/yemingfeng/sdb/raw/master/docs/architecture.png" width=80% />
+<img alt="architecture" src="https://github.com/yemingfeng/sdb/raw/master/docs/architecture.png" width=80% />
 
 ------
 
@@ -64,7 +62,7 @@ MySQL 在这个场景中充当了持久化的能力，Redis 提供了在线服�
 sh ./scripts/quick_start.sh
 ```
 
-**默认使用 pebble 存储引擎。集群方式启动，一主两从。**
+**默认使用 pebble 存储引擎。默认启动一主两从。**
 
 #### 客户端使用
 
@@ -137,7 +135,7 @@ func main() {
     - [x] bitset
     - [x] map
     - [x] geo hash
-- [x] 集群方案实现 (2021.01.30)
+- [x] 分布式方案实现 (2021.01.30)
 - [ ] 生成主流语言的客户端 (2021.02.15)
 - [ ] 搭建 admin web ui
 
@@ -285,7 +283,7 @@ Publish | topic, payload | 向某个 topic 发布 payload
 store.engine | 存储引擎，可选 pebble、level、badger | pebble
 store.path | 存储目录 | ./db
 server.grpc_port | grpc 监听的端口 | 10000
-server.http_port | http 监控的端口，供 prometheus 和集群注册使用 | 11000
+server.http_port | http 监控的端口，供 prometheus 和主从注册使用 | 11000
 server.rate | 每秒 qps 的限制 | 30000
 server.slow_query_threshold | 慢查询记录的阈值，单位为 ms | 100
 cluster.node_id | 集群中唯一标识 | 1
@@ -526,7 +524,7 @@ func LPop(key []byte, values [][]byte) (bool, error) {
 在 SBD 中，数据由 Collection 和 Row 构造。 其中：
 
 - [Collection](https://github.com/yemingfeng/sdb/blob/master/internal/collection/collection.go#L30)
-  类似数据库的一张表，是逻辑概念。一个 Collection 包含 dataType，比如：List。一个 Collection 包含多个 Row。
+  类似数据库的一张表，是逻辑概念。每个 dataType(如 List) 对应一个 Collection。一个 Collection 包含多个 Row。
 - 一个 Row 包含唯一键：key、id、value、indexes，**是真正存储于 KV 存储的数据**。每行 row 以 rowKey 作为唯一值，rowKey
   = `{dataType} + {key} + {id}`
 - 每个 row 包含 N 个索引，每个索引以 indexKey 作为唯一值，indexKey
@@ -568,23 +566,9 @@ grpc 是一个非常不错的选择，只需要使用 SDB proto 文件，就能�
 
 ### SDB 原理之——分布式方案
 
-首先，我们看下分布式方案的历史进程。
+目前 SDB 只实现了主从架构的分布式方案。
 
-从主从复制的角度看分布式的阶段：
-
-- 阶段一：单机存储。只有一个存储节点。该节点负责读写。不需要特殊处理，就实现了。
-- 阶段二：主从架构。一个主节点，多个从节点。较好实现
-- 阶段三：多主多从架构。多个主节点，多个从节点。非常难实现
-
-从数据的角度看分布式的阶段：
-
-- 阶段一：单机存储，该节点存储所有数据。
-- 阶段二：数据分片存储，类似 Redis hash 槽的实现，TiKV range 数据分片实现。
-
-可以看出，最进阶的方案是：多主多从 + 数据分片存储。 但多主多从的实现过于复杂，大多数存储引擎都实现了主从架构 + 数据分片（如：Redis、TiDB、elasticsearch、mongoDB
-等）
-
-说回 SDB，目前 SDB 只实现了主从架构，并没有实现数据分片。是因为数据分片的逻辑多余复杂，目前只实现了主从架构。
+接下来 SDB 会探索实现数据分片的方案，主要参考 TiKV (range 方案) 或者 Redis (hash slot 方案)
 
 ------
 
