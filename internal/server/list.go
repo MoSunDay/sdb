@@ -12,18 +12,18 @@ type ListServer struct {
 }
 
 func (server *ListServer) LRPush(_ context.Context, request *pb.LRPushRequest) (*pb.LRPushResponse, error) {
-	res, err := cluster.Apply("LRPush", request)
-	return res.(*pb.LRPushResponse), err
+	err := cluster.Apply("LRPush", request)
+	return &pb.LRPushResponse{Success: err == nil}, err
 }
 
 func (server *ListServer) LLPush(_ context.Context, request *pb.LLPushRequest) (*pb.LLPushResponse, error) {
-	res, err := cluster.Apply("LLPush", request)
-	return res.(*pb.LLPushResponse), err
+	err := cluster.Apply("LLPush", request)
+	return &pb.LLPushResponse{Success: err == nil}, err
 }
 
 func (server *ListServer) LPop(_ context.Context, request *pb.LPopRequest) (*pb.LPopResponse, error) {
-	res, err := cluster.Apply("LPop", request)
-	return res.(*pb.LPopResponse), err
+	err := cluster.Apply("LPop", request)
+	return &pb.LPopResponse{Success: err == nil}, err
 }
 
 func (server *ListServer) LRange(_ context.Context, request *pb.LRangeRequest) (*pb.LRangeResponse, error) {
@@ -37,8 +37,8 @@ func (server *ListServer) LExist(_ context.Context, request *pb.LExistRequest) (
 }
 
 func (server *ListServer) LDel(_ context.Context, request *pb.LDelRequest) (*pb.LDelResponse, error) {
-	res, err := cluster.Apply("LDel", request)
-	return res.(*pb.LDelResponse), err
+	err := cluster.Apply("LDel", request)
+	return &pb.LDelResponse{Success: err == nil}, err
 }
 
 func (server *ListServer) LCount(_ context.Context, request *pb.LCountRequest) (*pb.LCountResponse, error) {

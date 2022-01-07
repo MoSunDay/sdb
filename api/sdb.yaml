@@ -12,9 +12,6 @@ http:
     - selector: proto.SDB.SetNX
       post: /v1/set-nx
       body: "*"
-    - selector: proto.SDB.SetGet
-      post: /v1/set-get
-      body: "*"
     - selector: proto.SDB.Get
       post: /v1/get
       body: "*"

@@ -12,23 +12,23 @@ type BitsetServer struct {
 }
 
 func (server *BitsetServer) BSCreate(_ context.Context, request *pb.BSCreateRequest) (*pb.BSCreateResponse, error) {
-	res, err := cluster.Apply("BSCreate", request)
-	return res.(*pb.BSCreateResponse), err
+	err := cluster.Apply("BSCreate", request)
+	return &pb.BSCreateResponse{Success: err == nil}, err
 }
 
 func (server *BitsetServer) BSDel(_ context.Context, request *pb.BSDelRequest) (*pb.BSDelResponse, error) {
-	res, err := cluster.Apply("BSDel", request)
-	return res.(*pb.BSDelResponse), err
+	err := cluster.Apply("BSDel", request)
+	return &pb.BSDelResponse{Success: err == nil}, err
 }
 
 func (server *BitsetServer) BSSetRange(_ context.Context, request *pb.BSSetRangeRequest) (*pb.BSSetRangeResponse, error) {
-	res, err := cluster.Apply("BSSetRange", request)
-	return res.(*pb.BSSetRangeResponse), err
+	err := cluster.Apply("BSSetRange", request)
+	return &pb.BSSetRangeResponse{Success: err == nil}, err
 }
 
 func (server *BitsetServer) BSMSet(_ context.Context, request *pb.BSMSetRequest) (*pb.BSMSetResponse, error) {
-	res, err := cluster.Apply("BSMSet", request)
-	return res.(*pb.BSMSetResponse), err
+	err := cluster.Apply("BSMSet", request)
+	return &pb.BSMSetResponse{Success: err == nil}, err
 }
 
 func (server *BitsetServer) BSGetRange(_ context.Context, request *pb.BSGetRangeRequest) (*pb.BSGetRangeResponse, error) {

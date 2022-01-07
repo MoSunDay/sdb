@@ -12,13 +12,13 @@ type SortedSetServer struct {
 }
 
 func (server *SortedSetServer) ZPush(_ context.Context, request *pb.ZPushRequest) (*pb.ZPushResponse, error) {
-	res, err := cluster.Apply("ZPush", request)
-	return res.(*pb.ZPushResponse), err
+	err := cluster.Apply("ZPush", request)
+	return &pb.ZPushResponse{Success: err == nil}, err
 }
 
 func (server *SortedSetServer) ZPop(_ context.Context, request *pb.ZPopRequest) (*pb.ZPopResponse, error) {
-	res, err := cluster.Apply("ZPop", request)
-	return res.(*pb.ZPopResponse), err
+	err := cluster.Apply("ZPop", request)
+	return &pb.ZPopResponse{Success: err == nil}, err
 }
 
 func (server *SortedSetServer) ZRange(_ context.Context, request *pb.ZRangeRequest) (*pb.ZRangeResponse, error) {
@@ -32,8 +32,8 @@ func (server *SortedSetServer) ZExist(_ context.Context, request *pb.ZExistReque
 }
 
 func (server *SortedSetServer) ZDel(_ context.Context, request *pb.ZDelRequest) (*pb.ZDelResponse, error) {
-	res, err := cluster.Apply("ZDel", request)
-	return res.(*pb.ZDelResponse), err
+	err := cluster.Apply("ZDel", request)
+	return &pb.ZDelResponse{Success: err == nil}, err
 }
 
 func (server *SetServer) ZCount(_ context.Context, request *pb.ZCountRequest) (*pb.ZCountResponse, error) {

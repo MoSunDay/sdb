@@ -24,9 +24,7 @@ var node *raft.Raft
 func Start() {
 	raftConfig := raft.DefaultConfig()
 	raftConfig.LocalID = raft.ServerID(conf.Conf.Cluster.NodeId)
-	raftConfig.SnapshotThreshold = 1
-	raftConfig.SnapshotInterval = 1 * time.Second
-	raftConfig.LogLevel = "Error"
+	raftConfig.LogLevel = "Trace"
 	log.Printf("raft config: %+v", raftConfig)
 
 	path := filepath.Join(conf.Conf.Cluster.Path, string(raftConfig.LocalID))
@@ -44,7 +42,7 @@ func Start() {
 	if err != nil {
 		log.Fatalf("new stable store error, %+v", err)
 	}
-	snapshotStore, err := raft.NewFileSnapshotStore(path, 1, os.Stderr)
+	snapshotStore, err := raft.NewFileSnapshotStore(path, 20, os.Stderr)
 	if err != nil {
 		log.Fatalln("new snapshot store error", err)
 	}
@@ -92,30 +90,32 @@ func Start() {
 	}
 }
 
-func Apply(methodName string, request proto.Message) (proto.Message, error) {
+func Apply(methodName string, request proto.Message) error {
 	if node.State() != raft.Leader {
-		return nil, errors.New("only can apply from leader")
+		return errors.New("only can apply from leader")
 	}
 	requestBytes, err := proto.Marshal(request)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	entry := &pb.LogEntry{MethodName: methodName, RequestBytes: requestBytes}
 	data, err := proto.Marshal(entry)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	future := node.Apply(data, time.Duration(conf.Conf.Cluster.Timeout)*time.Millisecond)
 	if err := future.Error(); err != nil {
-		log.Fatalf("apply error: %+v", err)
-		return nil, err
+		log.Printf("apply error: %+v", err)
+		return err
 	}
-	applyResponse := future.Response().(*fsm.ApplyResponse)
-	if applyResponse.Err != nil {
-		return nil, applyResponse.Err
+	resp := future.Response()
+	if resp == nil {
+		return nil
 	}
-	return applyResponse.Response, nil
+	err = resp.(error)
+	log.Printf("response error: %+v", err)
+	return err
 }
 
 func Join(nodeId, addr string) error {

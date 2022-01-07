@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/tmthrgd/go-bitset"
 	"github.com/yemingfeng/sdb/internal/collection"
+	"github.com/yemingfeng/sdb/internal/engine"
 	"github.com/yemingfeng/sdb/internal/pb"
 )
 
@@ -13,79 +14,70 @@ var BitsetRangeError = errors.New("bitset out of range, please check it")
 
 var bitsetCollection = collection.NewCollection(pb.DataType_BITSET)
 
-func BSCreate(key []byte, size uint32) (bool, error) {
-	lock(LBitset, key)
-	defer unlock(LBitset, key)
-
+func BSCreate(key []byte, size uint32, batch engine.Batch) error {
 	exist, err := bitsetCollection.ExistRowById(key, key)
 	if err != nil {
-		return false, err
+		return err
 	}
 	if exist {
-		return false, BitsetExistError
+		return BitsetExistError
 	}
 
-	return bitsetCollection.UpsertRowAutoCommit(&collection.Row{
+	return bitsetCollection.UpsertRow(&collection.Row{
 		Key:   key,
 		Id:    key,
 		Value: bitset.New(uint(size)),
-	})
+	}, batch)
 }
 
-func BSDel(key []byte) (bool, error) {
-	return bitsetCollection.DelRowByIdAutoCommit(key, key)
+func BSDel(key []byte, batch engine.Batch) error {
+	return bitsetCollection.DelRowById(key, key, batch)
 }
 
-func BSSetRange(key []byte, start uint32, end uint32, value bool) (bool, error) {
-	lock(LBitset, key)
-	defer unlock(LBitset, key)
-
+func BSSetRange(key []byte, start uint32, end uint32, value bool, batch engine.Batch) error {
 	row, err := bitsetCollection.GetRowById(key, key)
 	if err != nil {
-		return false, err
+		return err
 	}
 	if row == nil {
-		return false, NotFoundBitsetError
+		return NotFoundBitsetError
 	}
 	b := bitset.Bitset(row.Value)
 	if start > end {
-		return false, BitsetRangeError
+		return BitsetRangeError
 	}
 	if end > uint32(b.Len()) {
-		return false, BitsetRangeError
+		return BitsetRangeError
 	}
 	b.SetRangeTo(uint(start), uint(end), value)
-	return bitsetCollection.UpsertRowAutoCommit(&collection.Row{
+	return bitsetCollection.UpsertRow(&collection.Row{
 		Key:   key,
 		Id:    key,
 		Value: b,
-	})
+	}, batch)
 }
 
-func BSMSet(key []byte, bits []uint32, value bool) (bool, error) {
-	lock(LBitset, key)
-	defer unlock(LBitset, key)
-
+func BSMSet(key []byte, bits []uint32, value bool, batch engine.Batch) error {
 	row, err := bitsetCollection.GetRowById(key, key)
 	if err != nil {
-		return false, err
+		return err
 	}
 	if row == nil {
-		return false, NotFoundBitsetError
+		return NotFoundBitsetError
 	}
 	b := bitset.Bitset(row.Value)
 	for i := range bits {
 		bit := uint(bits[i])
 		if bit > b.Len() {
-			return false, BitsetRangeError
+			return BitsetRangeError
 		}
 		b.SetTo(bit, value)
 	}
-	return bitsetCollection.UpsertRowAutoCommit(&collection.Row{
+	return bitsetCollection.UpsertRow(&collection.Row{
 		Key:   key,
 		Id:    key,
 		Value: b,
-	})
+	}, batch)
 }
 
 func BSGetRange(key []byte, start uint32, end uint32) ([]bool, error) {

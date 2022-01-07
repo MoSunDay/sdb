@@ -9,36 +9,26 @@ import (
 
 var setCollection = collection.NewCollection(pb.DataType_SET)
 
-func SPush(key []byte, values [][]byte) (bool, error) {
-	lock(LSet, key)
-	defer unlock(LSet, key)
-
-	return setCollection.Batch(func(batch engine.Batch) error {
-		for _, value := range values {
-			if _, err := setCollection.UpsertRow(&collection.Row{
-				Key:   key,
-				Id:    value,
-				Value: value,
-			}, batch); err != nil {
-				return err
-			}
+func SPush(key []byte, values [][]byte, batch engine.Batch) error {
+	for _, value := range values {
+		if err := setCollection.UpsertRow(&collection.Row{
+			Key:   key,
+			Id:    value,
+			Value: value,
+		}, batch); err != nil {
+			return err
 		}
-		return nil
-	})
+	}
+	return nil
 }
 
-func SPop(key []byte, values [][]byte) (bool, error) {
-	lock(LSet, key)
-	defer unlock(LSet, key)
-
-	return setCollection.Batch(func(batch engine.Batch) error {
-		for _, value := range values {
-			if _, err := setCollection.DelRowById(key, value, batch); err != nil {
-				return err
-			}
+func SPop(key []byte, values [][]byte, batch engine.Batch) error {
+	for _, value := range values {
+		if err := setCollection.DelRowById(key, value, batch); err != nil {
+			return err
 		}
-		return nil
-	})
+	}
+	return nil
 }
 
 func SExist(key []byte, values [][]byte) ([]bool, error) {
@@ -53,11 +43,8 @@ func SExist(key []byte, values [][]byte) ([]bool, error) {
 	return res, nil
 }
 
-func SDel(key []byte) (bool, error) {
-	lock(LSet, key)
-	defer unlock(LSet, key)
-
-	return setCollection.DelAutoCommit(key)
+func SDel(key []byte, batch engine.Batch) error {
+	return setCollection.Del(key, batch)
 }
 
 func SCount(key []byte) (uint32, error) {

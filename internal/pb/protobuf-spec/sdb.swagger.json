@@ -1624,38 +1624,6 @@
         ]
       }
     },
-    "/v1/set-get": {
-      "post": {
-        "operationId": "SDB_SetGet",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/protoSetGetResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/protoSetGetRequest"
-            }
-          }
-        ],
-        "tags": [
-          "SDB"
-        ]
-      }
-    },
     "/v1/set-nx": {
       "post": {
         "operationId": "SDB_SetNX",
@@ -3058,31 +3026,6 @@
       "properties": {
         "success": {
           "type": "boolean"
-        }
-      }
-    },
-    "protoSetGetRequest": {
-      "type": "object",
-      "properties": {
-        "key": {
-          "type": "string",
-          "format": "byte"
-        },
-        "value": {
-          "type": "string",
-          "format": "byte"
-        }
-      }
-    },
-    "protoSetGetResponse": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        },
-        "oldValue": {
-          "type": "string",
-          "format": "byte"
         }
       }
     },

@@ -12,23 +12,23 @@ type GeoHashServer struct {
 }
 
 func (server *GeoHashServer) GHCreate(_ context.Context, request *pb.GHCreateRequest) (*pb.GHCreateResponse, error) {
-	res, err := cluster.Apply("GHCreate", request)
-	return res.(*pb.GHCreateResponse), err
+	err := cluster.Apply("GHCreate", request)
+	return &pb.GHCreateResponse{Success: err == nil}, err
 }
 
 func (server *GeoHashServer) GHDel(_ context.Context, request *pb.GHDelRequest) (*pb.GHDelResponse, error) {
-	res, err := cluster.Apply("GHDel", request)
-	return res.(*pb.GHDelResponse), err
+	err := cluster.Apply("GHDel", request)
+	return &pb.GHDelResponse{Success: err == nil}, err
 }
 
 func (server *GeoHashServer) GHAdd(_ context.Context, request *pb.GHAddRequest) (*pb.GHAddResponse, error) {
-	res, err := cluster.Apply("GHAdd", request)
-	return res.(*pb.GHAddResponse), err
+	err := cluster.Apply("GHAdd", request)
+	return &pb.GHAddResponse{Success: err == nil}, err
 }
 
 func (server *GeoHashServer) GHRem(_ context.Context, request *pb.GHRemRequest) (*pb.GHRemResponse, error) {
-	res, err := cluster.Apply("GHRem", request)
-	return res.(*pb.GHRemResponse), err
+	err := cluster.Apply("GHRem", request)
+	return &pb.GHRemResponse{Success: err == nil}, err
 }
 
 func (server *GeoHashServer) GHGetBoxes(_ context.Context, request *pb.GHGetBoxesRequest) (*pb.GHGetBoxesResponse, error) {

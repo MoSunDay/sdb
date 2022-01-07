@@ -5,6 +5,7 @@ import (
 	"github.com/devopsfaith/bloomfilter"
 	bloomFilter2 "github.com/devopsfaith/bloomfilter/bloomfilter"
 	"github.com/yemingfeng/sdb/internal/collection"
+	"github.com/yemingfeng/sdb/internal/engine"
 	"github.com/yemingfeng/sdb/internal/pb"
 )
 
@@ -13,49 +14,43 @@ var BloomFilterExistError = errors.New("bloom filter exist, please delete it or 
 
 var bloomFilterCollection = collection.NewCollection(pb.DataType_BLOOM_FILTER)
 
-func BFCreate(key []byte, n uint32, p float64) (bool, error) {
-	lock(LBloomFilter, key)
-	defer unlock(LBloomFilter, key)
-
+func BFCreate(key []byte, n uint32, p float64, batch engine.Batch) error {
 	exist, err := bloomFilterCollection.ExistRowById(key, key)
 	if err != nil {
-		return false, err
+		return err
 	}
 	if exist {
-		return false, BloomFilterExistError
+		return BloomFilterExistError
 	}
 	bloomFilter := bloomFilter2.New(
 		bloomfilter.Config{N: uint(n), P: p, HashName: bloomfilter.HASHER_DEFAULT})
 	value, err := bloomFilter.MarshalBinary()
 	if err != nil {
-		return false, nil
+		return err
 	}
 
-	return bloomFilterCollection.UpsertRowAutoCommit(&collection.Row{
+	return bloomFilterCollection.UpsertRow(&collection.Row{
 		Key:   key,
 		Id:    key,
-		Value: value})
+		Value: value}, batch)
 }
 
-func BFDel(key []byte) (bool, error) {
-	return bloomFilterCollection.DelRowByIdAutoCommit(key, key)
+func BFDel(key []byte, batch engine.Batch) error {
+	return bloomFilterCollection.DelRowById(key, key, batch)
 }
 
-func BFAdd(key []byte, values [][]byte) (bool, error) {
-	lock(LBloomFilter, key)
-	defer unlock(LBloomFilter, key)
-
+func BFAdd(key []byte, values [][]byte, batch engine.Batch) error {
 	row, err := bloomFilterCollection.GetRowById(key, key)
 	if err != nil {
-		return false, err
+		return err
 	}
 	if row == nil {
-		return false, NotFoundBloomFilterError
+		return NotFoundBloomFilterError
 	}
 
 	bloomFilter := &bloomFilter2.Bloomfilter{}
 	if err = bloomFilter.UnmarshalBinary(row.Value); err != nil {
-		return false, err
+		return err
 	}
 
 	for _, value := range values {
@@ -63,10 +58,10 @@ func BFAdd(key []byte, values [][]byte) (bool, error) {
 	}
 
 	value, err := bloomFilter.MarshalBinary()
-	return bloomFilterCollection.UpsertRowAutoCommit(&collection.Row{
+	return bloomFilterCollection.UpsertRow(&collection.Row{
 		Key:   key,
 		Id:    key,
-		Value: value})
+		Value: value}, batch)
 }
 
 func BFExist(key []byte, values [][]byte) ([]bool, error) {

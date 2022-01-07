@@ -18,49 +18,39 @@ func newSortedSetIndexes(score []byte, value []byte) []collection.Index {
 	}
 }
 
-func ZPush(key []byte, tuples []*pb.Tuple) (bool, error) {
-	lock(LSortedSet, key)
-	defer unlock(LSortedSet, key)
-
+func ZPush(key []byte, tuples []*pb.Tuple, batch engine.Batch) error {
 	// tuples -> [ {value: a, score: 1.0}, {value:b, score:1.1}, {value: c, score: 0.9} ]
-	return sortedSetCollection.Batch(func(batch engine.Batch) error {
-		for _, tuple := range tuples {
-			score := []byte(fmt.Sprintf("%32.32f", tuple.Score))
-			value, err := proto.Marshal(tuple)
-			if err != nil {
-				return err
-			}
-			if _, err := sortedSetCollection.UpsertRow(&collection.Row{
-				Key:     key,
-				Id:      tuple.Value,
-				Indexes: newSortedSetIndexes(score, tuple.Value),
-				Value:   value,
-			}, batch); err != nil {
-				return err
-			}
+	for _, tuple := range tuples {
+		score := []byte(fmt.Sprintf("%32.32f", tuple.Score))
+		value, err := proto.Marshal(tuple)
+		if err != nil {
+			return err
 		}
-		return nil
-	})
+		if err := sortedSetCollection.UpsertRow(&collection.Row{
+			Key:     key,
+			Id:      tuple.Value,
+			Indexes: newSortedSetIndexes(score, tuple.Value),
+			Value:   value,
+		}, batch); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
-func ZPop(key []byte, values [][]byte) (bool, error) {
-	lock(LSortedSet, key)
-	defer unlock(LSortedSet, key)
-
-	return sortedSetCollection.Batch(func(batch engine.Batch) error {
-		for _, value := range values {
-			rows, err := sortedSetCollection.IndexValuePage(key, []byte("value"), value, 0, math.MaxUint32)
-			if err != nil {
+func ZPop(key []byte, values [][]byte, batch engine.Batch) error {
+	for _, value := range values {
+		rows, err := sortedSetCollection.IndexValuePage(key, []byte("value"), value, 0, math.MaxUint32)
+		if err != nil {
+			return err
+		}
+		for _, row := range rows {
+			if err := sortedSetCollection.DelRowById(key, row.Id, batch); err != nil {
 				return err
 			}
-			for _, row := range rows {
-				if _, err := sortedSetCollection.DelRowById(key, row.Id, batch); err != nil {
-					return err
-				}
-			}
 		}
-		return nil
-	})
+	}
+	return nil
 }
 
 func ZRange(key []byte, offset int32, limit uint32) ([]*pb.Tuple, error) {
@@ -91,10 +81,8 @@ func ZExist(key []byte, values [][]byte) ([]bool, error) {
 	return res, nil
 }
 
-func ZDel(key []byte) (bool, error) {
-	lock(LSortedSet, key)
-	defer unlock(LSortedSet, key)
-	return sortedSetCollection.DelAutoCommit(key)
+func ZDel(key []byte, batch engine.Batch) error {
+	return sortedSetCollection.Del(key, batch)
 }
 
 func ZCount(key []byte) (uint32, error) {

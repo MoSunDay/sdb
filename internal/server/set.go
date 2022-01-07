@@ -12,13 +12,13 @@ type SetServer struct {
 }
 
 func (server *SetServer) SPush(_ context.Context, request *pb.SPushRequest) (*pb.SPushResponse, error) {
-	res, err := cluster.Apply("SPush", request)
-	return res.(*pb.SPushResponse), err
+	err := cluster.Apply("SPush", request)
+	return &pb.SPushResponse{Success: err == nil}, err
 }
 
 func (server *SetServer) SPop(_ context.Context, request *pb.SPopRequest) (*pb.SPopResponse, error) {
-	res, err := cluster.Apply("SPop", request)
-	return res.(*pb.SPopResponse), err
+	err := cluster.Apply("SPop", request)
+	return &pb.SPopResponse{Success: err == nil}, err
 }
 
 func (server *SetServer) SExist(_ context.Context, request *pb.SExistRequest) (*pb.SExistResponse, error) {
@@ -27,8 +27,8 @@ func (server *SetServer) SExist(_ context.Context, request *pb.SExistRequest) (*
 }
 
 func (server *SetServer) SDel(_ context.Context, request *pb.SDelRequest) (*pb.SDelResponse, error) {
-	res, err := cluster.Apply("SDel", request)
-	return res.(*pb.SDelResponse), err
+	err := cluster.Apply("SDel", request)
+	return &pb.SDelResponse{Success: err == nil}, err
 }
 
 func (server *SetServer) SCount(_ context.Context, request *pb.SCountRequest) (*pb.SCountResponse, error) {

@@ -9,9 +9,10 @@ type Store interface {
 
 type Batch interface {
 	Get(key []byte) ([]byte, error)
-	Set(key []byte, value []byte) (bool, error)
-	Del(key []byte) (bool, error)
-	Commit() (bool, error)
+	Set(key []byte, value []byte) error
+	Del(key []byte) error
+	Commit() error
+	Reset()
 	Close()
 }
 

@@ -9,61 +9,38 @@ import (
 
 var stringCollection = collection.NewCollection(pb.DataType_STRING)
 
-func Set(key []byte, value []byte) (bool, error) {
-	return stringCollection.UpsertRowAutoCommit(&collection.Row{
+func Set(key []byte, value []byte, batch engine.Batch) error {
+	return stringCollection.UpsertRow(&collection.Row{
 		Key:   key,
 		Id:    key,
-		Value: value})
+		Value: value}, batch)
 }
 
-func MSet(keys [][]byte, values [][]byte) (bool, error) {
-	return stringCollection.Batch(func(batch engine.Batch) error {
-		for i := range keys {
-			if _, err := stringCollection.UpsertRow(&collection.Row{
-				Key:   keys[i],
-				Id:    keys[i],
-				Value: values[i],
-			}, batch); err != nil {
-				return err
-			}
+func MSet(keys [][]byte, values [][]byte, batch engine.Batch) error {
+	for i := range keys {
+		if err := stringCollection.UpsertRow(&collection.Row{
+			Key:   keys[i],
+			Id:    keys[i],
+			Value: values[i],
+		}, batch); err != nil {
+			return err
 		}
-		return nil
-	})
+	}
+	return nil
 }
 
-func SetNX(key []byte, value []byte) (bool, error) {
-	lock(LString, key)
-	defer unlock(LString, key)
-
+func SetNX(key []byte, value []byte, batch engine.Batch) error {
 	exist, err := stringCollection.ExistRowById(key, key)
 	if err != nil {
-		return false, err
+		return err
 	}
 	if exist {
-		return false, err
+		return err
 	}
-	return stringCollection.UpsertRowAutoCommit(&collection.Row{
+	return stringCollection.UpsertRow(&collection.Row{
 		Key:   key,
 		Id:    key,
-		Value: value})
-}
-
-func SetGet(key []byte, value []byte) (bool, []byte, error) {
-	lock(LString, key)
-	defer unlock(LString, key)
-
-	oldRow, err := stringCollection.GetRowById(key, key)
-	if err != nil {
-		return false, nil, err
-	}
-	res, err := stringCollection.UpsertRowAutoCommit(&collection.Row{
-		Key:   key,
-		Id:    key,
-		Value: value})
-	if oldRow == nil {
-		return res, nil, err
-	}
-	return res, oldRow.Value, err
+		Value: value}, batch)
 }
 
 func Get(key []byte) ([]byte, error) {
@@ -88,29 +65,26 @@ func MGet(keys [][]byte) ([][]byte, error) {
 	return values, nil
 }
 
-func Del(key []byte) (bool, error) {
-	return stringCollection.DelAutoCommit(key)
+func Del(key []byte, batch engine.Batch) error {
+	return stringCollection.Del(key, batch)
 }
 
-func Incr(key []byte, delta int32) (bool, error) {
-	lock(LString, key)
-	defer unlock(LString, key)
-
+func Incr(key []byte, delta int32, batch engine.Batch) error {
 	row, err := stringCollection.GetRowById(key, key)
 	if err != nil {
-		return false, err
+		return err
 	}
 	var valueInt = 0
 	if row != nil {
 		valueInt, err = strconv.Atoi(string(row.Value))
 		if err != nil {
-			return false, err
+			return err
 		}
 	}
 	valueInt = valueInt + int(delta)
 
-	return stringCollection.UpsertRowAutoCommit(&collection.Row{
+	return stringCollection.UpsertRow(&collection.Row{
 		Key:   key,
 		Id:    key,
-		Value: []byte(strconv.Itoa(valueInt))})
+		Value: []byte(strconv.Itoa(valueInt))}, batch)
 }

@@ -39,7 +39,7 @@ func (store *LevelStore) Get(key []byte) ([]byte, error) {
 
 func (store *LevelStore) NewBatch() engine.Batch {
 	transaction, _ := store.db.OpenTransaction()
-	return &LevelBatch{transaction: transaction}
+	return &LevelBatch{db: store.db, transaction: transaction}
 }
 
 func (store *LevelStore) Iterate(opt *engine.PrefixIteratorOption, handle func([]byte, []byte) error) error {

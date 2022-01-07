@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/axiomhq/hyperloglog"
 	"github.com/yemingfeng/sdb/internal/collection"
+	"github.com/yemingfeng/sdb/internal/engine"
 	"github.com/yemingfeng/sdb/internal/pb"
 )
 
@@ -12,50 +13,44 @@ var HyperLogLogExistError = errors.New("hyper log log exist, please delete it or
 
 var hyperLogLogCollection = collection.NewCollection(pb.DataType_HYPER_LOG_LOG)
 
-func HLLCreate(key []byte) (bool, error) {
-	lock(LHyperLogLog, key)
-	defer unlock(LHyperLogLog, key)
-
+func HLLCreate(key []byte, batch engine.Batch) error {
 	exist, err := hyperLogLogCollection.ExistRowById(key, key)
 	if err != nil {
-		return false, err
+		return err
 	}
 	if exist {
-		return false, HyperLogLogExistError
+		return HyperLogLogExistError
 	}
 
 	h := hyperloglog.New16()
 	value, err := h.MarshalBinary()
 	if err != nil {
-		return false, err
+		return err
 	}
 
-	return hyperLogLogCollection.UpsertRowAutoCommit(&collection.Row{
+	return hyperLogLogCollection.UpsertRow(&collection.Row{
 		Key:   key,
 		Id:    key,
 		Value: value,
-	})
+	}, batch)
 }
 
-func HLLDel(key []byte) (bool, error) {
-	return hyperLogLogCollection.DelRowByIdAutoCommit(key, key)
+func HLLDel(key []byte, batch engine.Batch) error {
+	return hyperLogLogCollection.DelRowById(key, key, batch)
 }
 
-func HLLAdd(key []byte, values [][]byte) (bool, error) {
-	lock(LHyperLogLog, key)
-	defer unlock(LHyperLogLog, key)
-
+func HLLAdd(key []byte, values [][]byte, batch engine.Batch) error {
 	row, err := hyperLogLogCollection.GetRowById(key, key)
 	if err != nil {
-		return false, err
+		return err
 	}
 	if row == nil {
-		return false, NotFoundHyperLogLogError
+		return NotFoundHyperLogLogError
 	}
 	var hll hyperloglog.Sketch
 	err = hll.UnmarshalBinary(row.Value)
 	if err != nil {
-		return false, err
+		return err
 	}
 
 	for _, value := range values {
@@ -64,13 +59,13 @@ func HLLAdd(key []byte, values [][]byte) (bool, error) {
 
 	value, err := hll.MarshalBinary()
 	if err != nil {
-		return false, err
+		return err
 	}
-	return hyperLogLogCollection.UpsertRowAutoCommit(&collection.Row{
+	return hyperLogLogCollection.UpsertRow(&collection.Row{
 		Key:   key,
 		Id:    key,
 		Value: value,
-	})
+	}, batch)
 }
 
 func HLLCount(key []byte) (uint32, error) {

@@ -9,36 +9,26 @@ import (
 
 var mapCollection = collection.NewCollection(pb.DataType_MAP)
 
-func MPush(key []byte, pairs []*pb.Pair) (bool, error) {
-	lock(LMap, key)
-	defer unlock(LMap, key)
-
-	return mapCollection.Batch(func(batch engine.Batch) error {
-		for i := range pairs {
-			if _, err := mapCollection.UpsertRow(&collection.Row{
-				Key:   key,
-				Id:    pairs[i].Key,
-				Value: pairs[i].Value,
-			}, batch); err != nil {
-				return err
-			}
+func MPush(key []byte, pairs []*pb.Pair, batch engine.Batch) error {
+	for i := range pairs {
+		if err := mapCollection.UpsertRow(&collection.Row{
+			Key:   key,
+			Id:    pairs[i].Key,
+			Value: pairs[i].Value,
+		}, batch); err != nil {
+			return err
 		}
-		return nil
-	})
+	}
+	return nil
 }
 
-func MPop(key []byte, keys [][]byte) (bool, error) {
-	lock(LMap, key)
-	defer unlock(LMap, key)
-
-	return mapCollection.Batch(func(batch engine.Batch) error {
-		for i := range keys {
-			if _, err := mapCollection.DelRowById(key, keys[i], batch); err != nil {
-				return err
-			}
+func MPop(key []byte, keys [][]byte, batch engine.Batch) error {
+	for i := range keys {
+		if err := mapCollection.DelRowById(key, keys[i], batch); err != nil {
+			return err
 		}
-		return nil
-	})
+	}
+	return nil
 }
 
 func MExist(key []byte, keys [][]byte) ([]bool, error) {
@@ -53,11 +43,8 @@ func MExist(key []byte, keys [][]byte) ([]bool, error) {
 	return res, nil
 }
 
-func MDel(key []byte) (bool, error) {
-	lock(LMap, key)
-	defer unlock(LMap, key)
-
-	return mapCollection.DelAutoCommit(key)
+func MDel(key []byte, batch engine.Batch) error {
+	return mapCollection.Del(key, batch)
 }
 
 func MCount(key []byte) (uint32, error) {

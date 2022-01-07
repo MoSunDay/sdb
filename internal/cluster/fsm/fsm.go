@@ -1,81 +1,99 @@
 package fsm
 
 import (
-	"encoding/json"
+	"encoding/binary"
 	"errors"
 	"github.com/hashicorp/raft"
+	"github.com/yemingfeng/sdb/internal/collection"
+	"github.com/yemingfeng/sdb/internal/engine"
 	"github.com/yemingfeng/sdb/internal/pb"
 	"google.golang.org/protobuf/proto"
 	"io"
-	"strconv"
+	"log"
 	"sync"
 )
 
-var handlers = make(map[string]func(*pb.LogEntry) interface{}, 0)
+var committedIndexKey = []byte("committed_index_key")
 
-func RegisterHandler(methodName string, handler func(*pb.LogEntry) interface{}) {
+var handlers = make(map[string]func(*pb.LogEntry, engine.Batch) error, 0)
+
+func RegisterHandler(methodName string, handler func(*pb.LogEntry, engine.Batch) error) {
 	handlers[methodName] = handler
-}
-
-type ApplyResponse struct {
-	Response proto.Message
-	Err      error
 }
 
 type FSM struct {
 	sync.Mutex
-	committed []string
+	lastCommittedIndex uint64
 }
 
 func NewFSM() *FSM {
-	return &FSM{
-		committed: make([]string, 0),
+	value, err := collection.Get(committedIndexKey)
+	if err != nil {
+		log.Fatalln("get committed index key error", err)
 	}
+	lastCommittedIndex := uint64(0)
+	if len(value) != 0 {
+		lastCommittedIndex = binary.BigEndian.Uint64(value)
+	}
+	log.Printf("last committed index: [%d]", lastCommittedIndex)
+	return &FSM{lastCommittedIndex: lastCommittedIndex}
 }
 
-func (fsm *FSM) Apply(log *raft.Log) interface{} {
+func (fsm *FSM) Apply(raftLog *raft.Log) interface{} {
+	if fsm.lastCommittedIndex >= raftLog.Index {
+		log.Printf("invalid raft log index: [%d], last committed index: [%d]",
+			raftLog.Index, fsm.lastCommittedIndex)
+		return errors.New("invalid raft log")
+	}
+
+	var err error
+
+	batch := collection.NewBatch()
+	defer func() {
+		bs := make([]byte, 8)
+		binary.BigEndian.PutUint64(bs, raftLog.Index)
+
+		if err != nil {
+			batch.Reset()
+		}
+		_ = batch.Set(committedIndexKey, bs)
+		_ = batch.Commit()
+		batch.Close()
+
+		fsm.lastCommittedIndex = raftLog.Index
+	}()
+
 	logEntry := &pb.LogEntry{}
-	err := proto.Unmarshal(log.Data, logEntry)
+	err = proto.Unmarshal(raftLog.Data, logEntry)
 	if err != nil {
 		return err
 	}
 
-	fsm.Lock()
-	fsm.committed = append(fsm.committed, strconv.Itoa(int(log.Term))+":"+strconv.Itoa(int(log.Index)))
-	defer fsm.Unlock()
+	log.Printf("apply methodName: [%s], term: [%d], index: [%d]", logEntry.MethodName, raftLog.Term, raftLog.Index)
 
 	handler := handlers[logEntry.MethodName]
-	if handler == nil {
-		return &ApplyResponse{Err: errors.New("not support method name")}
-	}
-	return handler(logEntry)
+	err = handler(logEntry, batch)
+	return err
+}
+
+func (fsm *FSM) Snapshot() (raft.FSMSnapshot, error) {
+	return &FSMSnapshot{lastCommittedIndex: fsm.lastCommittedIndex}, nil
+}
+
+func (fsm *FSM) Restore(closer io.ReadCloser) error {
+	return closer.Close()
 }
 
 type FSMSnapshot struct {
-	committed []string
+	lastCommittedIndex uint64
 }
 
 func (fsmSnapshot *FSMSnapshot) Persist(sink raft.SnapshotSink) error {
-	bs, err := json.Marshal(fsmSnapshot.committed)
-	if err != nil {
-		return err
-	}
-	_, err = sink.Write(bs)
+	bs := make([]byte, 8)
+	binary.BigEndian.PutUint64(bs, fsmSnapshot.lastCommittedIndex)
+	_, err := sink.Write(bs)
 	return err
 }
 
 func (fsmSnapshot *FSMSnapshot) Release() {
-
-}
-
-func (fsm *FSM) Snapshot() (raft.FSMSnapshot, error) {
-	return &FSMSnapshot{committed: fsm.committed}, nil
-}
-
-func (fsm *FSM) Restore(closer io.ReadCloser) error {
-	bs, err := io.ReadAll(closer)
-	if err != nil {
-		return err
-	}
-	return json.Unmarshal(bs, &fsm.committed)
 }

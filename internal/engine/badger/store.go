@@ -35,7 +35,7 @@ func (store *BadgerStore) Get(key []byte) ([]byte, error) {
 }
 
 func (store *BadgerStore) NewBatch() engine.Batch {
-	return &BadgerBatch{transaction: store.db.NewTransaction(true)}
+	return &BadgerBatch{db: store.db, transaction: store.db.NewTransaction(true)}
 }
 
 func (store *BadgerStore) Iterate(opt *engine.PrefixIteratorOption, handle func([]byte, []byte) error) error {

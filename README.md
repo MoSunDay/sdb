@@ -150,7 +150,6 @@ func main() {
 Set | key, value | 设置 kv
 MSet | keys, values | 设置一组 kv
 SetNX | key, value | 当 key 不存在时，设置 value
-SetGet | key, value | 设置 kv，并返回原始值，当原始值不存在时，返回 nil
 Get | key | 获取 key 对应的 value
 MGet | keys | 获取一组 key 对应的 value
 Del | key | 删除一个 key

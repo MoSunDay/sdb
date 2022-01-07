@@ -22,7 +22,6 @@ type SDBClient interface {
 	Set(ctx context.Context, in *SetRequest, opts ...grpc.CallOption) (*SetResponse, error)
 	MSet(ctx context.Context, in *MSetRequest, opts ...grpc.CallOption) (*MSetResponse, error)
 	SetNX(ctx context.Context, in *SetNXRequest, opts ...grpc.CallOption) (*SetNXResponse, error)
-	SetGet(ctx context.Context, in *SetGetRequest, opts ...grpc.CallOption) (*SetGetResponse, error)
 	Get(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*GetResponse, error)
 	MGet(ctx context.Context, in *MGetRequest, opts ...grpc.CallOption) (*MGetResponse, error)
 	Del(ctx context.Context, in *DelRequest, opts ...grpc.CallOption) (*DelResponse, error)
@@ -120,15 +119,6 @@ func (c *sDBClient) MSet(ctx context.Context, in *MSetRequest, opts ...grpc.Call
 func (c *sDBClient) SetNX(ctx context.Context, in *SetNXRequest, opts ...grpc.CallOption) (*SetNXResponse, error) {
 	out := new(SetNXResponse)
 	err := c.cc.Invoke(ctx, "/proto.SDB/SetNX", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *sDBClient) SetGet(ctx context.Context, in *SetGetRequest, opts ...grpc.CallOption) (*SetGetResponse, error) {
-	out := new(SetGetResponse)
-	err := c.cc.Invoke(ctx, "/proto.SDB/SetGet", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -679,7 +669,6 @@ type SDBServer interface {
 	Set(context.Context, *SetRequest) (*SetResponse, error)
 	MSet(context.Context, *MSetRequest) (*MSetResponse, error)
 	SetNX(context.Context, *SetNXRequest) (*SetNXResponse, error)
-	SetGet(context.Context, *SetGetRequest) (*SetGetResponse, error)
 	Get(context.Context, *GetRequest) (*GetResponse, error)
 	MGet(context.Context, *MGetRequest) (*MGetResponse, error)
 	Del(context.Context, *DelRequest) (*DelResponse, error)
@@ -760,9 +749,6 @@ func (UnimplementedSDBServer) MSet(context.Context, *MSetRequest) (*MSetResponse
 }
 func (UnimplementedSDBServer) SetNX(context.Context, *SetNXRequest) (*SetNXResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetNX not implemented")
-}
-func (UnimplementedSDBServer) SetGet(context.Context, *SetGetRequest) (*SetGetResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SetGet not implemented")
 }
 func (UnimplementedSDBServer) Get(context.Context, *GetRequest) (*GetResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Get not implemented")
@@ -997,24 +983,6 @@ func _SDB_SetNX_Handler(srv interface{}, ctx context.Context, dec func(interface
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(SDBServer).SetNX(ctx, req.(*SetNXRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _SDB_SetGet_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SetGetRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(SDBServer).SetGet(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/proto.SDB/SetGet",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SDBServer).SetGet(ctx, req.(*SetGetRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -2066,10 +2034,6 @@ var SDB_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SetNX",
 			Handler:    _SDB_SetNX_Handler,
-		},
-		{
-			MethodName: "SetGet",
-			Handler:    _SDB_SetGet_Handler,
 		},
 		{
 			MethodName: "Get",

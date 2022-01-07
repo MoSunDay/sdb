@@ -30,16 +30,6 @@ message SetNXResponse {
   bool success = 1;
 }
 
-message SetGetRequest {
-  bytes key = 1;
-  bytes value = 2;
-}
-
-message SetGetResponse {
-  bool success = 1;
-  bytes oldValue = 2;
-}
-
 message GetRequest {
   bytes key = 1;
 }

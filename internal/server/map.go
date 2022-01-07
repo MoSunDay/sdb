@@ -12,13 +12,13 @@ type MapServer struct {
 }
 
 func (server *MapServer) MPush(_ context.Context, request *pb.MPushRequest) (*pb.MPushResponse, error) {
-	res, err := cluster.Apply("MPush", request)
-	return res.(*pb.MPushResponse), err
+	err := cluster.Apply("MPush", request)
+	return &pb.MPushResponse{Success: err == nil}, err
 }
 
 func (server *MapServer) MPop(_ context.Context, request *pb.MPopRequest) (*pb.MPopResponse, error) {
-	res, err := cluster.Apply("MPop", request)
-	return res.(*pb.MPopResponse), err
+	err := cluster.Apply("MPop", request)
+	return &pb.MPopResponse{Success: err == nil}, err
 }
 
 func (server *MapServer) MExist(_ context.Context, request *pb.MExistRequest) (*pb.MExistResponse, error) {
@@ -27,8 +27,8 @@ func (server *MapServer) MExist(_ context.Context, request *pb.MExistRequest) (*
 }
 
 func (server *MapServer) MDel(_ context.Context, request *pb.MDelRequest) (*pb.MDelResponse, error) {
-	res, err := cluster.Apply("MDel", request)
-	return res.(*pb.MDelResponse), err
+	err := cluster.Apply("MDel", request)
+	return &pb.MDelResponse{Success: err == nil}, err
 }
 
 func (server *MapServer) MCount(_ context.Context, request *pb.MCountRequest) (*pb.MCountResponse, error) {

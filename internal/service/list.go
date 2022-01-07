@@ -18,66 +18,51 @@ func newListIndexes(score []byte, value []byte) []collection.Index {
 	}
 }
 
-func LRPush(key []byte, values [][]byte) (bool, error) {
-	lock(LList, key)
-	defer unlock(LList, key)
-
-	return listCollection.Batch(func(batch engine.Batch) error {
-		for _, value := range values {
-			score := []byte(fmt.Sprintf("%d", util.GetOrderingKey()))
-			id := []byte(string(value) + ":" + string(score))
-			if _, err := listCollection.UpsertRow(&collection.Row{
-				Key:     key,
-				Id:      id,
-				Indexes: newListIndexes(score, value),
-				Value:   value,
-			}, batch); err != nil {
-				return err
-			}
+func LRPush(key []byte, values [][]byte, batch engine.Batch) error {
+	for _, value := range values {
+		score := []byte(fmt.Sprintf("%d", util.GetOrderingKey()))
+		id := []byte(string(value) + ":" + string(score))
+		if err := listCollection.UpsertRow(&collection.Row{
+			Key:     key,
+			Id:      id,
+			Indexes: newListIndexes(score, value),
+			Value:   value,
+		}, batch); err != nil {
+			return err
 		}
-		return nil
-	})
+	}
+	return nil
 }
 
-func LLPush(key []byte, values [][]byte) (bool, error) {
-	lock(LList, key)
-	defer unlock(LList, key)
-
-	return listCollection.Batch(func(batch engine.Batch) error {
-		for i, value := range values {
-			score := []byte(fmt.Sprintf("%d", -util.GetOrderingKey()-int64(i)))
-			id := []byte(string(value) + ":" + string(score))
-			if _, err := listCollection.UpsertRow(&collection.Row{
-				Key:     key,
-				Id:      id,
-				Indexes: newListIndexes(score, value),
-				Value:   value,
-			}, batch); err != nil {
-				return err
-			}
+func LLPush(key []byte, values [][]byte, batch engine.Batch) error {
+	for i, value := range values {
+		score := []byte(fmt.Sprintf("%d", -util.GetOrderingKey()-int64(i)))
+		id := []byte(string(value) + ":" + string(score))
+		if err := listCollection.UpsertRow(&collection.Row{
+			Key:     key,
+			Id:      id,
+			Indexes: newListIndexes(score, value),
+			Value:   value,
+		}, batch); err != nil {
+			return err
 		}
-		return nil
-	})
+	}
+	return nil
 }
 
-func LPop(key []byte, values [][]byte) (bool, error) {
-	lock(LList, key)
-	defer unlock(LList, key)
-
-	return listCollection.Batch(func(batch engine.Batch) error {
-		for i := range values {
-			rows, err := listCollection.IndexValuePage(key, []byte("value"), values[i], 0, math.MaxUint32)
-			if err != nil {
+func LPop(key []byte, values [][]byte, batch engine.Batch) error {
+	for i := range values {
+		rows, err := listCollection.IndexValuePage(key, []byte("value"), values[i], 0, math.MaxUint32)
+		if err != nil {
+			return err
+		}
+		for _, row := range rows {
+			if err := listCollection.DelRowById(key, row.Id, batch); err != nil {
 				return err
 			}
-			for _, row := range rows {
-				if _, err := listCollection.DelRowById(key, row.Id, batch); err != nil {
-					return err
-				}
-			}
 		}
-		return nil
-	})
+	}
+	return nil
 }
 
 func LRange(key []byte, offset int32, limit uint32) ([][]byte, error) {
@@ -104,10 +89,8 @@ func LExist(key []byte, values [][]byte) ([]bool, error) {
 	return res, nil
 }
 
-func LDel(key []byte) (bool, error) {
-	lock(LList, key)
-	defer unlock(LList, key)
-	return listCollection.DelAutoCommit(key)
+func LDel(key []byte, batch engine.Batch) error {
+	return listCollection.Del(key, batch)
 }
 
 func LCount(key []byte) (uint32, error) {

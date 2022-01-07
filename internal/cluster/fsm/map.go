@@ -1,39 +1,37 @@
 package fsm
 
 import (
+	"github.com/yemingfeng/sdb/internal/engine"
 	"github.com/yemingfeng/sdb/internal/pb"
 	"github.com/yemingfeng/sdb/internal/service"
 	"google.golang.org/protobuf/proto"
 )
 
 func init() {
-	RegisterHandler("MPush", func(logEntry *pb.LogEntry) interface{} {
+	RegisterHandler("MPush", func(logEntry *pb.LogEntry, batch engine.Batch) error {
 		request := pb.MPushRequest{}
 		err := proto.Unmarshal(logEntry.RequestBytes, &request)
 		if err != nil {
-			return &ApplyResponse{Err: err}
+			return err
 		}
-		res, err := service.MPush(request.Key, request.Pairs)
-		return &ApplyResponse{Response: &pb.MPushResponse{Success: res}, Err: err}
+		return service.MPush(request.Key, request.Pairs, batch)
 	})
 
-	RegisterHandler("MPop", func(logEntry *pb.LogEntry) interface{} {
+	RegisterHandler("MPop", func(logEntry *pb.LogEntry, batch engine.Batch) error {
 		request := pb.MPopRequest{}
 		err := proto.Unmarshal(logEntry.RequestBytes, &request)
 		if err != nil {
-			return &ApplyResponse{Err: err}
+			return err
 		}
-		res, err := service.MPop(request.Key, request.Keys)
-		return &ApplyResponse{Response: &pb.MPopResponse{Success: res}, Err: err}
+		return service.MPop(request.Key, request.Keys, batch)
 	})
 
-	RegisterHandler("MDel", func(logEntry *pb.LogEntry) interface{} {
+	RegisterHandler("MDel", func(logEntry *pb.LogEntry, batch engine.Batch) error {
 		request := pb.MDelRequest{}
 		err := proto.Unmarshal(logEntry.RequestBytes, &request)
 		if err != nil {
-			return &ApplyResponse{Err: err}
+			return err
 		}
-		res, err := service.MDel(request.Key)
-		return &ApplyResponse{Response: &pb.MDelResponse{Success: res}, Err: err}
+		return service.MDel(request.Key, batch)
 	})
 }

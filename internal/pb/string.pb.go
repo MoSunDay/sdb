@@ -326,116 +326,6 @@ func (x *SetNXResponse) GetSuccess() bool {
 	return false
 }
 
-type SetGetRequest struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	Key   []byte `protobuf:"bytes,1,opt,name=key,proto3" json:"key,omitempty"`
-	Value []byte `protobuf:"bytes,2,opt,name=value,proto3" json:"value,omitempty"`
-}
-
-func (x *SetGetRequest) Reset() {
-	*x = SetGetRequest{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_pb_protobuf_spec_string_proto_msgTypes[6]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
-}
-
-func (x *SetGetRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*SetGetRequest) ProtoMessage() {}
-
-func (x *SetGetRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_pb_protobuf_spec_string_proto_msgTypes[6]
-	if protoimpl.UnsafeEnabled && x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use SetGetRequest.ProtoReflect.Descriptor instead.
-func (*SetGetRequest) Descriptor() ([]byte, []int) {
-	return file_internal_pb_protobuf_spec_string_proto_rawDescGZIP(), []int{6}
-}
-
-func (x *SetGetRequest) GetKey() []byte {
-	if x != nil {
-		return x.Key
-	}
-	return nil
-}
-
-func (x *SetGetRequest) GetValue() []byte {
-	if x != nil {
-		return x.Value
-	}
-	return nil
-}
-
-type SetGetResponse struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	Success  bool   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
-	OldValue []byte `protobuf:"bytes,2,opt,name=oldValue,proto3" json:"oldValue,omitempty"`
-}
-
-func (x *SetGetResponse) Reset() {
-	*x = SetGetResponse{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_pb_protobuf_spec_string_proto_msgTypes[7]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
-}
-
-func (x *SetGetResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*SetGetResponse) ProtoMessage() {}
-
-func (x *SetGetResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_pb_protobuf_spec_string_proto_msgTypes[7]
-	if protoimpl.UnsafeEnabled && x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use SetGetResponse.ProtoReflect.Descriptor instead.
-func (*SetGetResponse) Descriptor() ([]byte, []int) {
-	return file_internal_pb_protobuf_spec_string_proto_rawDescGZIP(), []int{7}
-}
-
-func (x *SetGetResponse) GetSuccess() bool {
-	if x != nil {
-		return x.Success
-	}
-	return false
-}
-
-func (x *SetGetResponse) GetOldValue() []byte {
-	if x != nil {
-		return x.OldValue
-	}
-	return nil
-}
-
 type GetRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -447,7 +337,7 @@ type GetRequest struct {
 func (x *GetRequest) Reset() {
 	*x = GetRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_pb_protobuf_spec_string_proto_msgTypes[8]
+		mi := &file_internal_pb_protobuf_spec_string_proto_msgTypes[6]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -460,7 +350,7 @@ func (x *GetRequest) String() string {
 func (*GetRequest) ProtoMessage() {}
 
 func (x *GetRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_pb_protobuf_spec_string_proto_msgTypes[8]
+	mi := &file_internal_pb_protobuf_spec_string_proto_msgTypes[6]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -473,7 +363,7 @@ func (x *GetRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetRequest.ProtoReflect.Descriptor instead.
 func (*GetRequest) Descriptor() ([]byte, []int) {
-	return file_internal_pb_protobuf_spec_string_proto_rawDescGZIP(), []int{8}
+	return file_internal_pb_protobuf_spec_string_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *GetRequest) GetKey() []byte {
@@ -494,7 +384,7 @@ type GetResponse struct {
 func (x *GetResponse) Reset() {
 	*x = GetResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_pb_protobuf_spec_string_proto_msgTypes[9]
+		mi := &file_internal_pb_protobuf_spec_string_proto_msgTypes[7]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -507,7 +397,7 @@ func (x *GetResponse) String() string {
 func (*GetResponse) ProtoMessage() {}
 
 func (x *GetResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_pb_protobuf_spec_string_proto_msgTypes[9]
+	mi := &file_internal_pb_protobuf_spec_string_proto_msgTypes[7]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -520,7 +410,7 @@ func (x *GetResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetResponse.ProtoReflect.Descriptor instead.
 func (*GetResponse) Descriptor() ([]byte, []int) {
-	return file_internal_pb_protobuf_spec_string_proto_rawDescGZIP(), []int{9}
+	return file_internal_pb_protobuf_spec_string_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *GetResponse) GetValue() []byte {
@@ -541,7 +431,7 @@ type MGetRequest struct {
 func (x *MGetRequest) Reset() {
 	*x = MGetRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_pb_protobuf_spec_string_proto_msgTypes[10]
+		mi := &file_internal_pb_protobuf_spec_string_proto_msgTypes[8]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -554,7 +444,7 @@ func (x *MGetRequest) String() string {
 func (*MGetRequest) ProtoMessage() {}
 
 func (x *MGetRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_pb_protobuf_spec_string_proto_msgTypes[10]
+	mi := &file_internal_pb_protobuf_spec_string_proto_msgTypes[8]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -567,7 +457,7 @@ func (x *MGetRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MGetRequest.ProtoReflect.Descriptor instead.
 func (*MGetRequest) Descriptor() ([]byte, []int) {
-	return file_internal_pb_protobuf_spec_string_proto_rawDescGZIP(), []int{10}
+	return file_internal_pb_protobuf_spec_string_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *MGetRequest) GetKeys() [][]byte {
@@ -588,7 +478,7 @@ type MGetResponse struct {
 func (x *MGetResponse) Reset() {
 	*x = MGetResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_pb_protobuf_spec_string_proto_msgTypes[11]
+		mi := &file_internal_pb_protobuf_spec_string_proto_msgTypes[9]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -601,7 +491,7 @@ func (x *MGetResponse) String() string {
 func (*MGetResponse) ProtoMessage() {}
 
 func (x *MGetResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_pb_protobuf_spec_string_proto_msgTypes[11]
+	mi := &file_internal_pb_protobuf_spec_string_proto_msgTypes[9]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -614,7 +504,7 @@ func (x *MGetResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MGetResponse.ProtoReflect.Descriptor instead.
 func (*MGetResponse) Descriptor() ([]byte, []int) {
-	return file_internal_pb_protobuf_spec_string_proto_rawDescGZIP(), []int{11}
+	return file_internal_pb_protobuf_spec_string_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *MGetResponse) GetValues() [][]byte {
@@ -635,7 +525,7 @@ type DelRequest struct {
 func (x *DelRequest) Reset() {
 	*x = DelRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_pb_protobuf_spec_string_proto_msgTypes[12]
+		mi := &file_internal_pb_protobuf_spec_string_proto_msgTypes[10]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -648,7 +538,7 @@ func (x *DelRequest) String() string {
 func (*DelRequest) ProtoMessage() {}
 
 func (x *DelRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_pb_protobuf_spec_string_proto_msgTypes[12]
+	mi := &file_internal_pb_protobuf_spec_string_proto_msgTypes[10]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -661,7 +551,7 @@ func (x *DelRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DelRequest.ProtoReflect.Descriptor instead.
 func (*DelRequest) Descriptor() ([]byte, []int) {
-	return file_internal_pb_protobuf_spec_string_proto_rawDescGZIP(), []int{12}
+	return file_internal_pb_protobuf_spec_string_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *DelRequest) GetKey() []byte {
@@ -682,7 +572,7 @@ type DelResponse struct {
 func (x *DelResponse) Reset() {
 	*x = DelResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_pb_protobuf_spec_string_proto_msgTypes[13]
+		mi := &file_internal_pb_protobuf_spec_string_proto_msgTypes[11]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -695,7 +585,7 @@ func (x *DelResponse) String() string {
 func (*DelResponse) ProtoMessage() {}
 
 func (x *DelResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_pb_protobuf_spec_string_proto_msgTypes[13]
+	mi := &file_internal_pb_protobuf_spec_string_proto_msgTypes[11]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -708,7 +598,7 @@ func (x *DelResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DelResponse.ProtoReflect.Descriptor instead.
 func (*DelResponse) Descriptor() ([]byte, []int) {
-	return file_internal_pb_protobuf_spec_string_proto_rawDescGZIP(), []int{13}
+	return file_internal_pb_protobuf_spec_string_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *DelResponse) GetSuccess() bool {
@@ -730,7 +620,7 @@ type IncrRequest struct {
 func (x *IncrRequest) Reset() {
 	*x = IncrRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_pb_protobuf_spec_string_proto_msgTypes[14]
+		mi := &file_internal_pb_protobuf_spec_string_proto_msgTypes[12]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -743,7 +633,7 @@ func (x *IncrRequest) String() string {
 func (*IncrRequest) ProtoMessage() {}
 
 func (x *IncrRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_pb_protobuf_spec_string_proto_msgTypes[14]
+	mi := &file_internal_pb_protobuf_spec_string_proto_msgTypes[12]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -756,7 +646,7 @@ func (x *IncrRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IncrRequest.ProtoReflect.Descriptor instead.
 func (*IncrRequest) Descriptor() ([]byte, []int) {
-	return file_internal_pb_protobuf_spec_string_proto_rawDescGZIP(), []int{14}
+	return file_internal_pb_protobuf_spec_string_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *IncrRequest) GetKey() []byte {
@@ -784,7 +674,7 @@ type IncrResponse struct {
 func (x *IncrResponse) Reset() {
 	*x = IncrResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_pb_protobuf_spec_string_proto_msgTypes[15]
+		mi := &file_internal_pb_protobuf_spec_string_proto_msgTypes[13]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -797,7 +687,7 @@ func (x *IncrResponse) String() string {
 func (*IncrResponse) ProtoMessage() {}
 
 func (x *IncrResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_pb_protobuf_spec_string_proto_msgTypes[15]
+	mi := &file_internal_pb_protobuf_spec_string_proto_msgTypes[13]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -810,7 +700,7 @@ func (x *IncrResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IncrResponse.ProtoReflect.Descriptor instead.
 func (*IncrResponse) Descriptor() ([]byte, []int) {
-	return file_internal_pb_protobuf_spec_string_proto_rawDescGZIP(), []int{15}
+	return file_internal_pb_protobuf_spec_string_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *IncrResponse) GetSuccess() bool {
@@ -844,36 +734,28 @@ var file_internal_pb_protobuf_spec_string_proto_rawDesc = []byte{
 	0x20, 0x01, 0x28, 0x0c, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x22, 0x29, 0x0a, 0x0d, 0x53,
 	0x65, 0x74, 0x4e, 0x58, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x18, 0x0a, 0x07,
 	0x73, 0x75, 0x63, 0x63, 0x65, 0x73, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x08, 0x52, 0x07, 0x73,
-	0x75, 0x63, 0x63, 0x65, 0x73, 0x73, 0x22, 0x37, 0x0a, 0x0d, 0x53, 0x65, 0x74, 0x47, 0x65, 0x74,
-	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x01,
-	0x20, 0x01, 0x28, 0x0c, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c,
-	0x75, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x22,
-	0x46, 0x0a, 0x0e, 0x53, 0x65, 0x74, 0x47, 0x65, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
-	0x65, 0x12, 0x18, 0x0a, 0x07, 0x73, 0x75, 0x63, 0x63, 0x65, 0x73, 0x73, 0x18, 0x01, 0x20, 0x01,
-	0x28, 0x08, 0x52, 0x07, 0x73, 0x75, 0x63, 0x63, 0x65, 0x73, 0x73, 0x12, 0x1a, 0x0a, 0x08, 0x6f,
-	0x6c, 0x64, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x08, 0x6f,
-	0x6c, 0x64, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x22, 0x1e, 0x0a, 0x0a, 0x47, 0x65, 0x74, 0x52, 0x65,
-	0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x01, 0x20, 0x01,
-	0x28, 0x0c, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x22, 0x23, 0x0a, 0x0b, 0x47, 0x65, 0x74, 0x52, 0x65,
-	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18,
-	0x01, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x22, 0x21, 0x0a, 0x0b,
-	0x4d, 0x47, 0x65, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x12, 0x0a, 0x04, 0x6b,
-	0x65, 0x79, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0c, 0x52, 0x04, 0x6b, 0x65, 0x79, 0x73, 0x22,
-	0x26, 0x0a, 0x0c, 0x4d, 0x47, 0x65, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12,
-	0x16, 0x0a, 0x06, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0c, 0x52,
-	0x06, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x73, 0x22, 0x1e, 0x0a, 0x0a, 0x44, 0x65, 0x6c, 0x52, 0x65,
-	0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x01, 0x20, 0x01,
-	0x28, 0x0c, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x22, 0x27, 0x0a, 0x0b, 0x44, 0x65, 0x6c, 0x52, 0x65,
+	0x75, 0x63, 0x63, 0x65, 0x73, 0x73, 0x22, 0x1e, 0x0a, 0x0a, 0x47, 0x65, 0x74, 0x52, 0x65, 0x71,
+	0x75, 0x65, 0x73, 0x74, 0x12, 0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x0c, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x22, 0x23, 0x0a, 0x0b, 0x47, 0x65, 0x74, 0x52, 0x65, 0x73,
+	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x0c, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x22, 0x21, 0x0a, 0x0b, 0x4d,
+	0x47, 0x65, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x12, 0x0a, 0x04, 0x6b, 0x65,
+	0x79, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0c, 0x52, 0x04, 0x6b, 0x65, 0x79, 0x73, 0x22, 0x26,
+	0x0a, 0x0c, 0x4d, 0x47, 0x65, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x16,
+	0x0a, 0x06, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0c, 0x52, 0x06,
+	0x76, 0x61, 0x6c, 0x75, 0x65, 0x73, 0x22, 0x1e, 0x0a, 0x0a, 0x44, 0x65, 0x6c, 0x52, 0x65, 0x71,
+	0x75, 0x65, 0x73, 0x74, 0x12, 0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x0c, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x22, 0x27, 0x0a, 0x0b, 0x44, 0x65, 0x6c, 0x52, 0x65, 0x73,
+	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x73, 0x75, 0x63, 0x63, 0x65, 0x73, 0x73,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x08, 0x52, 0x07, 0x73, 0x75, 0x63, 0x63, 0x65, 0x73, 0x73, 0x22,
+	0x35, 0x0a, 0x0b, 0x49, 0x6e, 0x63, 0x72, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x10,
+	0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x03, 0x6b, 0x65, 0x79,
+	0x12, 0x14, 0x0a, 0x05, 0x64, 0x65, 0x6c, 0x74, 0x61, 0x18, 0x02, 0x20, 0x01, 0x28, 0x05, 0x52,
+	0x05, 0x64, 0x65, 0x6c, 0x74, 0x61, 0x22, 0x28, 0x0a, 0x0c, 0x49, 0x6e, 0x63, 0x72, 0x52, 0x65,
 	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x73, 0x75, 0x63, 0x63, 0x65, 0x73,
 	0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x08, 0x52, 0x07, 0x73, 0x75, 0x63, 0x63, 0x65, 0x73, 0x73,
-	0x22, 0x35, 0x0a, 0x0b, 0x49, 0x6e, 0x63, 0x72, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12,
-	0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x03, 0x6b, 0x65,
-	0x79, 0x12, 0x14, 0x0a, 0x05, 0x64, 0x65, 0x6c, 0x74, 0x61, 0x18, 0x02, 0x20, 0x01, 0x28, 0x05,
-	0x52, 0x05, 0x64, 0x65, 0x6c, 0x74, 0x61, 0x22, 0x28, 0x0a, 0x0c, 0x49, 0x6e, 0x63, 0x72, 0x52,
-	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x73, 0x75, 0x63, 0x63, 0x65,
-	0x73, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x08, 0x52, 0x07, 0x73, 0x75, 0x63, 0x63, 0x65, 0x73,
-	0x73, 0x42, 0x0d, 0x5a, 0x0b, 0x69, 0x6e, 0x74, 0x65, 0x72, 0x6e, 0x61, 0x6c, 0x2f, 0x70, 0x62,
-	0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x42, 0x0d, 0x5a, 0x0b, 0x69, 0x6e, 0x74, 0x65, 0x72, 0x6e, 0x61, 0x6c, 0x2f, 0x70, 0x62, 0x62,
+	0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -888,24 +770,22 @@ func file_internal_pb_protobuf_spec_string_proto_rawDescGZIP() []byte {
 	return file_internal_pb_protobuf_spec_string_proto_rawDescData
 }
 
-var file_internal_pb_protobuf_spec_string_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
+var file_internal_pb_protobuf_spec_string_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
 var file_internal_pb_protobuf_spec_string_proto_goTypes = []interface{}{
-	(*SetRequest)(nil),     // 0: proto.SetRequest
-	(*SetResponse)(nil),    // 1: proto.SetResponse
-	(*MSetRequest)(nil),    // 2: proto.MSetRequest
-	(*MSetResponse)(nil),   // 3: proto.MSetResponse
-	(*SetNXRequest)(nil),   // 4: proto.SetNXRequest
-	(*SetNXResponse)(nil),  // 5: proto.SetNXResponse
-	(*SetGetRequest)(nil),  // 6: proto.SetGetRequest
-	(*SetGetResponse)(nil), // 7: proto.SetGetResponse
-	(*GetRequest)(nil),     // 8: proto.GetRequest
-	(*GetResponse)(nil),    // 9: proto.GetResponse
-	(*MGetRequest)(nil),    // 10: proto.MGetRequest
-	(*MGetResponse)(nil),   // 11: proto.MGetResponse
-	(*DelRequest)(nil),     // 12: proto.DelRequest
-	(*DelResponse)(nil),    // 13: proto.DelResponse
-	(*IncrRequest)(nil),    // 14: proto.IncrRequest
-	(*IncrResponse)(nil),   // 15: proto.IncrResponse
+	(*SetRequest)(nil),    // 0: proto.SetRequest
+	(*SetResponse)(nil),   // 1: proto.SetResponse
+	(*MSetRequest)(nil),   // 2: proto.MSetRequest
+	(*MSetResponse)(nil),  // 3: proto.MSetResponse
+	(*SetNXRequest)(nil),  // 4: proto.SetNXRequest
+	(*SetNXResponse)(nil), // 5: proto.SetNXResponse
+	(*GetRequest)(nil),    // 6: proto.GetRequest
+	(*GetResponse)(nil),   // 7: proto.GetResponse
+	(*MGetRequest)(nil),   // 8: proto.MGetRequest
+	(*MGetResponse)(nil),  // 9: proto.MGetResponse
+	(*DelRequest)(nil),    // 10: proto.DelRequest
+	(*DelResponse)(nil),   // 11: proto.DelResponse
+	(*IncrRequest)(nil),   // 12: proto.IncrRequest
+	(*IncrResponse)(nil),  // 13: proto.IncrResponse
 }
 var file_internal_pb_protobuf_spec_string_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -994,30 +874,6 @@ func file_internal_pb_protobuf_spec_string_proto_init() {
 			}
 		}
 		file_internal_pb_protobuf_spec_string_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SetGetRequest); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_internal_pb_protobuf_spec_string_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SetGetResponse); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_internal_pb_protobuf_spec_string_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*GetRequest); i {
 			case 0:
 				return &v.state
@@ -1029,7 +885,7 @@ func file_internal_pb_protobuf_spec_string_proto_init() {
 				return nil
 			}
 		}
-		file_internal_pb_protobuf_spec_string_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_pb_protobuf_spec_string_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*GetResponse); i {
 			case 0:
 				return &v.state
@@ -1041,7 +897,7 @@ func file_internal_pb_protobuf_spec_string_proto_init() {
 				return nil
 			}
 		}
-		file_internal_pb_protobuf_spec_string_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_pb_protobuf_spec_string_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*MGetRequest); i {
 			case 0:
 				return &v.state
@@ -1053,7 +909,7 @@ func file_internal_pb_protobuf_spec_string_proto_init() {
 				return nil
 			}
 		}
-		file_internal_pb_protobuf_spec_string_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_pb_protobuf_spec_string_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*MGetResponse); i {
 			case 0:
 				return &v.state
@@ -1065,7 +921,7 @@ func file_internal_pb_protobuf_spec_string_proto_init() {
 				return nil
 			}
 		}
-		file_internal_pb_protobuf_spec_string_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_pb_protobuf_spec_string_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*DelRequest); i {
 			case 0:
 				return &v.state
@@ -1077,7 +933,7 @@ func file_internal_pb_protobuf_spec_string_proto_init() {
 				return nil
 			}
 		}
-		file_internal_pb_protobuf_spec_string_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_pb_protobuf_spec_string_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*DelResponse); i {
 			case 0:
 				return &v.state
@@ -1089,7 +945,7 @@ func file_internal_pb_protobuf_spec_string_proto_init() {
 				return nil
 			}
 		}
-		file_internal_pb_protobuf_spec_string_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_pb_protobuf_spec_string_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*IncrRequest); i {
 			case 0:
 				return &v.state
@@ -1101,7 +957,7 @@ func file_internal_pb_protobuf_spec_string_proto_init() {
 				return nil
 			}
 		}
-		file_internal_pb_protobuf_spec_string_proto_msgTypes[15].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_pb_protobuf_spec_string_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*IncrResponse); i {
 			case 0:
 				return &v.state
@@ -1120,7 +976,7 @@ func file_internal_pb_protobuf_spec_string_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_internal_pb_protobuf_spec_string_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   16,
+			NumMessages:   14,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

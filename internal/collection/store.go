@@ -41,7 +41,7 @@ func Iterate(prefix []byte, offset int32, limit uint32, handle func([]byte, []by
 	return store.Iterate(&engine.PrefixIteratorOption{Prefix: prefix, Offset: offset, Limit: limit}, handle)
 }
 
-// Close todo call
-func Close() error {
-	return store.Close()
-}
+//// Close todo call
+//func Close() error {
+//	return store.Close()
+//}

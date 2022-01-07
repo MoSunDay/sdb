@@ -12,18 +12,18 @@ type BloomFilterServer struct {
 }
 
 func (server *BloomFilterServer) BFCreate(_ context.Context, request *pb.BFCreateRequest) (*pb.BFCreateResponse, error) {
-	res, err := cluster.Apply("BFCreate", request)
-	return res.(*pb.BFCreateResponse), err
+	err := cluster.Apply("BFCreate", request)
+	return &pb.BFCreateResponse{Success: err == nil}, err
 }
 
 func (server *BloomFilterServer) BFDel(_ context.Context, request *pb.BFDelRequest) (*pb.BFDelResponse, error) {
-	res, err := cluster.Apply("BFDel", request)
-	return res.(*pb.BFDelResponse), err
+	err := cluster.Apply("BFDel", request)
+	return &pb.BFDelResponse{Success: err == nil}, err
 }
 
 func (server *BloomFilterServer) BFAdd(_ context.Context, request *pb.BFAddRequest) (*pb.BFAddResponse, error) {
-	res, err := cluster.Apply("BFAdd", request)
-	return res.(*pb.BFAddResponse), err
+	err := cluster.Apply("BFAdd", request)
+	return &pb.BFAddResponse{Success: err == nil}, err
 }
 
 func (server *BloomFilterServer) BFExist(_ context.Context, request *pb.BFExistRequest) (*pb.BFExistResponse, error) {

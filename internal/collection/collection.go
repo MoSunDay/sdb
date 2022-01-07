@@ -47,127 +47,70 @@ func NewCollection(dataType pb.DataType) *Collection {
 	return &Collection{dataType: dataType}
 }
 
-func (collection *Collection) Batch(fun func(engine.Batch) error) (bool, error) {
-	batch := NewBatch()
-	defer batch.Close()
-
-	err := fun(batch)
-	if err != nil {
-		return false, err
-	}
-
-	return batch.Commit()
-}
-
-func (collection *Collection) DelRowByIdAutoCommit(key []byte, id []byte) (bool, error) {
-	return collection.DelRowById(key, id, nil)
-}
-
 // DelRowById delete row by id
-func (collection *Collection) DelRowById(key []byte, id []byte, batch engine.Batch) (bool, error) {
-	selfBatch := batch == nil
-	if selfBatch {
-		batch = NewBatch()
-		defer batch.Close()
-	}
-
+func (collection *Collection) DelRowById(key []byte, id []byte, batch engine.Batch) error {
 	existRow, err := collection.GetRowByIdWithBatch(key, id, batch)
 	if err != nil {
-		return false, err
+		return err
 	}
 	if existRow != nil {
 		// delete exist indexes
 		for i := range existRow.Indexes {
 			index := existRow.Indexes[i]
-			_, err := batch.Del(indexKey(collection.dataType, key, index.Name, index.Value, id))
+			err := batch.Del(indexKey(collection.dataType, key, index.Name, index.Value, id))
 			if err != nil {
-				return false, err
+				return err
 			}
 		}
 	}
 	// delete row
-	_, err = batch.Del(rowKey(collection.dataType, key, id))
-	if err != nil {
-		return false, err
-	}
+	err = batch.Del(rowKey(collection.dataType, key, id))
 
-	if selfBatch {
-		return batch.Commit()
-	}
-	return true, nil
-}
-
-func (collection *Collection) UpsertRowAutoCommit(row *Row) (bool, error) {
-	return collection.UpsertRow(row, nil)
+	return err
 }
 
 // UpsertRow update or insert
 // batch can be nil, if nil, will auto commit
-func (collection *Collection) UpsertRow(row *Row, batch engine.Batch) (bool, error) {
-	selfBatch := batch == nil
-	if selfBatch {
-		batch = NewBatch()
-		defer batch.Close()
-	}
-
+func (collection *Collection) UpsertRow(row *Row, batch engine.Batch) error {
 	if len(row.Key) == 0 {
-		return false, keyEmptyError
+		return keyEmptyError
 	}
 	if len(row.Id) == 0 {
-		return false, idEmptyError
+		return idEmptyError
 	}
 	if len(row.Value) == 0 {
-		return false, valueEmptyError
+		return valueEmptyError
 	}
 
 	existRow, err := collection.GetRowByIdWithBatch(row.Key, row.Id, batch)
 	if err != nil {
-		return false, err
+		return err
 	}
 	if existRow != nil {
-		_, err := collection.DelRowById(row.Key, row.Id, batch)
+		err := collection.DelRowById(row.Key, row.Id, batch)
 		if err != nil {
-			return false, err
+			return err
 		}
 	}
 
 	rowKey := rowKey(collection.dataType, row.Key, row.Id)
 	for i := range row.Indexes {
 		index := row.Indexes[i]
-		_, err := batch.Set(indexKey(collection.dataType, row.Key, index.Name, index.Value, row.Id), rowKey)
+		err := batch.Set(indexKey(collection.dataType, row.Key, index.Name, index.Value, row.Id), rowKey)
 		if err != nil {
-			return false, err
+			return err
 		}
 	}
 	rawRow, err := marshal(row)
 	if err != nil {
-		return false, err
+		return err
 	}
-	_, err = batch.Set(rowKey, rawRow)
-	if err != nil {
-		return false, err
-	}
-
-	if selfBatch {
-		return batch.Commit()
-	}
-
-	return true, nil
-}
-
-func (collection *Collection) DelAutoCommit(key []byte) (bool, error) {
-	return collection.Del(key, nil)
+	return batch.Set(rowKey, rawRow)
 }
 
 // Del del all by key
-func (collection *Collection) Del(key []byte, batch engine.Batch) (bool, error) {
-	selfBatch := batch == nil
-	if selfBatch {
-		batch = NewBatch()
-		defer batch.Close()
-	}
-
-	if err := Iterate(rowKeyPrefix(collection.dataType, key),
+func (collection *Collection) Del(key []byte, batch engine.Batch) error {
+	return Iterate(rowKeyPrefix(collection.dataType, key),
 		0, math.MaxUint32, func(rowKey []byte, rawRow []byte) error {
 			row, err := unmarshal(rawRow)
 			if err != nil {
@@ -175,24 +118,17 @@ func (collection *Collection) Del(key []byte, batch engine.Batch) (bool, error) 
 			}
 			for i := range row.Indexes {
 				index := row.Indexes[i]
-				_, err := batch.Del(indexKey(collection.dataType, row.Key, index.Name, index.Value, row.Id))
+				err := batch.Del(indexKey(collection.dataType, row.Key, index.Name, index.Value, row.Id))
 				if err != nil {
 					return err
 				}
 			}
-			_, err = batch.Del(rowKey)
+			err = batch.Del(rowKey)
 			if err != nil {
 				return err
 			}
 			return nil
-		}); err != nil {
-		return false, err
-	}
-
-	if selfBatch {
-		return batch.Commit()
-	}
-	return true, nil
+		})
 }
 
 // GetRowByIdWithBatch get row by id
@@ -290,29 +226,6 @@ func (collection *Collection) IndexValuePage(key []byte, indexName []byte, index
 				return err
 			}
 			rows = append(rows, row)
-			return nil
-		}); err != nil {
-		return nil, err
-	}
-	return rows, nil
-}
-
-// Filter filter
-func (collection *Collection) Filter(key []byte, filter func(*Row) bool) ([]*Row, error) {
-	rows := make([]*Row, 0)
-	if err := Iterate(rowKeyPrefix(collection.dataType, key),
-		0, math.MaxUint32, func(indexKey []byte, rowKey []byte) error {
-			rowRaw, err := Get(rowKey)
-			if err != nil {
-				return err
-			}
-			row, err := unmarshal(rowRaw)
-			if err != nil {
-				return err
-			}
-			if filter(row) {
-				rows = append(rows, row)
-			}
 			return nil
 		}); err != nil {
 		return nil, err

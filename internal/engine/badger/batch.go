@@ -5,6 +5,7 @@ import (
 )
 
 type BadgerBatch struct {
+	db          *badger.DB
 	transaction *badger.Txn
 }
 
@@ -19,25 +20,21 @@ func (batch *BadgerBatch) Get(key []byte) ([]byte, error) {
 	return item.ValueCopy(nil)
 }
 
-func (batch *BadgerBatch) Set(key []byte, value []byte) (bool, error) {
-	if err := batch.transaction.Set(key, value); err != nil {
-		return false, err
-	}
-	return true, nil
+func (batch *BadgerBatch) Set(key []byte, value []byte) error {
+	return batch.transaction.Set(key, value)
 }
 
-func (batch *BadgerBatch) Del(key []byte) (bool, error) {
-	if err := batch.transaction.Delete(key); err != nil {
-		return false, err
-	}
-	return true, nil
+func (batch *BadgerBatch) Del(key []byte) error {
+	return batch.transaction.Delete(key)
 }
 
-func (batch *BadgerBatch) Commit() (bool, error) {
-	if err := batch.transaction.Commit(); err != nil {
-		return false, err
-	}
-	return true, nil
+func (batch *BadgerBatch) Commit() error {
+	return batch.transaction.Commit()
+}
+
+func (batch *BadgerBatch) Reset() {
+	batch.transaction.Discard()
+	batch.transaction = batch.db.NewTransaction(true)
 }
 
 func (batch *BadgerBatch) Close() {

@@ -20,25 +20,20 @@ func (batch *PebbleBatch) Get(key []byte) ([]byte, error) {
 	return value, err
 }
 
-func (batch *PebbleBatch) Set(key []byte, value []byte) (bool, error) {
-	if err := batch.batch.Set(key, value, nil); err != nil {
-		return false, err
-	}
-	return true, nil
+func (batch *PebbleBatch) Set(key []byte, value []byte) error {
+	return batch.batch.Set(key, value, nil)
 }
 
-func (batch *PebbleBatch) Del(key []byte) (bool, error) {
-	if err := batch.batch.Delete(key, nil); err != nil {
-		return false, err
-	}
-	return true, nil
+func (batch *PebbleBatch) Del(key []byte) error {
+	return batch.batch.Delete(key, nil)
 }
 
-func (batch *PebbleBatch) Commit() (bool, error) {
-	if err := batch.batch.Commit(pebble.Sync); err != nil {
-		return false, err
-	}
-	return true, nil
+func (batch *PebbleBatch) Commit() error {
+	return batch.batch.Commit(pebble.Sync)
+}
+
+func (batch *PebbleBatch) Reset() {
+	batch.batch.Reset()
 }
 
 func (batch *PebbleBatch) Close() {

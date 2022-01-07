@@ -12,18 +12,18 @@ type HyperLogLogServer struct {
 }
 
 func (server *HyperLogLogServer) HLLCreate(_ context.Context, request *pb.HLLCreateRequest) (*pb.HLLCreateResponse, error) {
-	res, err := cluster.Apply("HLLCreate", request)
-	return res.(*pb.HLLCreateResponse), err
+	err := cluster.Apply("HLLCreate", request)
+	return &pb.HLLCreateResponse{Success: err == nil}, err
 }
 
 func (server *HyperLogLogServer) HLLDel(_ context.Context, request *pb.HLLDelRequest) (*pb.HLLDelResponse, error) {
-	res, err := cluster.Apply("HLLDel", request)
-	return res.(*pb.HLLDelResponse), err
+	err := cluster.Apply("HLLDel", request)
+	return &pb.HLLDelResponse{Success: err == nil}, err
 }
 
 func (server *HyperLogLogServer) HLLAdd(_ context.Context, request *pb.HLLAddRequest) (*pb.HLLAddResponse, error) {
-	res, err := cluster.Apply("HLLAdd", request)
-	return res.(*pb.HLLAddResponse), err
+	err := cluster.Apply("HLLAdd", request)
+	return &pb.HLLAddResponse{Success: err == nil}, err
 }
 
 func (server *HyperLogLogServer) HLLCount(_ context.Context, request *pb.HLLCountRequest) (*pb.HLLCountResponse, error) {
